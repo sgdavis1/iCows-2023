@@ -18,7 +18,12 @@ Do not commit these settings into the source code repository.
 ### Start the system
 
 Execute the `start.sh` script. Pay attention to the startup logging to watch for warnings and
-errors. Often any issues can be identified during this startup phase from reading the logs
+errors. Often any issues can be identified during this startup phase from reading the logs:
+
+  ```
+  cd docker/scripts
+  ./start.sh
+  ```
 
 ### Access the system
 
