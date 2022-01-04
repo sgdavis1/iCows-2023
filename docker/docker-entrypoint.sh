@@ -13,6 +13,7 @@ if [ ! -s /var/www/html/sites/default/settings.php ]; then
 
     # Append our credentials into the default settings.php
     cat >> /var/www/html/sites/default/settings.php << EOF
+\$settings['hash_salt'] = 'WwJ1Uk7xTikljDpVIt_XWOS2hl-xhYA_ktxjAck4laBScTMcV78Sn2clwJ2LmJM8RIjX8QwDTw';
 \$databases['default']['default'] = array (
    'database' => 'icows_d9',
    'username' => '$MYSQL_USER',
