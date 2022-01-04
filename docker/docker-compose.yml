@@ -1,0 +1,49 @@
+version: '3.5'
+
+services:
+  icows_drupal:
+    build: 
+      context: .
+      args: 
+        PHP_ENV: ${PHP_ENV}
+    image: drupal/icows
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=icows_d9
+      - BASE_URL=${BASE_URL}
+    ports:
+      - "127.0.0.1:${LOCAL_PORT}:80"
+    depends_on:
+      - icows_db
+    volumes:
+      - type: bind
+        source: ../src
+        target: /src
+    container_name: icows_drupal9
+  icows_db:
+    image: mariadb:10.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=icows_d9
+    volumes:
+      - type: bind
+        source: ./seed.sql
+        target: /docker-entrypoint-initdb.d/init_seed.sql
+      - type: volume
+        source: icows_db_data
+        target: /var/lib/mysql
+    expose:
+      - 3306
+    container_name: icows_db
+networks:
+  default:
+    name: icows_network
+volumes:
+  icows_db_data:
+    driver: local
+    name: icows_db_data
+

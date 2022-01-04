@@ -1,0 +1,19 @@
+#
+# Example iCows configuration file
+#
+# Make a copy of this file, rename it to "icows.conf", and
+# set any or all of the properties below that you wish to
+# customize
+#
+
+# iCows configuration
+
+LOCAL_PORT=8080
+MYSQL_ROOT_PASSWORD=root
+MYSQL_USER=demo
+MYSQL_PASSWORD=demo
+# (Optional) used to userride $base_url for Drupal settings.php
+# Note: Must include protocol, and NO trailing "/"
+#BASE_URL=http://localhost
+# (Optional) Indicate the php configuration to use (development / production)
+#PHP_ENV=development
