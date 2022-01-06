@@ -5,6 +5,7 @@ settings.php
 icows-settings.php
 icows.conf
 icows*.sql
+.idea
 
 # Don't ever commit 3rd party contrib modules: 
 # (See docker/scripts/install_deps.sh"
