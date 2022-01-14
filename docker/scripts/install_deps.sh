@@ -17,7 +17,7 @@ fi
 
 # Define all the required modules and themes
 MODULES=""
-THEMES=""
+THEMES="bootstrap-8.x-3.23.tar.gz" # names seperated by |
 touch ../../src/all/modules; touch ../../src/all/themes
 
 echo
