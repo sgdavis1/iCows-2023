@@ -1,4 +1,18 @@
-.DS_Store
+# Don't ever commit 3rd party contrib modules: 
+# (See docker/scripts/install_deps.sh"
+src/all/modules/*
+!src/all/modules/custom/
+!src/all/modules/custom/*
+!src/all/modules/custom/**/*
+src/all/themes/*
+!src/all/themes/custom/
+!src/all/themes/custom/*
+!src/all/themes/custom/**/*
+
+# Ignore everything in the files directory
+files
+
+*.DS_Store
 .*.un~
 .*.swp
 settings.php
@@ -6,10 +20,3 @@ icows-settings.php
 icows.conf
 icows*.sql
 .idea
-
-# Don't ever commit 3rd party contrib modules: 
-# (See docker/scripts/install_deps.sh"
-src/all/
-
-# Ignore everything in the files directory
-files
