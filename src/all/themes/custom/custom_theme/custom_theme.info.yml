@@ -2,7 +2,6 @@ name: Custom Theme
 type: theme
 description: 'Custom Theme for My Website.'
 #package: Other
-core: 9.x
 core_version_requirement: ^8 || ^9
 libraries:
   - custom_theme/global-styling
