@@ -1,10 +1,13 @@
 name: Custom Theme
 type: theme
 description: 'Custom Theme for My Website.'
-package: Other
+#package: Other
 core_version_requirement: ^8 || ^9
 libraries:
   - custom_theme/global-styling
+
+
+hidden: false
 
 base theme: classy
 #Under ‘regions’ key, you can define your regions for the custom Drupal theme. Here,
