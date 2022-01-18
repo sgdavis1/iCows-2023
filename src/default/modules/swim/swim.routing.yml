@@ -1,0 +1,8 @@
+# Defines the routes for the basic custom module page
+swim.content:
+  path: '/swim'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::content'
+    _title: 'Swim'
+  requirements:
+    _permission: 'access content'

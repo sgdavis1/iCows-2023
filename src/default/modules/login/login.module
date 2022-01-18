@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function login_theme($existing, $type, $theme, $path) {
+  return [
+    'login' => [
+      'variables' => ['test_var' => NULL],
+    ],
+  ];
+}
