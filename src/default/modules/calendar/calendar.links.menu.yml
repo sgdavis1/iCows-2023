@@ -1,0 +1,7 @@
+# Creates a link to our custom module (page) from the Configuration -> Development window
+calendar.admin:
+  title: 'Calendar module settings'
+  description: 'calendar custom module'
+  parent: system.admin_config_development
+  route_name: calendar.content
+  weight: 100
