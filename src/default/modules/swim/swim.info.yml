@@ -1,0 +1,8 @@
+# Basic module configuration information
+name: Swim Module
+description: A custom module for the swim page
+package: ICOWS
+
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9

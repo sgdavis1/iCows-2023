@@ -1,0 +1,7 @@
+# Creates a link to our custom module (page) from the Configuration -> Development window
+swim.admin:
+  title: 'Swim Page'
+  description: 'A quick link to the swim page'
+  parent: system.admin_config_development
+  route_name: swim.content
+  weight: 100
