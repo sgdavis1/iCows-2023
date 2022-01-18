@@ -5,9 +5,9 @@ src/all/modules/*
 !src/all/modules/custom/*
 !src/all/modules/custom/**/*
 src/all/themes/*
-!src/all/themes/custom/
-!src/all/themes/custom/*
-!src/all/themes/custom/**/*
+!src/default/themes/custom/
+!src/default/themes/custom/*
+!src/default/themes/custom/**/*
 
 # Ignore everything in the files directory
 files
