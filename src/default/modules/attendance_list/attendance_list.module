@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function attendance_list_theme($existing, $type, $theme, $path) {
+  return [
+    'attendance_list' => [
+      'variables' => ['test_var' => NULL],
+    ],
+  ];
+}
