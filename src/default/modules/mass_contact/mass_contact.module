@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function mass_contact_theme($existing, $type, $theme, $path) {
+  return [
+    'mass_contact' => [
+      'variables' => ['test_var' => NULL],
+    ],
+  ];
+}
