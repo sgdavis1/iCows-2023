@@ -12,6 +12,9 @@ function swim_theme($existing, $type, $theme, $path) {
     'show' => [
       'variables' => ['id' => NULL],
     ],
+    'edit' => [
+      'variables' => ['id' => NULL],
+    ],
   ];
 }
 

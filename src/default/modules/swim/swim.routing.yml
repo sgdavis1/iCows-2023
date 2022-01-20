@@ -14,3 +14,11 @@ swim.show:
     _title: 'Show Swim'
   requirements:
     _permission: 'access content'
+
+swim.edit:
+  path: '/swim/{id}/edit'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::edit'
+    _title: 'Edit Swim'
+  requirements:
+    _permission: 'access content'

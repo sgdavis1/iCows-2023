@@ -14,7 +14,6 @@ class SwimController extends ControllerBase {
       '#theme' => 'swim',
       '#test_var' => $this->t('Test Value'),
     ];
- 
   }
 
   public function show($id) {
@@ -22,6 +21,12 @@ class SwimController extends ControllerBase {
       '#theme' => 'show',
       '#id' => $id,
     ];
- 
+  }
+
+  public function edit($id) {
+    return [
+      '#theme' => 'edit',
+      '#id' => $id,
+    ];
   }
 }
