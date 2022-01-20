@@ -1,8 +1,32 @@
 # Defines the routes for the basic custom module page
 swim.content:
-  path: '/swim'
+  path: '/swims'
   defaults:
     _controller: '\Drupal\swim\Controller\SwimController::content'
-    _title: 'Swim'
+    _title: 'Swims'
+  requirements:
+    _permission: 'access content'
+
+swim.show:
+  path: '/swims/{id}'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::show'
+    _title: 'Show Swim'
+  requirements:
+    _permission: 'access content'
+
+swim.edit:
+  path: '/swims/{id}/edit'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::edit'
+    _title: 'Edit Swim'
+  requirements:
+    _permission: 'access content'
+
+swim.attendance_list:
+  path: '/swims/{id}/attendance_list'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::attendance_list'
+    _title: 'Swim Attendance List'
   requirements:
     _permission: 'access content'

@@ -2,11 +2,22 @@
 
 /**
  * Implements hook_theme().
+ * https://www.drupal.org/docs/theming-drupal/twig-in-drupal/create-custom-twig-templates-for-custom-module
  */
 function swim_theme($existing, $type, $theme, $path) {
   return [
-    'swim' => [
+    'swims' => [
       'variables' => ['test_var' => NULL],
+    ],
+    'show' => [
+      'variables' => ['id' => NULL],
+    ],
+    'edit' => [
+      'variables' => ['id' => NULL],
+    ],
+    'attendance_list' => [
+      'variables' => ['id' => NULL],
     ],
   ];
 }
+
