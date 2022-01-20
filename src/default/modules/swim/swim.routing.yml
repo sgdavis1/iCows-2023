@@ -22,3 +22,11 @@ swim.edit:
     _title: 'Edit Swim'
   requirements:
     _permission: 'access content'
+
+swim.attendance_list:
+  path: '/swim/{id}/attendance_list'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::attendance_list'
+    _title: 'Swim Attendance List'
+  requirements:
+    _permission: 'access content'

@@ -29,4 +29,11 @@ class SwimController extends ControllerBase {
       '#id' => $id,
     ];
   }
+
+  public function attendance_list($id) {
+    return [
+      '#theme' => 'attendance_list',
+      '#id' => $id,
+    ];
+  }
 }
