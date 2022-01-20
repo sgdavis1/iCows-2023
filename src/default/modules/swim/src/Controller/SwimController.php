@@ -11,7 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 class SwimController extends ControllerBase {
   public function content() {
     return [
-      '#theme' => 'swim',
+      '#theme' => 'swims',
       '#test_var' => $this->t('Test Value'),
     ];
   }
