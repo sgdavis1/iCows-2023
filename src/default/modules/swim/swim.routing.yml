@@ -6,3 +6,11 @@ swim.content:
     _title: 'Swim'
   requirements:
     _permission: 'access content'
+
+swim.show:
+  path: '/swim/{id}'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::show'
+    _title: 'Show Swim'
+  requirements:
+    _permission: 'access content'

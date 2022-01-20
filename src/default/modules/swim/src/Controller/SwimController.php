@@ -16,4 +16,12 @@ class SwimController extends ControllerBase {
     ];
  
   }
+
+  public function show($id) {
+    return [
+      '#theme' => 'show',
+      '#id' => $id,
+    ];
+ 
+  }
 }
