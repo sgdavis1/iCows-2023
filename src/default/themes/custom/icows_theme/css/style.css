@@ -28,13 +28,13 @@
     height: 0;
 }
 
-#content div.col
-{
-    width: auto;
-    display: block;
-}
+/*div.col*/
+/*{*/
+/*    width: auto;*/
+/*    display: block;*/
+/*}*/
 
-#content .info2 .col
+.info2 .col
 {
     padding: 0 20px;
 }
@@ -309,37 +309,37 @@ h1, h2, h3, h4, h5, h6
 /**
  * Content styles for homepage.
  */
-#content h1
+h1
 {
     text-align: center;
     color: #204a87;
 }
 
-#content .col
+.col
 {
     display: inline-block;
     width: 49.5%;
     vertical-align: top;
 }
 
-#content .checklist
+.checklist
 {
     padding: 0 25px;
 }
-#content .checklist ul
+.checklist ul
 {
     list-style: none;
     margin: 0;
 }
-#content .checklist li.break-before
+.checklist li.break-before
 {
     margin-top: 10px;
 }
-#content .checklist li i.no
+.checklist li i.no
 {
     color: #729fcf;
 }
-#content .checklist li i.yes
+.checklist li i.yes
 {
     color: #204a87;
 }
@@ -360,7 +360,20 @@ h1, h2, h3, h4, h5, h6
 }
 
 /** Swimmers / Kayakers section **/
-#content .info2
+.kayakers-block{
+    float: right;
+    width: 49.5%;
+    min-height: auto;
+}
+
+.swimmers-block{
+    float: left;
+    width: 49.5%;
+    min-height: auto;
+}
+
+
+.info2
 {
     background-color: #cadbed;
     background-color: rgba(202, 219, 237, 0.78);
@@ -373,13 +386,15 @@ h1, h2, h3, h4, h5, h6
     top: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
+    min-height: 400px;
+    text-align: center;
 }
-#content .info2 .icon
+.info2 .icon
 {
     text-align: center;
     margin-top: 25px;
 }
-#content .info2 .icon h2
+.info2 .icon h2
 {
     font-style: italic;
     color: #555753;
@@ -387,20 +402,20 @@ h1, h2, h3, h4, h5, h6
     font-size: 2em;
 }
 
-#content .info2 .col
+.info2 .col
 {
     text-align: center;
     padding: 0 60px;
 }
 
-#content .green
+.green
 {
     font-style: italic;
     color: #4e9a06;
 }
 
 /** Safety Section **/
-#content-bg-scroll
+.bg-scroll
 {
     /*background: url("../images/ocean.jpg") no-repeat center center fixed;*/
     background-size: cover;
@@ -410,18 +425,30 @@ h1, h2, h3, h4, h5, h6
     margin-right: -1500px;
 }
 
-#content .info3 h2
+.info3{
+    min-height: auto;
+}
+.info3 p{
+    margin-bottom: 24px;
+    margin-top: 24px;
+}
+
+.info3 h2
 {
     font-family: "Roboto", serif;
     font-style: italic;
+    margin-bottom: 5px;
+    margin-top: 24px;
 }
 
-#content .info3 ul
+.info3 ul
 {
     list-style: none;
+    margin-bottom: 24px;
+    margin-top: 24px;
 }
 
-#content .info3 li:before
+.info3 li:before
 {
     font-family: "FontAwesome", serif;
     color: #4e9a06;
@@ -432,7 +459,7 @@ h1, h2, h3, h4, h5, h6
 /**
  * The howto signup section
  **/
-#content .info4
+.info4
 {
     background-color: #cadbed;
     padding-top: 1px;
@@ -444,20 +471,20 @@ h1, h2, h3, h4, h5, h6
     padding-right: 1500px;
 }
 
-#content .info4 .howto-signup,
-#content .info4 .see-you
+.info4 .howto-signup,
+.info4 .see-you
 {
     text-align: center;
     color: #729fcf;
 }
 
-#content .info4 .howto-signup h2
+.info4 .howto-signup h2
 {
     font-family: "Kaushan Script", serif;
     font-weight: normal;
 }
 
-#content .info4 .see-you
+.info4 .see-you
 {
     font-family: "Kaushan Script", serif;
     color: #204a87;
@@ -465,20 +492,20 @@ h1, h2, h3, h4, h5, h6
     line-height: 2em;
 }
 
-#content .info4 ul
+.info4 ul
 {
     margin: 0 15%;
     list-style: none;
 }
 
-#content .info4 ul li
+.info4 ul li
 {
     margin: 25px 0;
     position: relative;
 }
 
 /** All the special list bullets **/
-#content .info4 ul li::before
+.info4 ul li::before
 {
     font-family: "FontAwesome", serif;
     color: #204a87;
@@ -487,15 +514,15 @@ h1, h2, h3, h4, h5, h6
     left: -60px;
     top: 15px;
 }
-#content .info4 ul li.invited::before
+.info4 ul li.invited::before
 {
     content: "\f003";
 }
-#content .info4 ul li.login::before
+.info4 ul li.login::before
 {
     content: "\f090";
 }
-#content .info4 ul li.signup::before
+.info4 ul li.signup::before
 {
     content: "\f073";
 }
@@ -510,7 +537,7 @@ h1, h2, h3, h4, h5, h6
     font-style: italic;
     font-weight: bold;
 }
-#content .view-display-id-single_swim_view .views-field-title h1
+.view-display-id-single_swim_view .views-field-title h1
 {
     color: #444;
 }
