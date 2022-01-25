@@ -322,6 +322,7 @@ h1
     vertical-align: top;
 }
 
+
 .checklist
 {
     padding: 0 25px;
@@ -370,6 +371,16 @@ h1
     float: left;
     width: 49.5%;
     min-height: auto;
+}
+
+.swimmers-image::before
+{
+    content: url("../images/swimmer.png");
+}
+
+.kayakers-image::before
+{
+    content: url("../images/kayaker.png");
 }
 
 
