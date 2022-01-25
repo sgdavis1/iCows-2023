@@ -33,11 +33,24 @@ class NewSwimForm extends FormBase {
             '#required' => TRUE
         ];
         $form['description'] = [
-            '#type' => 'textarea',
+            '#type' => 'text_format',
             '#title' => $this->t('Description'),
+
+            //Need to add summary option
 
             '#required' => TRUE
         ];
+        $form['override'] = [
+            '#type' => 'select',
+            '#title' => $this->t('Manual Override'),
+            '#options' => [
+                'Unlocked' => $this->t('Unlocked'),
+                'Locked' => $this->t('Locked'),
+            ],
+            '#required' => TRUE
+        ];
+
+        //need to add sidebar option-selector thing
 
         $form['actions']['#type'] = 'actions';
         $form['actions']['submit'] = [
