@@ -16,7 +16,7 @@ else
 fi
 
 # Define all the required modules and themes
-MODULES=""
+MODULES="mass_contact-8.x-1.0-rc1.tar.gz|masquerade-8.x-2.0-beta4.tar.gz|fontyourface-8.x-3.6.tar.gz|flag-8.x-4.0-beta3.tar.gz"
 THEMES="bootstrap-8.x-3.23.tar.gz" # names seperated by |
 touch ../../src/all/modules; touch ../../src/all/themes
 
