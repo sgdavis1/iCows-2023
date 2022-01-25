@@ -322,6 +322,16 @@ h1
     vertical-align: top;
 }
 
+.yes::before{
+    content: '\2714';
+    padding-right: 5px;
+}
+
+.no::before{
+    content: '\2718';
+    padding-right: 5px;
+}
+
 .checklist
 {
     padding: 0 25px;
