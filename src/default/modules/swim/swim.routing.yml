@@ -7,6 +7,14 @@ swim.content:
   requirements:
     _permission: 'access content'
 
+swim.new:
+  path: '/swims/new'
+  defaults:
+    _title: 'Create A Swim'
+    _form: '\Drupal\swim\Form\NewSwimForm'
+  requirements:
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:
