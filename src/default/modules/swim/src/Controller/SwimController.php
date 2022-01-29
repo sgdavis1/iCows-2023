@@ -17,9 +17,13 @@ class SwimController extends ControllerBase {
   }
 
   public function show($id) {
+
+  $query = \Drupal::database()->query( "SELECT * FROM swims where swimID = $id" );
+  $results = $query->fetchAll();
     return [
       '#theme' => 'show',
       '#id' => $id,
+      '#description' => $results[0]->description,
     ];
   }
 
