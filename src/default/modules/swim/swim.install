@@ -1,0 +1,62 @@
+<?php
+
+/**
+ *  hook_install()
+ */
+function swim_install() {
+  $values = [
+    [
+      'swimID' => 1,
+      'field_date' => 5,
+      'hostID' => 3,
+      'description' => 'this is a test',
+    ],
+  ];
+  $database = \Drupal::database();
+  $query = $database->insert('swims')->fields(['swimID','field_date','hostID','description']);
+  foreach ($values as $developer) {
+    $query->values($developer);
+  }
+  $query->execute();
+
+}
+
+/**
+ * hook_schema()
+ */
+function swim_schema() {
+
+  $schema['swims'] = array(
+    'description' => 'Holds all of the swims for the Iowa open water swimming club',
+    'fields' => array(
+      'swimID' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique swim ID.',
+      ),
+      'field_date' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Date and time of the swim",
+      ),
+      'hostID' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'User ID of the host of the swim',
+      ),
+      'description' => array(
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => FALSE,
+              'description' => 'Description of the swim',
+      ),
+    ),
+    'primary key' => array('swimID'),
+    'indexes' => array(
+      'hostID' => array('hostID'),
+    ),
+  );
+  return $schema;
+}
