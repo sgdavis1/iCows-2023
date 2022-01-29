@@ -387,6 +387,11 @@ h1
     content: url("../images/kayaker.png");
 }
 
+.route-image::before
+{
+    content: url("../images/swim-route.png");
+    height: 500px;
+}
 
 .info2
 {
