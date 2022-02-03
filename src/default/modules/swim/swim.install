@@ -4,21 +4,20 @@
  *  hook_install()
  */
 function swim_install() {
-  $values = [
-    [
-      'swim_id' => 1,
-      'field_date' => 5,
-      'uid' => 1,
-      'description' => 'this is a test',
-    ],
-  ];
-  $database = \Drupal::database();
-  $query = $database->insert('icows_swims')->fields(['swim_id','field_date','uid','description']); 
-  foreach ($values as $developer) {
-    $query->values($developer);
-  }
-  $query->execute();
-
+    $values = [
+        [
+        'swim_id' => 1,
+        'field_date' => 5,
+        'uid' => 1,
+        'description' => 'this is a test',
+        ],
+    ];
+    $database = \Drupal::database();
+    $query = $database->insert('icows_swims')->fields(['swim_id','field_date','uid','description']);
+    foreach ($values as $developer) {
+        $query->values($developer);
+    }
+    $query->execute();
 }
 
 /**
@@ -26,165 +25,202 @@ function swim_install() {
  */
 function swim_schema() {
 
-  $schema['icows_swims'] = array(
-    'description' => 'Holds all of the swims for the Iowa open water swimming club',
-    'fields' => array(
-      'swim_id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique swim ID.',
-      ),
-      'field_date' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "Date and time of the swim",
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'User ID of the host of the swim',
-      ),
-      'description' => array(
-              'type' => 'text',
-              'not null' => FALSE,
-              'size' => 'normal',
-              'description' => 'Description of the swim',
-      ),
-    ),
-    'primary key' => array('swim_id'),
-    'indexes' => array(
-      'swim_id' => array('swim_id'),
-    ),
-  );
+    $schema['icows_swims'] = array(
+        'description' => 'Holds all of the swims for the Iowa open water swimming club',
+        'fields' => array(
+            'swim_id' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique swim ID.',
+            ),
+            'field_date' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => "Date and time of the swim",
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'User ID of the host of the swim',
+            ),
+            'description' => array(
+                'type' => 'text',
+                'not null' => FALSE,
+                'size' => 'normal',
+                'description' => 'Description of the swim',
+            ),
+        ),
+        'primary key' => array('swim_id'),
+        'indexes' => array(
+            'swim_id' => array('swim_id'),
+        ),
+    );
 
 
-  $schema['icows_attendees'] = array(
-    'description' => 'The users attending each swim',
-    'fields' => array(
-      'attendee_id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique attendee ID.',
-      ),
-      'swim_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The id of the assigned swim',
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'User ID of the swim attendee',
-      ),
-      'swimmer' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Determines if the user is signed up as a swimmer',
-      ),
-      'kayaker' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Determines if the user is signed up as a kayaker',
-      ),
-      'number_of_kayaks' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The number of kayaks that the user is bringing',
-      ),
-      'estimated_pace' => array(
-        'type' => 'varchar',
-        'not null' => FALSE,
-        'length' => 10, 
-        'default' => 0,
-        'description' => 'The swimmers estimated pace for this specific swim',
-      ),
-    ),
-    'primary key' => array('attendee_id'),
-    'indexes' => array(
-      'attendee_id' => array('attendee_id'),
-    ),
-  );
+    $schema['icows_attendees'] = array(
+        'description' => 'The users attending each swim',
+        'fields' => array(
+            'attendee_id' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique attendee ID.',
+            ),
+            'swim_id' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'The id of the assigned swim',
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'User ID of the swim attendee',
+            ),
+            'swimmer' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'size' => 'tiny',
+                'description' => 'Determines if the user is signed up as a swimmer',
+            ),
+            'kayaker' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'size' => 'tiny',
+                'description' => 'Determines if the user is signed up as a kayaker',
+            ),
+            'number_of_kayaks' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'The number of kayaks that the user is bringing',
+            ),
+            'estimated_pace' => array(
+                'type' => 'varchar',
+                'not null' => FALSE,
+                'length' => 10,
+                'default' => 0,
+                'description' => 'The swimmers estimated pace for this specific swim',
+            ),
+        ),
+        'primary key' => array('attendee_id'),
+        'indexes' => array(
+            'attendee_id' => array('attendee_id'),
+        ),
+    );
 
-  $schema['icows_waivers'] = array(
-    'description' => 'The users attending each swim',
-    'fields' => array(
-      'waiver_id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique waiver ID.',
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'User ID associated with this waiver',
-      ),
-      'waiver_url' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'normal',
-        'description' => 'The URL or file path pointing to this waiver',
-      ),
-      'current_waiver' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Determines if the user is signed up as a kayaker',
-      ),
-      'timestamp' => array(
-        'mysql_type' => 'timestamp',
-        'not null' => true,
-        'description' => 'The time at which the waiver was submitted',
-      ),
-      'approved' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Becomes true when an admin approves the waiver',
-      ),
-    ),
-    'primary key' => array('waiver_id'),
-    'indexes' => array(
-      'waiver_id' => array('waiver_id'),
-    ),
-  );
+    $schema['icows_waivers'] = array(
+        'description' => 'The users attending each swim',
+        'fields' => array(
+            'waiver_id' => array(
+            'type' => 'serial',
+            'not null' => TRUE,
+            'description' => 'Primary Key: Unique waiver ID.',
+        ),
+        'uid' => array(
+            'type' => 'int',
+            'not null' => TRUE,
+            'default' => 0,
+            'description' => 'User ID associated with this waiver',
+        ),
+        'waiver_url' => array(
+            'type' => 'text',
+            'not null' => FALSE,
+            'size' => 'normal',
+            'description' => 'The URL or file path pointing to this waiver',
+        ),
+        'current_waiver' => array(
+            'type' => 'int',
+            'not null' => TRUE,
+            'default' => 0,
+            'size' => 'tiny',
+            'description' => 'Determines if the user is signed up as a kayaker',
+        ),
+        'timestamp' => array(
+            'mysql_type' => 'timestamp',
+            'not null' => true,
+            'description' => 'The time at which the waiver was submitted',
+        ),
+        'approved' => array(
+            'type' => 'int',
+            'not null' => TRUE,
+            'default' => 0,
+            'size' => 'tiny',
+            'description' => 'Becomes true when an admin approves the waiver',
+        ),
+        ),
+        'primary key' => array('waiver_id'),
+        'indexes' => array(
+            'waiver_id' => array('waiver_id'),
+        ),
+    );
 
-  $schema['icows_swim_groups'] = array(
-    'description' => 'The users attending each swim',
-    'fields' => array(
-      'kayaker_attendee_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The kayaker assigned to this group',
-      ),
-      'swimmer_attendee_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'A swimmer assigned to this group',
-      ),
-      'swim_id' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The swim that this group is participating in',
-      ),
-    ),
-    'primary key' => array('kayaker_attendee_id', 'swimmer_attendee_id', 'swim_id'),
-  );
-
+    $schema['icows_swim_groups'] = array(
+        'description' => 'The users attending each swim',
+        'fields' => array(
+            'kayaker_attendee_id' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'The kayaker assigned to this group',
+            ),
+            'swimmer_attendee_id' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'A swimmer assigned to this group',
+            ),
+            'swim_id' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'The swim that this group is participating in',
+            ),
+        ),
+        'primary key' => array('kayaker_attendee_id', 'swimmer_attendee_id', 'swim_id'),
+    );
+    $schema['icows_stats'] = array(
+        'description' => 'Holds all of the swims for the Iowa open water swimming club',
+        'fields' => array(
+            'statID' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique swim ID.',
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => "users foreign key reference",
+            ),
+            'swim_id' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => "icows_swim foreign key reference",
+            ),
+            'pace' => array(
+                'type' => 'varchar',
+                'not null' => TRUE,
+                'length' => 10,
+                'description' => "swimming pace per mile for a swim",
+            ),
+            'distance' => array(
+                'type' => 'int',
+                'not null' => False,
+                'default' => 0,
+                'description' => "icows_swim foreign key reference",
+            ),
+        ),
+        'primary key' => array('statID'),
+        'indexes' => array(
+            'statID' => array('statID'),
+        ),
+    );
 
   return $schema;
 }
