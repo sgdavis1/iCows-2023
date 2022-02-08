@@ -307,6 +307,9 @@ h1, h2, h3, h4, h5, h6
     height: 350px;
     margin-left: -1500px;
     margin-right: -1500px;
+    margin-top: -9px;
+    position: relative;
+    z-index: -1;
 
 }
 
@@ -369,12 +372,14 @@ h1
     float: right;
     width: 49.5%;
     min-height: auto;
+    padding-bottom: 10px;
 }
 
 .swimmers-block{
     float: left;
     width: 49.5%;
     min-height: auto;
+    padding-bottom: 10px;
 }
 
 .swimmers-image::before
@@ -404,9 +409,9 @@ h1
     margin-right: -1500px;
     position: relative;
     top: 20px;
-    padding-top: 10px;
+    padding-top: 30px;
     padding-bottom: 10px;
-    min-height: 400px;
+    min-height: 450px;
     text-align: center;
 }
 .info2 .icon
@@ -584,4 +589,48 @@ h1
 .calendar-calendar .month-view .full td.single-day div.monthview
 {
     background-color: #cce2ff;
+}
+
+/**
+ * Navigation Bar stuff
+ */
+
+.navbar{
+    max-height: 50px;
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.navbar-btn{
+    margin-bottom: 0;
+}
+
+.navbar-collapse{
+    max-width: 80%;
+    position: center;
+
+}
+
+.navbar-header{
+    padding-left: 10%;
+    position: center;
+
+}
+
+
+#navbar{
+    background-color: #204a87;
+    min-width: 100%;
+    border: 0;
+    position: fixed;
+    z-index: 100;
+    margin-top: -15px;
+    padding: 0;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+
+.tabs{
+    margin-top: 40px;
 }
