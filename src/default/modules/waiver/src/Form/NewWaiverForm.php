@@ -21,21 +21,17 @@ class NewWaiverForm extends FormBase {
      * {@inheritdoc}
      */
     public function buildForm(array $form, FormStateInterface $form_state) {
-        $form['title'] = [
-            '#type' => 'textfield',
-            '#title' => $this->t('Title'),
-            '#maxlength' => 128,
-            '#required' => TRUE
-        ];
+        $form['waiver'] = array(
+            '#type' => 'managed_file',
+            '#title' => t('waiver'),
+            '#description' => t('Swim waiver'),
+            '#upload_location' => 'public://files',
+        );
+        //only allow pdfs for now
 
         //need to add sidebar option-selector thing
 
-        $form['actions']['#type'] = 'actions';
-        $form['actions']['submit'] = [
-            '#type' => 'submit',
-            '#value' => $this->t('Save'),
-            '#button_type' => 'primary',
-        ];
+        $form['#submit'][] = 'mymodule_set_default_header_image_form_submit';
         return $form;
     }
 
