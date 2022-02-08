@@ -372,12 +372,14 @@ h1
     float: right;
     width: 49.5%;
     min-height: auto;
+    padding-bottom: 10px;
 }
 
 .swimmers-block{
     float: left;
     width: 49.5%;
     min-height: auto;
+    padding-bottom: 10px;
 }
 
 .swimmers-image::before
@@ -409,7 +411,7 @@ h1
     top: 20px;
     padding-top: 30px;
     padding-bottom: 10px;
-    min-height: 400px;
+    min-height: 450px;
     text-align: center;
 }
 .info2 .icon
@@ -627,4 +629,8 @@ h1
 }
 .navbar-default .navbar-nav > li > a {
     color: #ffffff;
+}
+
+.tabs{
+    margin-top: 40px;
 }
