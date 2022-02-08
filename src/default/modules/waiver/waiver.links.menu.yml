@@ -1,0 +1,7 @@
+# Creates a link to our custom module (page) from the Configuration -> Development window
+attendance_list.admin:
+  title: 'Waiver module settings'
+  description: 'Waiver custom module'
+  parent: system.admin_config_development
+  route_name: waiver.content
+  weight: 100
