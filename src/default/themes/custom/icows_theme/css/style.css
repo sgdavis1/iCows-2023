@@ -307,7 +307,7 @@ h1, h2, h3, h4, h5, h6
     height: 350px;
     margin-left: -1500px;
     margin-right: -1500px;
-    margin-top: -9px;
+    margin-top: -15px;
     position: relative;
     z-index: -1;
 
@@ -609,7 +609,6 @@ h1
 .navbar-collapse{
     max-width: 80%;
     position: center;
-
 }
 
 @media (max-width: 768px) {
@@ -664,3 +663,12 @@ h1
 .tabs{
     margin-top: 40px;
 }
+
+/*Formats error and alert messages so they arent hidden by the nav bar*/
+.messages__wrapper {
+    margin-top: 50px;
+}
+
+
+
+
