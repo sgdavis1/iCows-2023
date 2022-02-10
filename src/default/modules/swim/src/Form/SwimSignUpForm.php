@@ -23,7 +23,11 @@ class SwimSignUpForm extends FormBase {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(array $form, FormStateInterface $form_state) {
+    public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
+        $form['swim_id'] = array(
+            '#value' => $id,
+            '#type' => 'hidden'
+        );
         $form['pace'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Pace'),
@@ -74,11 +78,21 @@ class SwimSignUpForm extends FormBase {
         $form['actions']['#type'] = 'actions';
         $form['actions']['submit'] = [
             '#type' => 'submit',
-            '#value' => $this->t('Save'),
+            '#value' => $this->t('Sign up'),
             '#button_type' => 'primary',
         ];
-//        Still need a  cancel button
+        $form['actions']['cancel'] = [      //FIXME
+            '#type' => 'button',
+            '#value' => t('Cancel'),
+            '#weight' => 20,
+            '#executes_submit_callback' => TRUE,
+            '#submit' => array('mymodule_form_cancel'),
+        ];
         return $form;
+    }
+
+    public function mymodule_form_cancel(){     //FIXME
+        drupal_goto('destinationpage');
     }
 
     /**
@@ -92,29 +106,27 @@ class SwimSignUpForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
-        $locked = 0;
-        if ($form_state->getValue('override') == 'Locked') {
-            $locked = 1;
+        $willing_to_kayak = 0;
+        if ($form_state->getValue('if_needed') == 1) {  //assuming 1 means box is checked
+            $willing_to_kayak = 1;
         }
 
         $values = [
             [
-                'title' => $form_state->getValue('title'),
-                'description' => $form_state->getValue('description')["value"],// only saving value for now, can save format later
-                'locked' => $locked,
-                // https://drupal.stackexchange.com/questions/204103/inserting-the-value-from-datetime-field-form
-                'field_date' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
-                // must add uid, ask steve if uid determined by creator or from dropdowm
+                'kayaker' => $willing_to_kayak,
+                'swimmer' => 1,
                 'uid' => \Drupal::currentUser()->id(),
+                'swim_id' => $form_state->getValue('swim_id'),
+                'number_of_kayaks' => $form_state->getValue('kayaks'),
+                'estimated_pace' => $form_state->getValue('pace'),
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_swims')->fields(['title','description','locked','field_date']); //->values($values)->execute();
+        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
         foreach ($values as $developer) {
             $query->values($developer);
         }
         $query->execute();
-
     }
 
 }
