@@ -9,7 +9,7 @@ namespace Drupal\swim\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\DateHelper;
- 
+
 class SwimController extends ControllerBase {
   public function content() {
     return [
@@ -25,11 +25,11 @@ class SwimController extends ControllerBase {
   
   // Add extra detail to this query object: a condition, fields and a range
   $query->condition('i.swim_id', $id, '=');
-  $query->fields('i', ['uid', 'swim_id', 'field_date', 'title', 'description', 'locked']);
-  $query->range(0, 50);
+   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+   $query->range(0, 50);
   $result = $query->execute()->fetchAll()[0];
   $date = new DrupalDateTime($result->field_date, 'UTC');
-  
+
   return [
     '#theme' => 'show',
     '#id' => $id,
@@ -85,7 +85,7 @@ function getFormattedDate($date) {
       $day = "Unknown";
       break;
   }
-  
+
   $month_index = intval($date->format('m'));
   $month = strval(DateHelper::monthNames()[$month_index]);
   return $day . ", " . $month . $date->format(' d, Y - g:ia');

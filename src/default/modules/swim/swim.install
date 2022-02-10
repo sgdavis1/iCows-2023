@@ -32,7 +32,7 @@ function swim_schema() {
                 'not null' => TRUE,
                 'description' => 'Primary Key: Unique swim ID.',
             ),
-            'field_date' => array(
+            'date_time' => array(
                 'type' => 'varchar', 
                 'not null' => FALSE,
                 'length' => 20,

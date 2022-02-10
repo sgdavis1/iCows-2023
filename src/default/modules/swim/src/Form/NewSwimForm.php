@@ -86,13 +86,13 @@ class NewSwimForm extends FormBase {
             'locked' => $locked,
             // https://drupal.stackexchange.com/questions/204103/inserting-the-value-from-datetime-field-form
             // would need to add timezones here if we ever wanted to support multiple timezones
-            'field_date' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+            'date_time' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             // must add uid, ask steve if uid determined by creator or from dropdowm
             'uid' => \Drupal::currentUser()->id(),
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_swims')->fields(['title','description','locked','field_date']); //->values($values)->execute();
+        $query = $database->insert('icows_swims')->fields(['title','description','locked','date_time']); //->values($values)->execute();
         foreach ($values as $developer) {
             $query->values($developer);
         }
