@@ -10,7 +10,12 @@ function swim_theme($existing, $type, $theme, $path) {
       'variables' => ['test_var' => NULL],
     ],
     'show' => [
-      'variables' => ['id' => NULL, 'description' => NULL],
+      'variables' => ['id' => NULL,       
+                      'title' => NULL,
+                      'description' => NULL,
+                      'locked' => NULL,
+                      'date_time' => NULL,
+                      'uid' => NULL],
     ],
     'edit' => [
       'variables' => ['id' => NULL],

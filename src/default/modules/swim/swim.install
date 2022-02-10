@@ -4,20 +4,19 @@
  *  hook_install()
  */
 function swim_install() {
-    $values = [
-        [
-        'swim_id' => 1,
-        'field_date' => 5,
-        'uid' => 1,
-        'description' => 'this is a test',
-        ],
-    ];
-    $database = \Drupal::database();
-    $query = $database->insert('icows_swims')->fields(['swim_id','field_date','uid','description']);
-    foreach ($values as $developer) {
-        $query->values($developer);
-    }
-    $query->execute();
+    // $values = [
+    //     [
+    //     'swim_id' => 1,
+    //     'uid' => 1,
+    //     'description' => 'this is a test',
+    //     ],
+    // ];
+    // $database = \Drupal::database();
+    // $query = $database->insert('icows_swims')->fields(['swim_id','field_date','uid','description']);
+    // foreach ($values as $developer) {
+    //     $query->values($developer);
+    // }
+    // $query->execute();
 }
 
 /**
@@ -34,9 +33,9 @@ function swim_schema() {
                 'description' => 'Primary Key: Unique swim ID.',
             ),
             'field_date' => array(
-                'type' => 'int',
-                'not null' => TRUE,
-                'default' => 0,
+                'type' => 'varchar', 
+                'not null' => FALSE,
+                'length' => 20,
                 'description' => "Date and time of the swim",
             ),
             'uid' => array(
