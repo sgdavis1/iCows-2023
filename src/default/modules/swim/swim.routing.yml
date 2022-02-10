@@ -26,7 +26,7 @@ swim.show:
 swim.edit:
   path: '/swims/{id}/edit'
   defaults:
-    _controller: '\Drupal\swim\Controller\SwimController::edit'
+    _form: '\Drupal\swim\Form\EditSwimForm'
     _title: 'Edit Swim'
   requirements:
     _permission: 'access content'
