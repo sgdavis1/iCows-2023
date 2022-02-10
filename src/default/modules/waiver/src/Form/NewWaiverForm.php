@@ -55,22 +55,29 @@ class NewWaiverForm extends FormBase {
     /**
      * {@inheritdoc}
      */
-    public function submitForm(array &$form, FormStateInterface $form_state) {
+    public function submitForm(array &$form, FormStateInterface $form_state)
+    {
         $waiver = $form_state->getValue('waiver');
         if ($waiver) {
             $file = File::load(reset($waiver));
             $file->setPermanent();
             $file->save();
 
-            $connection = \Drupal::service('database');
-            $query = $connection->insert('icows_waivers')
-                -> fields([
+            $values = [
+                [
                     'uid' => 1,
                     'current_waiver' => $file->fid,
                     'waiver_url' => 'test',
-                    'timestamp' => \Drupal::time()->getRequestTime(),
-                ])
-                ->execute();
+                    'timestamp' => \Drupal::time()->getRequestTime()->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+                ],
+            ];
+
+            $connection = \Drupal::service('database');
+            $query = $connection->insert('icows_waivers')->fields(['uid', 'current_waiver', 'waiver_url', 'timestamp']);
+            foreach ($values as $value){
+                $query->values($value);
+            }
+            $query->execute();
         }
     }
 }

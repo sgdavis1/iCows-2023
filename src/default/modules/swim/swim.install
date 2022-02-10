@@ -160,8 +160,9 @@ function swim_schema() {
             'description' => 'Determines if the user is signed up as a kayaker',
         ),
         'timestamp' => array(
-            'mysql_type' => 'timestamp',
+            'type' => 'varchar',
             'not null' => true,
+            'length' => 20,
             'description' => 'The time at which the waiver was submitted',
         ),
         'approved' => array(
