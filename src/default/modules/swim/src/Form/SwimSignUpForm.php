@@ -25,40 +25,59 @@ class SwimSignUpForm extends FormBase {
      */
     public function buildForm(array $form, FormStateInterface $form_state) {
         $form['pace'] = [
-            '#type' => 'varchar',
-            '#title' => $this->t('Enter your sustained pace per 100m for a long swim (at least 500m length). Ex] 1:55'),
+            '#type' => 'textfield',
+            '#title' => $this->t('Pace'),
             '#maxlength' => 10,
             '#required' => TRUE
         ];
-//        $form['date_time'] = [
-//            '#type' => 'datetime',
-//            '#title' => $this->t('Date and Time'),
-//            '#required' => TRUE
-//        ];
-//        $form['description'] = [
-//            '#type' => 'text_format',
-//            '#title' => $this->t('Description'),
-//
-//            //Need to add summary option
-//
-//            '#required' => TRUE
-//        ];
-//        $form['override'] = [
-//            '#type' => 'select',
-//            '#title' => $this->t('Manual Override'),
-//            '#options' => [
-//                'Unlocked' => $this->t('Unlocked'),
-//                'Locked' => $this->t('Locked'),
-//            ],
-//            '#required' => TRUE
-//        ];
-
+        $form['pace_description'] = array(
+            '#markup' => '<p>Enter your sustained pace per 100m for a long swim (at least 500m length). Ex] 1:55</p><br>'
+        );
+        $form['distance'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Distance'),
+            '#maxlength' => 10,
+            '#required' => TRUE
+        ];
+        $form['distance_description'] = array(
+            '#markup' => '<p>Enter your desired distance that you would like to swim. Ex] 1km</p><br>
+            <p>Some useful approximate distances to remember (short course first / long course second)</p>
+            <ul>
+              <li><strong>Brown boathouse</strong> 1.2K / 2.0K</li>
+              <li><strong>Diamond Window boathouse</strong> 1.6K / 2.4K</li>
+              <li><strong>The point</strong> 2.1K / 2.9K</li>
+              <li><strong>The dam</strong> 3.0K / 3.8K</li>
+            </ul>
+            <p>Short course is the direct route to the landmarks, long course includes a jog across the lake
+            at the start and end of the swim.</p><br>'
+        );
+        $form['kayaks'] = [
+            '#type' => 'number',
+            '#title' => $this->t('Boat(s)'),
+            '#default_value' => 0,
+            '#min' => 0,
+            '#required' => TRUE
+        ];
+        $form['kayak_description'] = array(
+            '#markup' => '<p>If you have kayaks or other water vessels available, please let us know how many
+            you will be able to bring</p><br>'
+        );
+        $form['if_needed'] = [
+            '#type' => 'checkbox',
+            '#title' => $this->t('If needed'),
+            '#required' => TRUE
+        ];
+        $form['if_needed_description'] = array(
+            '#markup' => "<p>If you are willing to switch your role to a kayaker in the case we don't have
+            enough kayakers in attendance, please indicate this here.</p><br>"
+        );
         $form['actions']['#type'] = 'actions';
         $form['actions']['submit'] = [
             '#type' => 'submit',
             '#value' => $this->t('Save'),
             '#button_type' => 'primary',
         ];
+//        Still need a  cancel button
         return $form;
     }
 
