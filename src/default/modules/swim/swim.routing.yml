@@ -15,6 +15,14 @@ swim.new:
   requirements:
     _permission: 'access content'
 
+swim.signup:
+  path: '/swims/{id}/signup'
+  defaults:
+    _title: 'Swim Signup'
+    _form: '\Drupal\swim\Form\SwimSignUpForm'
+  requirements:
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:

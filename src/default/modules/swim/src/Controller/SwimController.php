@@ -25,10 +25,11 @@ class SwimController extends ControllerBase {
   
   // Add extra detail to this query object: a condition, fields and a range
   $query->condition('i.swim_id', $id, '=');
-   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-   $query->range(0, 50);
+
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $query->range(0, 50);
   $result = $query->execute()->fetchAll()[0];
-  $date = new DrupalDateTime($result->field_date, 'UTC');
+  $date = new DrupalDateTime($result->date_time, 'UTC');
 
   return [
     '#theme' => 'show',
