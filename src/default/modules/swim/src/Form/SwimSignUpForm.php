@@ -6,8 +6,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Drupal\Core\Url; 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements an example form.
@@ -133,28 +133,10 @@ class SwimSignUpForm extends FormBase {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-// There are duplicates of the BELOW code
-// Should somehow move this to a better code location
-// 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
-function check_and_update_swim_status($swim) {
-    if (new DrupalDateTime($swim->date_time, 'UTC') <= DrupalDateTime::createFromTimestamp(time())->modify('+1 day') && ($swim->locked == 0 || $swim->locked == 1)) {
-      $database = \Drupal::database();
-          $database->update('icows_swims')->fields(array(
-            'locked' => 2,
-          ))->condition('swim_id', $swim->swim_id, '=')->execute();
-      return 2;
-    } else {
-      return $swim->locked;
-    }
-    
-  }
-// There are duplicates of the ABOVE code
-// Should somehow move this to a better code location
-////////////////////////////////////////////////////////////////////////////////////////
 
 // 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
 // This code is very SIMILAR to some in the controller
+// This code is duplicated in other signup forms
 function verify_swim_status($id) {
     $query = \Drupal::database()->select('icows_swims', 'i');
     
@@ -162,7 +144,14 @@ function verify_swim_status($id) {
   
     $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
     $swim = $query->execute()->fetchAll()[0];
-    if (!$swim || $swim->locked == 1 || $swim->locked == 2) {
-      throw new NotFoundHttpException();
+    if ($swim->locked == 1 || $swim->locked == 2) {
+        $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
+        $response->send();
+        return;
+    }
+    else if (!$swim) {
+        $response = new RedirectResponse("/");
+        $response->send();
+        return;
     }
 }

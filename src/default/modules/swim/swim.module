@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Implements hook_theme().
@@ -29,3 +30,23 @@ function swim_theme($existing, $type, $theme, $path) {
   ];
 }
 
+
+function swim_cron() {
+  $past_date = DrupalDateTime::createFromTimestamp(time())->modify('-3 day')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+  $future_date = DrupalDateTime::createFromTimestamp(time())->modify('+1 day')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+  $query = \Drupal::database()->select('icows_swims', 'i');
+  // $query->condition('i.date_time', $past_date, '>=');
+  $query->condition('i.date_time', $future_date, '<=');
+  $query->condition('i.locked', [0,1], 'IN');
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $swims = $query->execute()->fetchAll();
+
+  foreach ($swims as &$swim) {
+    $database = \Drupal::database();
+        $database->update('icows_swims')->fields(array(
+          'locked' => 2,
+        ))->condition('swim_id', $swim->swim_id, '=')->execute();
+  }
+    
+}
