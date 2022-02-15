@@ -31,6 +31,14 @@ swim.kayak_signup:
   requirements:
     _permission: 'access content'
 
+swim.drop_out:
+  path: '/swims/{id}/drop_out'
+  defaults:
+    _title: 'Swim Drop Out'
+    _controller: '\Drupal\swim\Controller\SwimController::drop_out'
+  requirements:
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:
