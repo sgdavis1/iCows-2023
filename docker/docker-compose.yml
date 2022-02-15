@@ -38,8 +38,6 @@ services:
         target: /var/lib/mysql
     expose:
       - 3306
-    ports:
-      - "127.0.0.1:3306:3306"
     container_name: icows_db
 networks:
   default:
