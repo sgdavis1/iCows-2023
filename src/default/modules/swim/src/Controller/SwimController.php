@@ -9,6 +9,7 @@ namespace Drupal\swim\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\DateHelper;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException; //https://www.drupal.org/node/1616360
 
 class SwimController extends ControllerBase {
   public function content() {
@@ -20,6 +21,7 @@ class SwimController extends ControllerBase {
 
   public function show($id) {
 
+  verify_swim_exists($id);
   # Use dynamic queries instead: https://www.drupal.org/docs/7/api/database-api/dynamic-queries/introduction-to-dynamic-queries
   $query = \Drupal::database()->select('icows_swims', 'i');
   
@@ -27,17 +29,17 @@ class SwimController extends ControllerBase {
   $query->condition('i.swim_id', $id, '=');
 
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-  $result = $query->execute()->fetchAll()[0];
-  $date = new DrupalDateTime($result->date_time, 'UTC');
+  $swim = $query->execute()->fetchAll()[0];
+  $date = new DrupalDateTime($swim->date_time, 'UTC');
 
-  $image_uri = getProfilePicture(1);
-
+  // get swimmers
   $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
   $attendee_swimmer_query->condition('a.swim_id', $id, '=');
   $attendee_swimmer_query->condition('a.swimmer', 1, '=');
 
   $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
   $swimmers = $attendee_swimmer_query->execute()->fetchAll();
+  
 
   foreach ($swimmers as &$swimmer) {
     $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
@@ -51,15 +53,33 @@ class SwimController extends ControllerBase {
     }
   }
 
+  // get kayakers
+  $attendee_kayaker_query = \Drupal::database()->select('icows_attendees', 'a');
+  $attendee_kayaker_query->condition('a.swim_id', $id, '=');
+  $attendee_kayaker_query->condition('a.swimmer', 0, '=');
+  $attendee_kayaker_query->condition('a.kayaker', 1, '=');
+
+
+  $attendee_kayaker_query->fields('a', ['uid', 'number_of_kayaks']);
+  $kayakers = $attendee_kayaker_query->execute()->fetchAll();
+
+  foreach ($kayakers as &$kayaker) {
+    $kayaker->name = \Drupal\user\Entity\User::load($kayaker->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($kayaker->uid)->field_last_name->value;
+    $kayaker->picture = getProfilePicture($kayaker->uid);
+    $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
+    $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
+  }
+
   return [
     '#theme' => 'show',
     '#id' => $id,
-    '#title' => $result->title,
-    '#description' => $result->description,
-    '#locked' => $result->locked,
+    '#title' => getFormattedDate(DrupalDateTime::createFromTimestamp(time())->modify('+1 day')),// $swim->title,
+    '#description' => $swim->description,
+    '#locked' => check_and_update_swim_status($swim),
     '#date_time' => getFormattedDate($date),
-    '#uid' => $result->uid,
+    '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
+    '#kayakers' => $kayakers,
   ];    
   }
 
@@ -112,7 +132,7 @@ function getFormattedDate($date) {
     case 6:
       $day = "Saturday";
       break;
-    case 7:
+    case 0:
       $day = "Sunday";
       break;
     default:
@@ -125,6 +145,37 @@ function getFormattedDate($date) {
   return $day . ", " . $month . $date->format(' d, Y - g:ia');
 }
 
-function kians_test() {
-  return "test";
+////////////////////////////////////////////////////////////////////////////////////////
+// There are duplicates of the BELOW code
+// Should somehow move this to a better code location
+// 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
+function check_and_update_swim_status($swim) {
+  if (new DrupalDateTime($swim->date_time, 'UTC') <= DrupalDateTime::createFromTimestamp(time())->modify('+1 day') && ($swim->locked == 0 || $swim->locked == 1)) {
+    $database = \Drupal::database();
+        $database->update('icows_swims')->fields(array(
+          'locked' => 2,
+        ))->condition('swim_id', $swim->swim_id, '=')->execute();
+    return 2;
+  } else {
+    return $swim->locked;
+  }
+  
+}
+// There are duplicates of the ABOVE code
+// Should somehow move this to a better code location
+////////////////////////////////////////////////////////////////////////////////////////
+
+function verify_swim_exists($id) {
+  $query = \Drupal::database()->select('icows_swims', 'i');
+    $query->condition('i.swim_id', $id, '=');
+
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $swim = $query->execute()->fetchAll()[0];
+  if (!$swim) {
+    // We want to redirect user to login.
+    throw new NotFoundHttpException();
+    // $response = new RedirectResponse("/");
+    // $response->send();
+    // return;
+  }
 }

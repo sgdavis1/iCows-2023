@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -24,8 +25,9 @@ class EditSwimForm extends FormBase {
      * {@inheritdoc}
      */
     public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
+        verify_swim_exists($id);
         $query = \Drupal::database()->select('icows_swims', 'i');
-
+    
         // Add extra detail to this query object: a condition, fields and a range
         $query->condition('i.swim_id', $id, '=');
         $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
@@ -54,6 +56,11 @@ class EditSwimForm extends FormBase {
 
             '#required' => TRUE
         ];
+        $locked = 'Unlocked';
+        if ($swim->locked >= 1) {
+            $locked = 'Locked';
+        }
+        
         $form['override'] = [
             '#type' => 'select',
             '#title' => $this->t('Manual Override'),
@@ -61,7 +68,7 @@ class EditSwimForm extends FormBase {
                 'Unlocked' => $this->t('Unlocked'),
                 'Locked' => $this->t('Locked'),
             ],
-            '#default_value' => $swim->locked,
+            '#default_value' => $locked,
             '#required' => TRUE
         ];
         $form['swim_id'] = array(
@@ -89,9 +96,23 @@ class EditSwimForm extends FormBase {
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
         $locked = 0;
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
+        $query->fields('i', ['locked']);
+        $locked_status = $query->execute()->fetchAll()[0]->locked;
+
+        // locked_status: 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
         if ($form_state->getValue('override') == 'Locked') {
-            $locked = 1;
+            if ($locked_status == 2 || $locked_status == -1) {
+                $locked = 2;
+            } else {
+                $locked = 1;
+            }
+            
+        } else if ($form_state->getValue('override') == 'Unlocked' && $locked_status == 2) {
+            $locked = -1;
         }
+
         $database = \Drupal::database();
         $database->update('icows_swims')->fields(array(
             'title' => $form_state->getValue('title'),
@@ -102,6 +123,18 @@ class EditSwimForm extends FormBase {
     }
 }
 
+// This code is a duplicate of some in the controller, figure out how to centralize them
+function verify_swim_exists($id) {
+    $query = \Drupal::database()->select('icows_swims', 'i');
+    
+    $query->condition('i.swim_id', $id, '=');
+  
+    $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+    $swim = $query->execute()->fetchAll()[0];
+    if (!$swim) {
+      throw new NotFoundHttpException();
+    }
+  }
 
 
 

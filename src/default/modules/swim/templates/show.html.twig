@@ -6,6 +6,7 @@
 
 
 <h2>Swimmers</h2>
+{% if swimmers %}
 <table class="table table-striped">
   <thead>
     <tr>
@@ -27,18 +28,49 @@
     <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
     <td>{{ swimmer.name }}</td>
     <td>{{ swimmer.username }}</td>
-    <td>{{ swimmer.username }}</td>
+    <td>{{ swimmer.email }}</td>
     <td></td>
     <td>{{ swimmer.estimated_pace }}</td>
     <td></td>
     <td>{{ swimmer.number_of_kayaks }}</td>
     <td>{{ swimmer.kayaker }}</td>
   </tr>
-{% else %}
-    No swimmers have signed up yet.
 {% endfor %}
   </tbody>
 </table>
+{% else %}
+No swimmers have signed up yet.
+{% endif %}
+
+<h2>Kayakers</h2>
+{% if kayakers %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col">User</th>
+      <th scope="col">Email</th>
+      <th scope="col">RSVP</th>
+      <th scope="col">Boats?</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for kayaker in kayakers %}
+  <tr>
+    <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
+    <td>{{ kayaker.name }}</td>
+    <td>{{ kayaker.username }}</td>
+    <td>{{ kayaker.email }}</td>
+    <td></td>
+    <td>{{ kayaker.number_of_kayaks }}</td>
+  </tr>
+{% endfor %}
+  </tbody>
+</table>
+{% else %}
+No kayakers have signed up yet.
+{% endif %}
 
 <form action="http://127.0.0.1:8080/swims/{{ id }}/signup/">
     <input type="submit" value="Sign Up Here!" />
