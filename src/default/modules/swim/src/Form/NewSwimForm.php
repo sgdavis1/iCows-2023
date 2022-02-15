@@ -99,7 +99,9 @@ class NewSwimForm extends FormBase {
         }
         $query->execute();
 
-
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $num_rows = $query->countQuery()->execute()->fetchField();
+        $form_state->setRedirect('swim.show', ["id" => $num_rows]);
     }
 
 }
