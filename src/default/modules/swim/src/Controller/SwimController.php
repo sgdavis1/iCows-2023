@@ -27,9 +27,29 @@ class SwimController extends ControllerBase {
   $query->condition('i.swim_id', $id, '=');
 
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-  $query->range(0, 50);
   $result = $query->execute()->fetchAll()[0];
   $date = new DrupalDateTime($result->date_time, 'UTC');
+
+  $image_uri = getProfilePicture(1);
+
+  $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
+  $attendee_swimmer_query->condition('a.swim_id', $id, '=');
+  $attendee_swimmer_query->condition('a.swimmer', 1, '=');
+
+  $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
+  $swimmers = $attendee_swimmer_query->execute()->fetchAll();
+
+  foreach ($swimmers as &$swimmer) {
+    $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
+    $swimmer->picture = getProfilePicture($swimmer->uid);
+    $swimmer->email = \Drupal\user\Entity\User::load($swimmer->uid)->getEmail();
+    $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
+    if ($swimmer->kayaker == 1) {
+      $swimmer->kayaker = "Yes";
+    } else {
+      $swimmer->kayaker = "No";
+    }
+  }
 
   return [
     '#theme' => 'show',
@@ -39,6 +59,7 @@ class SwimController extends ControllerBase {
     '#locked' => $result->locked,
     '#date_time' => getFormattedDate($date),
     '#uid' => $result->uid,
+    '#swimmers' => $swimmers,
   ];    
   }
 
@@ -54,6 +75,18 @@ class SwimController extends ControllerBase {
       '#theme' => 'attendance_list',
       '#id' => $id,
     ];
+  }
+}
+
+function getProfilePicture($user_id) {
+  if (\Drupal\user\Entity\User::load($user_id)->user_picture->entity == NULL) {
+    $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
+    $default_image = $field->getSetting('default_image');
+    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
+    return $file->getFileUri();
+  }
+  else {
+    return \Drupal\user\Entity\User::load($user_id)->user_picture->entity->getFileUri();
   }
 }
 
@@ -90,4 +123,8 @@ function getFormattedDate($date) {
   $month_index = intval($date->format('m'));
   $month = strval(DateHelper::monthNames()[$month_index]);
   return $day . ", " . $month . $date->format(' d, Y - g:ia');
+}
+
+function kians_test() {
+  return "test";
 }
