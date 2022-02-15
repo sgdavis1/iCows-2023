@@ -71,7 +71,6 @@ class SwimSignUpForm extends FormBase {
         $form['if_needed'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('If needed'),
-            '#required' => TRUE
         ];
         $form['if_needed_description'] = array(
             '#markup' => "<p>If you are willing to switch your role to a kayaker in the case we don't have
@@ -129,6 +128,9 @@ class SwimSignUpForm extends FormBase {
             $query->values($developer);
         }
         $query->execute();
+
+        $id = $form_state->getValue('swim_id');
+        $form_state->setRedirect('swim.show', ["id" => $id]);
     }
 
 }
