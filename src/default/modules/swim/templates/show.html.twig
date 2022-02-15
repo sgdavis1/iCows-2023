@@ -72,6 +72,12 @@ No swimmers have signed up yet.
 No kayakers have signed up yet.
 {% endif %}
 
+{% if signed_up %}
+<form action={{drupal_url("swims/#{id}/signup")}}>
+  <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
+</form>
+{% else %}
+
 <form action={{drupal_url("swims/#{id}/signup")}}>
   <input type="submit" value="Sign Up Here!" />
 </form>
@@ -79,3 +85,4 @@ No kayakers have signed up yet.
 <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
   <input type="submit" value="Kayak signup" />
 </form>
+{% endif %}
