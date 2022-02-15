@@ -33,21 +33,23 @@ class SwimController extends ControllerBase {
   $image_uri = getProfilePicture(1);
 
   $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
-  
-  // Add extra detail to this query object: a condition, fields and a range
   $attendee_swimmer_query->condition('a.swim_id', $id, '=');
-  // $attendee_swimmer_query->condition('a.swimmer', 1, '=');
+  $attendee_swimmer_query->condition('a.swimmer', 1, '=');
 
   $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
   $swimmers = $attendee_swimmer_query->execute()->fetchAll();
-  var_dump(\Drupal\user\Entity\User::load(1)->field_first_name->value);
 
   foreach ($swimmers as &$swimmer) {
-    $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value;
+    $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
     $swimmer->picture = getProfilePicture($swimmer->uid);
+    $swimmer->email = \Drupal\user\Entity\User::load($swimmer->uid)->getEmail();
+    $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
+    if ($swimmer->kayaker == 1) {
+      $swimmer->kayaker = "Yes";
+    } else {
+      $swimmer->kayaker = "No";
+    }
   }
-  $swimmers[0]->test = "success";
-  var_dump(\Drupal::currentUser()->id());
 
   return [
     '#theme' => 'show',
@@ -57,7 +59,6 @@ class SwimController extends ControllerBase {
     '#locked' => $result->locked,
     '#date_time' => getFormattedDate($date),
     '#uid' => $result->uid,
-    '#test_user' => $image_uri, //\Drupal\user\Entity\User::load(1)->name->value,
     '#swimmers' => $swimmers,
   ];    
   }
