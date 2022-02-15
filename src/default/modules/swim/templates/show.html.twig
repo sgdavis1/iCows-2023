@@ -72,10 +72,10 @@ No swimmers have signed up yet.
 No kayakers have signed up yet.
 {% endif %}
 
-<form action="http://127.0.0.1:8080/swims/{{ id }}/signup/">
-    <input type="submit" value="Sign Up Here!" />
+<form action={{drupal_url("swims/#{id}/signup")}}>
+  <input type="submit" value="Sign Up Here!" />
 </form>
 
-<form action="http://127.0.0.1:8080/swims/{{id}}/KayakSignup/">
+<form action={{drupal_url("swims/#{id}/KayakSignup")}}>
   <input type="submit" value="Kayak signup" />
 </form>
