@@ -12,8 +12,10 @@ if [ ! -s /var/www/html/sites/default/settings.php ]; then
     sed -i "/$databases = array();/d" /var/www/html/sites/default/settings.php
 
     # Append our credentials into the default settings.php
+    mkdir /home/d9-conf
     cat >> /var/www/html/sites/default/settings.php << EOF
 \$settings['hash_salt'] = 'WwJ1Uk7xTikljDpVIt_XWOS2hl-xhYA_ktxjAck4laBScTMcV78Sn2clwJ2LmJM8RIjX8QwDTw';
+\$settings['config_sync_directory'] = '/home/d9-conf';
 \$databases['default']['default'] = array (
    'database' => 'icows_d9',
    'username' => '$MYSQL_USER',

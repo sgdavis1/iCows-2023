@@ -1,5 +1,5 @@
 # Make sure to rebuild your images if a security update is released on the drupal/7.x branch
-FROM drupal:9.3.0
+FROM drupal:9.3
 ENV OPCACHE_CONFIG /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
