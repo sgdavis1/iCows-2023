@@ -9,6 +9,7 @@ namespace Drupal\swim\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\DateHelper;
+use Drupal\Core\Url; 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SwimController extends ControllerBase {
@@ -17,6 +18,17 @@ class SwimController extends ControllerBase {
       '#theme' => 'swims',
       '#test_var' => $this->t('Test Value'),
     ];
+  }
+
+  public function drop_out($id) {
+    $num_deleted = \Drupal::database()->delete('icows_attendees')
+    ->condition('swim_id', $id)
+    ->condition('uid', \Drupal::currentUser()->id())
+    ->execute();
+
+    $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
+    $response->send();
+    return;
   }
 
   public function show($id) {
@@ -39,6 +51,9 @@ class SwimController extends ControllerBase {
 
   $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
   $swimmers = $attendee_swimmer_query->execute()->fetchAll();
+
+  $current_user_id = \Drupal::currentUser()->id();
+  $signed_up = false;
   
 
   foreach ($swimmers as &$swimmer) {
@@ -50,6 +65,9 @@ class SwimController extends ControllerBase {
       $swimmer->kayaker = "Yes";
     } else {
       $swimmer->kayaker = "No";
+    }
+    if ($swimmer->uid == $current_user_id) {
+      $signed_up = true;
     }
   }
 
@@ -68,7 +86,10 @@ class SwimController extends ControllerBase {
     $kayaker->picture = getProfilePicture($kayaker->uid);
     $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
     $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
-  }
+    if ($kayaker->uid == $current_user_id) {
+      $signed_up = true;
+    }
+  }  
 
   return [
     '#theme' => 'show',
@@ -80,6 +101,7 @@ class SwimController extends ControllerBase {
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
     '#kayakers' => $kayakers,
+    '#signed_up' => $signed_up,
   ];    
   }
 

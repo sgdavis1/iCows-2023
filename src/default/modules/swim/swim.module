@@ -18,7 +18,8 @@ function swim_theme($existing, $type, $theme, $path) {
                       'date_time' => NULL,
                       'uid' => NULL,
                       'swimmers' => NULL,
-                      'kayakers' => NULL],
+                      'kayakers' => NULL,
+                      'signed_up' => NULL],
     ],
     'edit' => [
       'variables' => ['id' => NULL],
