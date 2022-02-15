@@ -68,6 +68,7 @@ class NewSwimForm extends FormBase {
      */
     public function validateForm(array &$form, FormStateInterface $form_state) {
         // TODO: add validation
+        // make sure not within 24hrs (unless manually reopened)
     }
 
     /**

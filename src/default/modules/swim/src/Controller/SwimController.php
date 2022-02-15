@@ -9,7 +9,7 @@ namespace Drupal\swim\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\DateHelper;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException; //https://www.drupal.org/node/1616360
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SwimController extends ControllerBase {
   public function content() {
@@ -75,7 +75,7 @@ class SwimController extends ControllerBase {
     '#id' => $id,
     '#title' => $swim->title,
     '#description' => $swim->description,
-    '#locked' => check_and_update_swim_status($swim),
+    '#locked' => $swim->locked,
     '#date_time' => getFormattedDate($date),
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
@@ -145,26 +145,6 @@ function getFormattedDate($date) {
   return $day . ", " . $month . $date->format(' d, Y - g:ia');
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-// There are duplicates of the BELOW code
-// Should somehow move this to a better code location
-// 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
-function check_and_update_swim_status($swim) {
-  if (new DrupalDateTime($swim->date_time, 'UTC') <= DrupalDateTime::createFromTimestamp(time())->modify('+1 day') && ($swim->locked == 0 || $swim->locked == 1)) {
-    $database = \Drupal::database();
-        $database->update('icows_swims')->fields(array(
-          'locked' => 2,
-        ))->condition('swim_id', $swim->swim_id, '=')->execute();
-    return 2;
-  } else {
-    return $swim->locked;
-  }
-  
-}
-// There are duplicates of the ABOVE code
-// Should somehow move this to a better code location
-////////////////////////////////////////////////////////////////////////////////////////
-
 function verify_swim_exists($id) {
   $query = \Drupal::database()->select('icows_swims', 'i');
     $query->condition('i.swim_id', $id, '=');
@@ -172,10 +152,8 @@ function verify_swim_exists($id) {
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
   $swim = $query->execute()->fetchAll()[0];
   if (!$swim) {
-    // We want to redirect user to login.
-    throw new NotFoundHttpException();
-    // $response = new RedirectResponse("/");
-    // $response->send();
-    // return;
+    $response = new RedirectResponse("/");
+    $response->send();
+    return;
   }
 }

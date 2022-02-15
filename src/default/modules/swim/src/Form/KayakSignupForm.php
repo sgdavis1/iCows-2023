@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
+use Drupal\Core\Url; 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements an example form.
@@ -23,6 +25,7 @@ class KayakSignupForm extends FormBase {
      * {@inheritdoc}
      */
     public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
+        verify_swim_status($id);
         $form['swim_id'] = array(
             '#value' => $id,
             '#type' => 'hidden'
@@ -80,4 +83,27 @@ class KayakSignupForm extends FormBase {
         $form_state->setRedirect('swim.show', ["id" => $id]);
     }
 
+}
+
+
+// 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
+// This code is very SIMILAR to some in the controller
+// This code is duplicated in other signup forms
+function verify_swim_status($id) {
+    $query = \Drupal::database()->select('icows_swims', 'i');
+    
+    $query->condition('i.swim_id', $id, '=');
+  
+    $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+    $swim = $query->execute()->fetchAll()[0];
+    if ($swim->locked == 1 || $swim->locked == 2) {
+        $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
+        $response->send();
+        return;
+    }
+    else if (!$swim) {
+        $response = new RedirectResponse("/");
+        $response->send();
+        return;
+    }
 }
