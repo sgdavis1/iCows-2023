@@ -133,25 +133,3 @@ class SwimSignUpForm extends FormBase {
 
 }
 
-
-// 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
-// This code is very SIMILAR to some in the controller
-// This code is duplicated in other signup forms
-function verify_swim_status($id) {
-    $query = \Drupal::database()->select('icows_swims', 'i');
-    
-    $query->condition('i.swim_id', $id, '=');
-  
-    $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-    $swim = $query->execute()->fetchAll()[0];
-    if ($swim->locked == 1 || $swim->locked == 2) {
-        $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
-        $response->send();
-        return;
-    }
-    else if (!$swim) {
-        $response = new RedirectResponse("/");
-        $response->send();
-        return;
-    }
-}
