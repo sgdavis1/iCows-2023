@@ -73,7 +73,7 @@ class SwimController extends ControllerBase {
   return [
     '#theme' => 'show',
     '#id' => $id,
-    '#title' => getFormattedDate(DrupalDateTime::createFromTimestamp(time())->modify('+1 day')),// $swim->title,
+    '#title' => $swim->title,
     '#description' => $swim->description,
     '#locked' => check_and_update_swim_status($swim),
     '#date_time' => getFormattedDate($date),
