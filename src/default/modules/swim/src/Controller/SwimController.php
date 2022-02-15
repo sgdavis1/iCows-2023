@@ -53,6 +53,23 @@ class SwimController extends ControllerBase {
     }
   }
 
+  // get kayakers
+  $attendee_kayaker_query = \Drupal::database()->select('icows_attendees', 'a');
+  $attendee_kayaker_query->condition('a.swim_id', $id, '=');
+  $attendee_kayaker_query->condition('a.swimmer', 0, '=');
+  $attendee_kayaker_query->condition('a.kayaker', 1, '=');
+
+
+  $attendee_kayaker_query->fields('a', ['uid', 'number_of_kayaks']);
+  $kayakers = $attendee_kayaker_query->execute()->fetchAll();
+
+  foreach ($kayakers as &$kayaker) {
+    $kayaker->name = \Drupal\user\Entity\User::load($kayaker->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($kayaker->uid)->field_last_name->value;
+    $kayaker->picture = getProfilePicture($kayaker->uid);
+    $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
+    $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
+  }
+
   return [
     '#theme' => 'show',
     '#id' => $id,
@@ -62,6 +79,7 @@ class SwimController extends ControllerBase {
     '#date_time' => getFormattedDate($date),
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
+    '#kayakers' => $kayakers,
   ];    
   }
 
