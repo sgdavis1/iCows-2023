@@ -23,6 +23,14 @@ swim.signup:
   requirements:
     _permission: 'access content'
 
+swim.kayak_signup:
+  path: '/swims/{id}/KayakSignup'
+  defaults:
+    _title: 'Kayak Signup'
+    _form: '\Drupal\swim\Form\KayakSignupForm'
+  requirements:
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:
