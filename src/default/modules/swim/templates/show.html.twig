@@ -1,8 +1,45 @@
 {# swim/templates/show.html.twig #}
-<h2>{{ description }}</h2>
 <h3>{{ date_time }}</h3>
+<h2>{{ description }}</h2>
 <p>Status: {{ locked }}</p>
 <p>Host uid: {{ uid }}</p>
+
+
+<h2>Swimmers</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col">User</th>
+      <th scope="col">Email</th>
+      <th scope="col">RSVP</th>
+      <th scope="col">Pace</th>
+      <th scope="col">Distance</th>
+      <th scope="col">Boats?</th>
+      <th scope="col">Kayak?</th>
+
+    </tr>
+  </thead>
+  <tbody>
+{% for swimmer in swimmers %}
+  <tr>
+    <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
+    <td>{{ swimmer.name }}</td>
+    <td>{{ swimmer.username }}</td>
+    <td>{{ swimmer.username }}</td>
+    <td></td>
+    <td>{{ swimmer.estimated_pace }}</td>
+    <td></td>
+    <td>{{ swimmer.number_of_kayaks }}</td>
+    <td>{{ swimmer.kayaker }}</td>
+  </tr>
+{% else %}
+    No swimmers have signed up yet.
+{% endfor %}
+  </tbody>
+</table>
+
 <form action="http://127.0.0.1:8080/swims/{{ id }}/signup/">
     <input type="submit" value="Sign Up Here!" />
 </form>
