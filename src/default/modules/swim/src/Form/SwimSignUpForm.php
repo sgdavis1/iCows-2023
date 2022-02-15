@@ -115,7 +115,7 @@ class SwimSignUpForm extends FormBase {
             [
                 'kayaker' => $willing_to_kayak,
                 'swimmer' => 1,
-                'uid' => \Drupal::currentUser()->id(),
+                'uid' => intval(\Drupal::currentUser()->id()),
                 'swim_id' => $form_state->getValue('swim_id'),
                 'number_of_kayaks' => $form_state->getValue('kayaks'),
                 'estimated_pace' => $form_state->getValue('pace'),
