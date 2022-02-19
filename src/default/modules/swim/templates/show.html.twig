@@ -1,11 +1,16 @@
 {# swim/templates/show.html.twig #}
-<h3>{{ date_time }}</h3>
-<h2>{{ description }}</h2>
-<p>Status: {{ locked }}</p>
+<div class="centerDateTime">{{ date_time }}</div>
+<h2>Description</h2>
+<p> {{ description }} </p>
+<h2>Host</h2>
 <p>Host uid: {{ uid }}</p>
 
+<p>Status: {{ locked }}</p>
 
 <h2>Swimmers</h2>
+<form action={{drupal_url("swims/#{id}/signup")}}>
+  <input type="submit" value="Swimmer Signup" />
+</form>
 {% if swimmers %}
 <table class="table table-striped">
   <thead>
@@ -43,6 +48,9 @@ No swimmers have signed up yet.
 {% endif %}
 
 <h2>Kayakers</h2>
+<form action={{drupal_url("swims/#{id}/KayakSignup")}}>
+  <input type="submit" value="Kayaker Signup" />
+</form>
 {% if kayakers %}
 <table class="table table-striped">
   <thead>
@@ -75,14 +83,5 @@ No kayakers have signed up yet.
 {% if signed_up %}
 <form action={{drupal_url("swims/#{id}/drop_out")}}>
   <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
-</form>
-{% else %}
-
-<form action={{drupal_url("swims/#{id}/signup")}}>
-  <input type="submit" value="Sign Up Here!" />
-</form>
-
-<form action={{drupal_url("swims/#{id}/KayakSignup")}}>
-  <input type="submit" value="Kayak signup" />
 </form>
 {% endif %}
