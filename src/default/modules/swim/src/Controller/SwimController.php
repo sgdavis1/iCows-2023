@@ -49,7 +49,7 @@ class SwimController extends ControllerBase {
   $attendee_swimmer_query->condition('a.swim_id', $id, '=');
   $attendee_swimmer_query->condition('a.swimmer', 1, '=');
 
-  $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
+  $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
   $swimmers = $attendee_swimmer_query->execute()->fetchAll();
 
   $current_user_id = \Drupal::currentUser()->id();

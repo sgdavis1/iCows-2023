@@ -116,6 +116,7 @@ class SwimSignUpForm extends FormBase {
             [
                 'kayaker' => $willing_to_kayak,
                 'swimmer' => 1,
+                'distance' => $form_state->getValue('distance'),
                 'uid' => intval(\Drupal::currentUser()->id()),
                 'swim_id' => $form_state->getValue('swim_id'),
                 'number_of_kayaks' => $form_state->getValue('kayaks'),
@@ -123,7 +124,7 @@ class SwimSignUpForm extends FormBase {
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
+        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
         foreach ($values as $developer) {
             $query->values($developer);
         }
