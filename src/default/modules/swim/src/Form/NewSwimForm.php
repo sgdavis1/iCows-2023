@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 
 
@@ -39,9 +40,6 @@ class NewSwimForm extends FormBase {
         $form['description'] = [
             '#type' => 'text_format',
             '#title' => $this->t('Description'),
-
-            //Need to add summary option
-
             '#required' => TRUE
         ];
         $form['override'] = [
@@ -67,8 +65,13 @@ class NewSwimForm extends FormBase {
      * {@inheritdoc}
      */
     public function validateForm(array &$form, FormStateInterface $form_state) {
-        // TODO: add validation
-        // make sure not within 24hrs (unless manually reopened)
+        // make sure not in the past
+        $swim_date = $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+        $current_date = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+        if($swim_date < $current_date){
+            //throw error
+            $form_state->setErrorByName('swim_in_the_past', $this->t('You cannot create a swim for a past date.'));
+        }
     }
 
     /**
