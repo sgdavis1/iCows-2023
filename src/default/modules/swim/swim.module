@@ -70,3 +70,11 @@ function verify_swim_status($id) {
       return;
   }
 }
+
+function log_email($recipient_uid, $message) {
+  return;
+}
+
+function send_logged_emails() {
+  return;
+}
