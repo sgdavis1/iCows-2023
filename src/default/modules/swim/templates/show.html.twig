@@ -90,3 +90,7 @@ No kayakers have signed up yet.
   <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
 </form>
 {% endif %}
+
+<form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
+  <input type="submit" value="Export Attendees" />
+</form>
