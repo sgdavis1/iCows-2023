@@ -11,6 +11,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\DateHelper;
 use Drupal\Core\Url; 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SwimController extends ControllerBase {
   public function content() {
@@ -117,6 +118,95 @@ class SwimController extends ControllerBase {
       '#theme' => 'attendance_list',
       '#id' => $id,
     ];
+  }
+  /**
+  * Export a CSV of data.
+  */
+  public function build($id) {
+    verify_swim_exists($id);
+  
+    // Start using PHP's built in file handler functions to create a temporary file.
+    $handle = fopen('php://temp', 'w+');
+  
+    // Set up the header that will be displayed as the first line of the CSV file.
+    // Blank strings are used for multi-cell values where there is a count of
+    // the "keys" and a list of the keys with the count of their usage.
+    $header = [
+      'Status',
+      'Name',
+      'Username',
+      'Email',
+      'RSVP',
+      'Boats',
+      'Pace',
+      'Distance',
+      'Kayak?',
+    ];
+  
+    // Add the header as the first line of the CSV.
+    fputcsv($handle, $header);
+    
+    // get swimmers
+    $attendee_query = \Drupal::database()->select('icows_attendees', 'a');
+    $attendee_query->condition('a.swim_id', $id, '=');
+  
+    $attendee_query->fields('a', ['uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
+    $attendees = $attendee_query->execute()->fetchAll();
+  
+    $current_user_id = \Drupal::currentUser()->id();    
+  
+    foreach ($attendees as &$attendee) {
+      $user =  \Drupal\user\Entity\User::load($attendee->uid);
+      $csv_row = [];
+  
+      $csv_row["status"] = ($attendee->swimmer == 1 ? "Swimmer" : "Kayaker");
+      $csv_row["name"] = $user->field_first_name->value . " " . $user->field_last_name->value;
+      $csv_row["username"] = $user->getDisplayName();
+      $csv_row["email"] = $user->getEmail();
+      $csv_row["rsvp"] = "TODO";
+      $csv_row["boats"] = $attendee->number_of_kayaks;
+  
+      if ($attendee->swimmer == 1) {
+        $csv_row["pace"] = $attendee->estimated_pace;
+        $csv_row["distance"] = "TODO"; // $attendee->distance;
+        if ($attendee->kayaker == 1) {
+          $csv_row["kayaker"] = "Yes";
+        } else {
+          $csv_row["kayaker"] = "No";
+        }
+      } else {
+        $csv_row["pace"] = "";
+        $csv_row["distance"] = "";
+        $csv_row["kayaker"] = "";
+      }
+  
+      // Add the data we exported to the next line of the CSV>
+      fputcsv($handle, array_values($csv_row));
+    }
+  
+    // Reset where we are in the CSV.
+    rewind($handle);
+    
+    // Retrieve the data from the file handler.
+    $csv_data = stream_get_contents($handle);
+  
+    // Close the file handler since we don't need it anymore.  We are not storing
+    // this file anywhere in the filesystem.
+    fclose($handle);
+  
+    // This is the "magic" part of the code.  Once the data is built, we can
+    // return it as a response.
+    $response = new Response();
+  
+    // By setting these 2 header options, the browser will see the URL
+    // used by this Controller to return a CSV file called "article-report.csv".
+    $response->headers->set('Content-Type', 'text/csv');
+    $response->headers->set('Content-Disposition', 'attachment; filename="icows-attendee-list.csv"');
+  
+    // This line physically adds the CSV data we created 
+    $response->setContent($csv_data);
+  
+    return $response;
   }
 }
 

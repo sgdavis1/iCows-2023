@@ -47,6 +47,14 @@ swim.show:
   requirements:
     _permission: 'access content'
 
+swim.exports.attendee_list:
+  path: '/swims/{id}/exports/attendee_list'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::build'
+    _title: 'Export Swim'
+  requirements:
+    _permission: 'access content'
+
 swim.edit:
   path: '/swims/{id}/edit'
   defaults:
