@@ -72,9 +72,6 @@ class NewSwimForm extends FormBase {
             //throw error
             $form_state->setErrorByName('swim_in_the_past', $this->t('You cannot create a swim for a past date.'));
         }
-
-
-
     }
 
     /**
