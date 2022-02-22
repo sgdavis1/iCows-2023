@@ -8,9 +8,11 @@
 <p>Status: {{ locked }}</p>
 
 <h2>Swimmers</h2>
+{% if not signed_up %}
 <form action={{drupal_url("swims/#{id}/signup")}}>
   <input type="submit" value="Swimmer Signup" />
 </form>
+{% endif %}
 {% if swimmers %}
 <table class="table table-striped">
   <thead>
@@ -48,9 +50,12 @@ No swimmers have signed up yet.
 {% endif %}
 
 <h2>Kayakers</h2>
+{% if not signed_up %}
 <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
   <input type="submit" value="Kayaker Signup" />
 </form>
+{% endif %}
+
 {% if kayakers %}
 <table class="table table-striped">
   <thead>
