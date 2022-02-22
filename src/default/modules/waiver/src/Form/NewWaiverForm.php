@@ -32,6 +32,7 @@ class NewWaiverForm extends FormBase {
                 'file_validate_extensions' => array('pdf'),
                 'file_validate_size' => array(25600000)
             ],
+            '#required' => TRUE,
         );
         //only allow pdfs for now
 
@@ -62,18 +63,17 @@ class NewWaiverForm extends FormBase {
             $file = File::load(reset($waiver));
             $file->setPermanent();
             $file->save();
-
             $values = [
                 [
+                    'approved' => 0,
                     'uid' => 1,
-                    'current_waiver' => $file->fid,
-                    'waiver_url' => 'test',
-                    'timestamp' => \Drupal::time()->getRequestTime()->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
-                ],
+                    'current_waiver' => 1,
+                    'waiver_url' => $waiver[0],
+                ],                                          //time not working rn
             ];
 
             $connection = \Drupal::service('database');
-            $query = $connection->insert('icows_waivers')->fields(['uid', 'current_waiver', 'waiver_url', 'timestamp']);
+            $query = $connection->insert('icows_waivers')->fields(['approved','uid', 'current_waiver', 'waiver_url']);
             foreach ($values as $value){
                 $query->values($value);
             }
