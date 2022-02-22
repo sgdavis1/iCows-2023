@@ -1,0 +1,8 @@
+# Defines the routes for the basic custom module page
+waiver.submit:
+  path: '/waiver/submit'
+  defaults:
+    _title: 'Submit Waiver'
+    _form: '\Drupal\waiver\Form\NewWaiverForm'
+  requirements:
+    _permission: 'access content'
