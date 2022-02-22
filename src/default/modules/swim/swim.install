@@ -118,6 +118,13 @@ function swim_schema() {
                 'default' => 0,
                 'description' => 'The swimmers estimated pace for this specific swim',
             ),
+            'distance' => array(
+                            'type' => 'varchar',
+                            'not null' => FALSE,
+                            'length' => 10,
+                            'default' => 0,
+                            'description' => 'The distance swam correlating to the swimmers provided estimated pace',
+            ),
         ),
         'primary key' => array('attendee_id'),
         'indexes' => array(
