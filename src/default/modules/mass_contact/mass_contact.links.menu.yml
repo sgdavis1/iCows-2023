@@ -1,7 +1,0 @@
-# Creates a link to our custom module (page) from the Configuration -> Development window
-mass_contact.admin:
-  title: 'Mass Contact Page'
-  description: 'A quick link to the mass_contact page'
-  parent: system.admin_config_development
-  route_name: mass_contact.content
-  weight: 100
