@@ -1,8 +1,0 @@
-# Defines the routes for the basic custom module page
-mass_contact.content:
-  path: '/mass_contact'
-  defaults:
-    _controller: '\Drupal\mass_contact\Controller\MassContactController::content'
-    _title: 'Mass Contact'
-  requirements:
-    _permission: 'access content'
