@@ -1,8 +1,0 @@
-# Defines the routes for the basic custom module page
-login.content:
-  path: '/login'
-  defaults:
-    _controller: '\Drupal\login\Controller\LoginController::content'
-    _title: 'Login'
-  requirements:
-    _permission: 'access content'

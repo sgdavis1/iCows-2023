@@ -1,8 +1,0 @@
-# Defines the routes for the basic custom module page
-calendar.content:
-  path: '/calendar'
-  defaults:
-    _controller: '\Drupal\calendar\Controller\CalendarController::content'
-    _title: 'ICOWS Calendar'
-  requirements:
-    _permission: 'access content'
