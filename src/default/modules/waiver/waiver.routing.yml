@@ -5,4 +5,5 @@ waiver.submit:
     _title: 'Submit Waiver'
     _form: '\Drupal\waiver\Form\NewWaiverForm'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'

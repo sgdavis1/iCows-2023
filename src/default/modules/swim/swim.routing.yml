@@ -5,6 +5,7 @@ swim.content:
     _controller: '\Drupal\swim\Controller\SwimController::content'
     _title: 'Swims'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.new:
@@ -13,6 +14,7 @@ swim.new:
     _title: 'Create A Swim'
     _form: '\Drupal\swim\Form\NewSwimForm'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.signup:
@@ -21,6 +23,7 @@ swim.signup:
     _title: 'Swim Signup'
     _form: '\Drupal\swim\Form\SwimSignUpForm'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.kayak_signup:
@@ -29,6 +32,7 @@ swim.kayak_signup:
     _title: 'Kayak Signup'
     _form: '\Drupal\swim\Form\KayakSignupForm'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.drop_out:
@@ -37,6 +41,7 @@ swim.drop_out:
     _title: 'Swim Drop Out'
     _controller: '\Drupal\swim\Controller\SwimController::drop_out'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.show:
@@ -45,6 +50,7 @@ swim.show:
     _controller: '\Drupal\swim\Controller\SwimController::show'
     _title: 'Show Swim'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.exports.attendee_list:
@@ -53,6 +59,7 @@ swim.exports.attendee_list:
     _controller: '\Drupal\swim\Controller\SwimController::build'
     _title: 'Export Swim'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.edit:
@@ -61,6 +68,7 @@ swim.edit:
     _form: '\Drupal\swim\Form\EditSwimForm'
     _title: 'Edit Swim'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
 swim.attendance_list:
@@ -69,4 +77,5 @@ swim.attendance_list:
     _controller: '\Drupal\swim\Controller\SwimController::attendance_list'
     _title: 'Swim Attendance List'
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'access content'
