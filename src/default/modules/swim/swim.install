@@ -23,7 +23,6 @@ function swim_install() {
  * hook_schema()
  */
 function swim_schema() {
-
     $schema['icows_swims'] = array(
         'description' => 'Holds all of the swims for the Iowa open water swimming club',
         'fields' => array(
@@ -239,6 +238,33 @@ function swim_schema() {
         'primary key' => array('statID'),
         'indexes' => array(
             'statID' => array('statID'),
+        ),
+    );
+
+    $schema['icows_email_logs'] = array(
+        'description' => 'Holds emails to be sent out at the next cron',
+        'fields' => array(
+            'email_log_id' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique email log ID.',
+            ),
+            'recipient_uid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'User ID of the recipient of the email log.',
+            ),
+            'message' => array(
+                'type' => 'text',
+                'not null' => FALSE,
+                'size' => 'normal',
+                'description' => 'The contents of the email log.',
+            ),
+        ),
+        'primary key' => array('email_log_id'),
+        'indexes' => array(
+            'email_log_id' => array('email_log_id'),
         ),
     );
 
