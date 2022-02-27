@@ -1,7 +1,0 @@
-# Creates a link to our custom module (page) from the Configuration -> Development window
-attendance_list.admin:
-  title: 'Attendance List module settings'
-  description: 'Attendance list custom module'
-  parent: system.admin_config_development
-  route_name: attendance_list.content
-  weight: 100

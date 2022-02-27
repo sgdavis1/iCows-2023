@@ -1,8 +1,0 @@
-# Basic module configuration information
-name: Attendance List Module
-description: A custom module for an attendance list.
-package: ICOWS
-
-type: module
-core: 8.x
-core_version_requirement: ^8 || ^9

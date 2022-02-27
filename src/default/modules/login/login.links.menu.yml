@@ -1,7 +1,0 @@
-# Creates a link to our custom module (page) from the Configuration -> Development window
-login.admin:
-  title: 'Login Page'
-  description: 'A quick link to the login page'
-  parent: system.admin_config_development
-  route_name: login.content
-  weight: 100

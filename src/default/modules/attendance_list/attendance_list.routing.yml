@@ -1,8 +1,0 @@
-# Defines the routes for the basic custom module page
-attendance_list.content:
-  path: '/attendance_list'
-  defaults:
-    _controller: '\Drupal\attendance_list\Controller\AttendanceListController::content'
-    _title: 'ICOWS Attendance List'
-  requirements:
-    _permission: 'access content'
