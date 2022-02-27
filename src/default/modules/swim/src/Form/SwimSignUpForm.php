@@ -162,8 +162,17 @@ class SwimSignUpForm extends FormBase {
         }
         $query->execute();
 
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
+        $query->fields('i', ['uid', 'title']);
+        $swim = $query->execute()->fetchAll()[0];
+
+        $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
+
+        log_email($swim->uid, sprintf('%s has signed up for your hosted swim %s.', $attendee, $swim->title));
+
         $id = $form_state->getValue('swim_id');
-        $form_state->setRedirect('swim.show', ["id" => $id]);
+        // $form_state->setRedirect('swim.show', ["id" => $id]);
     }
 
 }

@@ -98,8 +98,9 @@ class EditSwimForm extends FormBase {
         $locked = 0;
         $query = \Drupal::database()->select('icows_swims', 'i');
         $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
-        $query->fields('i', ['locked']);
-        $locked_status = $query->execute()->fetchAll()[0]->locked;
+        $query->fields('i', ['locked', 'title', 'uid']);
+        $swim = $query->execute()->fetchAll()[0];
+        $locked_status = $swim->locked;
 
         // locked_status: 0 = Unlocked; 1 = Locked; 2 = Automatically Locked; -1 = Manually Unlocked After 2;
         if ($form_state->getValue('override') == 'Locked') {
@@ -113,6 +114,14 @@ class EditSwimForm extends FormBase {
             $locked = -1;
         }
 
+        $admin = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
+
+        if ($swim->title == $form_state->getValue('title')) {
+            log_email($swim->uid, sprintf('Your hosted swim %s has been edited by admin %s.', $swim->title, $admin));
+        } else {
+            log_email($swim->uid, sprintf('Your hosted swim %s (formerly %s) has been edited by admin %s.', $form_state->getValue('title'), $swim->title, $admin));
+        }
+        
         $database = \Drupal::database();
         $database->update('icows_swims')->fields(array(
             'title' => $form_state->getValue('title'),

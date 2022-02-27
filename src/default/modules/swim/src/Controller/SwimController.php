@@ -22,10 +22,21 @@ class SwimController extends ControllerBase {
   }
 
   public function drop_out($id) {
+    $query = \Drupal::database()->select('icows_swims', 'i');
+  
+    // Add extra detail to this query object: a condition, fields and a range
+    $query->condition('i.swim_id', $id, '=');
+
+    $query->fields('i', ['uid', 'title']);
+    $swim = $query->execute()->fetchAll()[0];
+
     $num_deleted = \Drupal::database()->delete('icows_attendees')
     ->condition('swim_id', $id)
     ->condition('uid', \Drupal::currentUser()->id())
     ->execute();
+
+    $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
+    log_email($swim->uid, sprintf('%s has dropped out of your hosted swim %s.', $attendee, $swim->title));
 
     $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
     $response->send();
@@ -33,7 +44,6 @@ class SwimController extends ControllerBase {
   }
 
   public function show($id) {
-
   verify_swim_exists($id);
   # Use dynamic queries instead: https://www.drupal.org/docs/7/api/database-api/dynamic-queries/introduction-to-dynamic-queries
   $query = \Drupal::database()->select('icows_swims', 'i');
