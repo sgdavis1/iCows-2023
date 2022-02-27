@@ -1,5 +1,7 @@
 <?php
 use Drupal\Core\Datetime\DrupalDateTime;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url; 
 
 /**
  * Implements hook_theme().
@@ -49,7 +51,7 @@ function swim_cron() {
           'locked' => 2,
         ))->condition('swim_id', $swim->swim_id, '=')->execute();
   }
-    
+  send_logged_emails();
 }
 
 function verify_swim_status($id) {
@@ -71,10 +73,95 @@ function verify_swim_status($id) {
   }
 }
 
+function log_swim_change($swim_id) {
+  # TODO: Add wrapper function around log email to immediately send notification if swim within 24hrs
+}
+
+
 function log_email($recipient_uid, $message) {
+  if (\Drupal\user\Entity\User::load($recipient_uid) == NULL) {
+    \Drupal::messenger()->addError(t('Email logger failed: the user tied with this message does not exist.'));
+    return;
+  }
+
+  $values = [
+    [
+      'recipient_uid' => $recipient_uid,
+      'message' => $message,
+    ],
+  ];
+
+  $database = \Drupal::database();
+  $query = $database->insert('icows_email_logs')->fields(['recipient_uid', 'message']);
+  foreach ($values as $value) {
+      $query->values($value);
+  }
+  $query->execute();
   return;
 }
 
 function send_logged_emails() {
+  $query = \Drupal::database()->select('icows_email_logs', 'i');
+  $query->fields('i', ['email_log_id', 'recipient_uid', 'message']);
+  $emails = $query->execute()->fetchAll();
+
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'swim';
+  $key = 'alert_swim_host';
+
+  $notifications = array();
+
+  if (count($emails) == 0) {
+    \Drupal::messenger()->addMessage(t('No emails to send.'));
+    return;
+  }
+
+  foreach ($emails as &$email) {
+    $recipient = \Drupal\user\Entity\User::load($email->recipient_uid)->getEmail();
+    if (array_key_exists($recipient, $notifications)) {
+      array_push($notifications[$recipient], $email->message);
+    }
+    else {
+      $notifications[$recipient] = array($email->message);
+    }
+  }
+
+  $recipients = array_keys($notifications);
+  foreach ($recipients as &$recipient) {
+    $params['message'] = "Hi, here is an update for the icows website:\n\t" . implode("\n\t", $notifications[$recipient]);
+    $langcode = \Drupal::currentUser()->getPreferredLangcode();
+    $send = true;
+
+    // TODO: Actually send the email
+    $// result = $mailManager->mail($module, $key, $recipient, $langcode, $params, NULL, $send);
+    $result = array("result" => true);
+    \Drupal::messenger()->addMessage($params['message']);
+
+    if ($result['result'] !== true) {
+      \Drupal::messenger()->addError(t('There was a problem sending your message and it was not sent.'));
+    }
+  }
+
+  \Drupal::database()->delete('icows_email_logs')->execute();
   return;
+}
+
+/**
+* Implements hook_mail().
+* https://www.valuebound.com/resources/blog/how-to-send-mail-programmatically-drupal-8
+*/
+function swim_mail($key, &$message, $params) {
+  $options = array(
+    'langcode' => $message['langcode'],
+  );
+
+  var_dump("WE made it to this point!");
+ 
+  switch ($key) {
+    case 'alert_swim_host':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('An hourly upate of changes to icows:');
+      $message['body'][] = $params['message'];
+      break;
+  }
 }
