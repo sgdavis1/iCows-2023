@@ -80,6 +80,15 @@ class KayakSignupForm extends FormBase {
         $id = $form_state->getValue('swim_id');
         //$url = \Drupal\Core\Url::fromRoute('swim.show', ["id" => $id]);
 
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
+        $query->fields('i', ['uid', 'title']);
+        $swim = $query->execute()->fetchAll()[0];
+
+        $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
+
+        log_swim_change($form_state->getValue('swim_id'), $swim->uid, sprintf('%s has signed up as a kayaker for your hosted swim %s.', $attendee, $swim->title));
+
         $form_state->setRedirect('swim.show', ["id" => $id]);
     }
 

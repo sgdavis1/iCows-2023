@@ -39,7 +39,7 @@ function swim_cron() {
   $future_date = DrupalDateTime::createFromTimestamp(time())->modify('+1 day')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
 
   $query = \Drupal::database()->select('icows_swims', 'i');
-  // $query->condition('i.date_time', $past_date, '>=');
+  $query->condition('i.date_time', $past_date, '>=');
   $query->condition('i.date_time', $future_date, '<=');
   $query->condition('i.locked', [0,1], 'IN');
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
@@ -73,8 +73,22 @@ function verify_swim_status($id) {
   }
 }
 
-function log_swim_change($swim_id) {
-  # TODO: Add wrapper function around log email to immediately send notification if swim within 24hrs
+function log_swim_change($swim_id, $recipient_uid, $message) {
+  $one_day_from_now = DrupalDateTime::createFromTimestamp(time())->modify('+1 day')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+  $query = \Drupal::database()->select('icows_swims', 'i');
+  $query->condition('i.swim_id', $swim_id, '=');
+  $query->fields('i', ['date_time']);
+  $swims = $query->execute()->fetchAll();
+
+  if (count($swims) == 0) {
+    \Drupal::messenger()->addError(sprintf('No swim exists with id %d', $swim_id));
+    return;
+  } else if ($swims[0]->date_time <= $one_day_from_now){
+    send_email($recipient, $message, "important_swim_changes");
+  } else {
+    log_email($recipient_uid, $message);
+  }
 }
 
 
@@ -105,10 +119,6 @@ function send_logged_emails() {
   $query->fields('i', ['email_log_id', 'recipient_uid', 'message']);
   $emails = $query->execute()->fetchAll();
 
-  $mailManager = \Drupal::service('plugin.manager.mail');
-  $module = 'swim';
-  $key = 'alert_swim_host';
-
   $notifications = array();
 
   if (count($emails) == 0) {
@@ -128,22 +138,31 @@ function send_logged_emails() {
 
   $recipients = array_keys($notifications);
   foreach ($recipients as &$recipient) {
-    $params['message'] = "Hi, here is an update for the icows website:\n\t" . implode("\n\t", $notifications[$recipient]);
-    $langcode = \Drupal::currentUser()->getPreferredLangcode();
-    $send = true;
-
-    // TODO: Actually send the email
-    $// result = $mailManager->mail($module, $key, $recipient, $langcode, $params, NULL, $send);
-    $result = array("result" => true);
-    \Drupal::messenger()->addMessage($params['message']);
-
-    if ($result['result'] !== true) {
-      \Drupal::messenger()->addError(t('There was a problem sending your message and it was not sent.'));
-    }
+    $message = "Hi, here is an update for the icows website:\n\t" . implode("\n\t", $notifications[$recipient]);
+    
+    send_email($recipient, $message);
   }
 
   \Drupal::database()->delete('icows_email_logs')->execute();
   return;
+}
+
+function send_email($recipient, $message, $message_key="alert_swim_host") {
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'swim';
+  $to = \Drupal::currentUser()->getEmail();
+  $params['message'] = $message;
+  $langcode = \Drupal::currentUser()->getPreferredLangcode();
+  $send = true;
+ 
+  // TODO: Actually send the email
+  // $result = $mailManager->mail($module, $message_key, $to, $langcode, $params, NULL, $send);
+  $result = array("result" => true);
+  \Drupal::messenger()->addMessage($params['message']);
+
+  if ($result['result'] !== true) {
+    \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
+  }
 }
 
 /**
@@ -162,6 +181,11 @@ function swim_mail($key, &$message, $params) {
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('An hourly upate of changes to icows:');
       $message['body'][] = $params['message'];
+      break;
+    case 'important_swim_changes':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Changes were made to an upcoming swim:');
+      $message['body'][] = "The following change occured for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'];
       break;
   }
 }

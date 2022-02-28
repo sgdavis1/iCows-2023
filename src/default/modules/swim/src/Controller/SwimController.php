@@ -36,7 +36,7 @@ class SwimController extends ControllerBase {
     ->execute();
 
     $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
-    log_email($swim->uid, sprintf('%s has dropped out of your hosted swim %s.', $attendee, $swim->title));
+    log_swim_change($id, $swim->uid, sprintf('%s has dropped out of your hosted swim %s.', $attendee, $swim->title));
 
     $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
     $response->send();
