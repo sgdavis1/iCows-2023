@@ -16,7 +16,7 @@ else
 fi
 
 # Define all the required modules and themes
-MODULES="mass_contact-8.x-1.0-rc1.tar.gz masquerade-8.x-2.0-beta4.tar.gz flag-8.x-4.0-beta3.tar.gz twig_tweak-8.x-2.9.tar.gz"
+MODULES="mass_contact-8.x-1.0-rc1.tar.gz masquerade-8.x-2.0-beta4.tar.gz flag-8.x-4.0-beta3.tar.gz twig_tweak-8.x-2.9.tar.gz auto_username-8.x-1.2.tar.gz token-8.x-1.10.tar.gz"
 THEMES="bootstrap-8.x-3.23.tar.gz" # names seperated by |
 touch ../../src/all/modules; touch ../../src/all/themes
 
