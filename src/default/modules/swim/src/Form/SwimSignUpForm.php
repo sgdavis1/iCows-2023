@@ -169,10 +169,10 @@ class SwimSignUpForm extends FormBase {
 
         $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
 
-        log_email($swim->uid, sprintf('%s has signed up for your hosted swim %s.', $attendee, $swim->title));
+        log_swim_change($form_state->getValue('swim_id'), $swim->uid, sprintf('%s has signed up as a swimmer for your hosted swim %s.', $attendee, $swim->title));
 
         $id = $form_state->getValue('swim_id');
-        // $form_state->setRedirect('swim.show', ["id" => $id]);
+        $form_state->setRedirect('swim.show', ["id" => $id]);
     }
 
 }

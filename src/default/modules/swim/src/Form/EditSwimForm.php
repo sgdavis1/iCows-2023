@@ -117,9 +117,9 @@ class EditSwimForm extends FormBase {
         $admin = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
 
         if ($swim->title == $form_state->getValue('title')) {
-            log_email($swim->uid, sprintf('Your hosted swim %s has been edited by admin %s.', $swim->title, $admin));
+            log_swim_change($form_state->getValue('swim_id'), $swim->uid, sprintf('Your hosted swim %s has been edited by admin %s.', $swim->title, $admin));
         } else {
-            log_email($swim->uid, sprintf('Your hosted swim %s (formerly %s) has been edited by admin %s.', $form_state->getValue('title'), $swim->title, $admin));
+            log_swim_change($form_state->getValue('swim_id'), $swim->uid, sprintf('Your hosted swim %s (formerly %s) has been edited by admin %s.', $form_state->getValue('title'), $swim->title, $admin));
         }
         
         $database = \Drupal::database();
@@ -129,7 +129,10 @@ class EditSwimForm extends FormBase {
             'date_time' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             'locked' => $locked,
         ))->condition('swim_id', $form_state->getValue('swim_id'), '=')->execute();
+
+        $form_state->setRedirect('swim.show', ["id" => $form_state->getValue('swim_id')]);
     }
+
 }
 
 // This code is a duplicate of some in the controller, figure out how to centralize them
