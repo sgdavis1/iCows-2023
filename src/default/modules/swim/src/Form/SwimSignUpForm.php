@@ -132,6 +132,10 @@ class SwimSignUpForm extends FormBase {
         $query->condition('i.swim_id', $swim_id_as_int, '=');
         $query->fields('i', ['uid']);
         $result = $select->execute()->fetchAll();
+        if(count($result) > 0){
+            $form_state->setErrorByName('signed_up', $this->t('You are already signed up for this swim'));
+        }
+
         $pace = $form_state->getValue('pace');
         $distance = $form_state->getValue('distance');
         $boats = $form_state->getValue('kayaks');
