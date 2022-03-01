@@ -2,10 +2,13 @@
 <div class="centerDateTime">{{ date_time }}</div>
 <h2>Description</h2>
 <p> {{ description }} </p>
-<h2>Host</h2>
-<p>Host uid: {{ uid }}</p>
 
-<p>Status: {{ locked }}</p>
+<h2>Host:</h2>
+Name: {{ host_name }}
+Email: {{ host_email }}
+{{ drupal_image(host_picture, 'thumbnail') }}
+
+<p>Swim status: {{ locked }}</p>
 
 <h2>Swimmers</h2>
 {% if not signed_up %}
