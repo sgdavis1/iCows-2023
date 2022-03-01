@@ -55,6 +55,11 @@ class SwimController extends ControllerBase {
   $swim = $query->execute()->fetchAll()[0];
   $date = new DrupalDateTime($swim->date_time, 'UTC');
 
+  // host id is $swim->uid
+  $host_name = \Drupal\user\Entity\User::load($swim->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swim->uid)->field_last_name->value;
+  $host_picture = getProfilePicture($swim->uid);
+  $host_email = \Drupal\user\Entity\User::load($swim->uid)->getEmail();
+
   // get swimmers
   $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
   $attendee_swimmer_query->condition('a.swim_id', $id, '=');
@@ -106,17 +111,21 @@ class SwimController extends ControllerBase {
     }
   }  
 
+
   return [
     '#theme' => 'show',
     '#id' => $id,
     '#title' => $swim->title,
     '#description' => $swim->description,
-    '#locked' => $swim->locked,
+    '#locked' => $locked,
     '#date_time' => getFormattedDate($date),
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
     '#kayakers' => $kayakers,
     '#signed_up' => $signed_up,
+    '#host_name' => $host_name,
+    '#host_email' => $host_email,
+    '#host_picture' => $host_picture,
   ];    
   }
 
