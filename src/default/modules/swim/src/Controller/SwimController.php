@@ -72,6 +72,8 @@ class SwimController extends ControllerBase {
     $swimmer->picture = getProfilePicture($swimmer->uid);
     $swimmer->email = \Drupal\user\Entity\User::load($swimmer->uid)->getEmail();
     $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
+    $date = new DrupalDateTime($swimmer->date_time, 'UTC');
+    $swimmer->rsvp = getFormattedDate($date);
     if ($swimmer->kayaker == 1) {
       $swimmer->kayaker = "Yes";
     } else {
@@ -97,6 +99,8 @@ class SwimController extends ControllerBase {
     $kayaker->picture = getProfilePicture($kayaker->uid);
     $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
     $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
+    $date = new DrupalDateTime($kayaker->date_time, 'UTC');
+    $kayaker->rsvp = getFormattedDate($date);
     if ($kayaker->uid == $current_user_id) {
       $signed_up = true;
     }
