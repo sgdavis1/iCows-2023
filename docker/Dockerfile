@@ -17,3 +17,6 @@ RUN cd /var/www/html && touch phpinfo.php \
     && echo "<?php print phpinfo() ?>" >> phpinfo.php
 
 CMD /docker-entrypoint.sh
+
+RUN echo 'adding php mailer'
+RUN composer require phpmailer/phpmailer
