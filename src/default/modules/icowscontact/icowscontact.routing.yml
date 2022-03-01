@@ -1,9 +1,9 @@
 # Defines the routes for the basic custom module page
 icowscontact.content:
-  path: 'contact'
+  path: '/mass_contact'
   defaults:
     _title: 'Submit Waiver'
-    _form: '\Drupal\waiver\Form\ICOWSContactForm'
+    _form: '\Drupal\icowscontact\Form\ICOWSContactForm'
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
