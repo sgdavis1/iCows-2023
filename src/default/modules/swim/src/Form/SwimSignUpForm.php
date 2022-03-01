@@ -120,7 +120,8 @@ class SwimSignUpForm extends FormBase {
      * {@inheritdoc}
      */
     public function validateForm(array &$form, FormStateInterface $form_state) {
-        //TODO: add validation that checks that a user is allowed to swim/has submitted their waiver
+        $swim_id = $form_state->getValue('swim_id');
+        $swim_id_as_int = (int)$swim_id;
         $pace = $form_state->getValue('pace');
         $distance = $form_state->getValue('distance');
         $boats = $form_state->getValue('kayaks');
