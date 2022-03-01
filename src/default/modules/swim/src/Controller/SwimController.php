@@ -111,18 +111,13 @@ class SwimController extends ControllerBase {
     }
   }
 
-  // set lock var
-  $locked = 'Locked';
-  if($swim->locked == 0){
-      $locked = 'Unlocked';
-  }
 
   return [
     '#theme' => 'show',
     '#id' => $id,
     '#title' => $swim->title,
     '#description' => $swim->description,
-    '#locked' => $locked,
+    '#locked' => $swim->locked,
     '#date_time' => getFormattedDate($date),
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,

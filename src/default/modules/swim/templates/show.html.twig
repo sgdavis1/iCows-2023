@@ -1,5 +1,12 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
+
+{% if locked == 1 %}
+<div style="text-align: center;">
+  <h1>This swim is locked</h1>
+</div>
+{% endif %}
+
 <h2>Description</h2>
 <p> {{ description }} </p>
 
@@ -8,10 +15,9 @@
 <p> Email: {{ host_email }} </p>
 <p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
 
-<h2>Swim status: {{ locked }}</h2>
 
 <h2>Swimmers</h2>
-{% if not signed_up %}
+{% if not signed_up and locked == 0 %}
 <form action={{drupal_url("swims/#{id}/signup")}}>
   <input type="submit" value="Swimmer Signup" />
 </form>
@@ -53,7 +59,7 @@ No swimmers have signed up yet.
 {% endif %}
 
 <h2>Kayakers</h2>
-{% if not signed_up %}
+{% if not signed_up and locked == 0 %}
 <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
   <input type="submit" value="Kayaker Signup" />
 </form>
