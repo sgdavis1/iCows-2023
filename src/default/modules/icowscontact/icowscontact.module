@@ -1,0 +1,56 @@
+<?php
+use Drupal\Core\Datetime\DrupalDateTime;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url; 
+
+
+function notify_users($subject, $message) {
+  var_dump("test");
+  $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+
+  $query = $userStorage->getQuery();
+  $uids = $query->condition('field_email_opt_out', "0", "=")->execute();
+  
+  $users = $userStorage->loadMultiple($uids);
+
+  foreach($users as $user){
+    send_massemail($user->getEmail(), $subject, $message);
+  }
+
+  return;
+}
+
+function send_massemail($recipient, $subject, $message) {
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'icowscontact';
+  $params['message'] = $message;
+  $params['subject'] = $subject;
+  $langcode = \Drupal::currentUser()->getPreferredLangcode();
+  $send = true;
+ 
+  // TODO: Actually send the email
+  $result = $mailManager->mail($module, 'mass_contact', $recipient, $langcode, $params, NULL, $send);
+  // \Drupal::messenger()->addMessage($params['message']);
+
+  if ($result['result'] !== true) {
+    \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
+  }
+}
+
+/**
+* Implements hook_mail().
+* https://www.valuebound.com/resources/blog/how-to-send-mail-programmatically-drupal-8
+*/
+function icowscontact_mail($key, &$message, $params) {
+  $options = array(
+    'langcode' => $message['langcode'],
+  );
+ 
+  switch ($key) {
+    case 'mass_contact':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['message'];
+      break;
+  }
+}
