@@ -109,8 +109,13 @@ class SwimController extends ControllerBase {
     if ($kayaker->uid == $current_user_id) {
       $signed_up = true;
     }
-  }  
+  }
 
+  // set lock var
+  $locked = 'Locked';
+  if($swim->locked == 0){
+      $locked = 'Unlocked';
+  }
 
   return [
     '#theme' => 'show',
