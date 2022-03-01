@@ -25,7 +25,7 @@ class ICOWSContactForm extends FormBase {
             '#required' => TRUE
         ];
         $form['body'] = [
-            '#type' => 'textfield',
+            '#type' => 'textarea',
             '#title' => $this->t('Body'),
             '#maxlength' => 300,
             '#required' => TRUE
@@ -48,6 +48,9 @@ class ICOWSContactForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
+        $subject = $form_state->getValue('subject');
+        $body = $form_state->getValue('body');
+
 
     }
 

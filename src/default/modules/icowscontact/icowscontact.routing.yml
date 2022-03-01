@@ -2,7 +2,7 @@
 icowscontact.content:
   path: '/mass_contact'
   defaults:
-    _title: 'Submit Waiver'
+    _title: 'Mass Contact'
     _form: '\Drupal\icowscontact\Form\ICOWSContactForm'
   requirements:
     _user_is_logged_in: 'TRUE'
