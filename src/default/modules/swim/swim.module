@@ -88,6 +88,7 @@ function log_swim_change($swim_id, $recipient_uid, $message) {
     \Drupal::messenger()->addError(sprintf('No swim exists with id %d', $swim_id));
     return;
   } else if ($swims[0]->date_time <= $one_day_from_now){
+    $recipient = \Drupal\user\Entity\User::load($recipient_uid)->getEmail();
     send_email($recipient, $message, "important_swim_changes");
   } else {
     log_email($recipient_uid, $message);
@@ -142,7 +143,6 @@ function send_logged_emails() {
   $recipients = array_keys($notifications);
   foreach ($recipients as &$recipient) {
     $message = "Hi, here is an update for the icows website:\n\t" . implode("\n\t", $notifications[$recipient]);
-    
     send_email($recipient, $message);
   }
 
@@ -153,15 +153,13 @@ function send_logged_emails() {
 function send_email($recipient, $message, $message_key="alert_swim_host") {
   $mailManager = \Drupal::service('plugin.manager.mail');
   $module = 'swim';
-  $to = \Drupal::currentUser()->getEmail();
   $params['message'] = $message;
   $langcode = \Drupal::currentUser()->getPreferredLangcode();
   $send = true;
  
   // TODO: Actually send the email
-  // $result = $mailManager->mail($module, $message_key, $to, $langcode, $params, NULL, $send);
-  $result = array("result" => true);
-  \Drupal::messenger()->addMessage($params['message']);
+  $result = $mailManager->mail($module, $message_key, $recipient, $langcode, $params, NULL, $send);
+  // \Drupal::messenger()->addMessage($params['message']);
 
   if ($result['result'] !== true) {
     \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
@@ -187,7 +185,7 @@ function swim_mail($key, &$message, $params) {
       break;
     case 'important_swim_changes':
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = t('Changes were made to an upcoming swim:');
+      $message['subject'] = t('Changes were made to an upcoming swim.');
       $message['body'][] = "The following change occured for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'];
       break;
   }
