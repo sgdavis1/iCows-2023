@@ -96,7 +96,7 @@ class NewSwimForm extends FormBase {
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_swims')->fields(['title','description','locked','date_time']); //->values($values)->execute();
+        $query = $database->insert('icows_swims')->fields(['uid','title','description','locked','date_time']); //->values($values)->execute();
         foreach ($values as $developer) {
             $query->values($developer);
         }
