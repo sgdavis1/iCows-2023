@@ -51,7 +51,7 @@ class ICOWSContactForm extends FormBase {
         $subject = $form_state->getValue('subject');
         $body = $form_state->getValue('body');
 
-
+        notify_users($subject, $body);
     }
 
 }
