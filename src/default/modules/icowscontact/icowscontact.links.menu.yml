@@ -3,5 +3,5 @@ icowscontact.admin:
   title: 'ICOWS Mass Contact'
   description: 'A quick link to the mass email page'
   parent: system.admin_config_development
-  route_name: contact.content
-  weight: 100 
+  route_name: icowscontact.content
+  weight: 100
