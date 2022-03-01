@@ -120,7 +120,22 @@ class SwimSignUpForm extends FormBase {
      * {@inheritdoc}
      */
     public function validateForm(array &$form, FormStateInterface $form_state) {
-        //TODO: add validation that checks that a user is allowed to swim/has submitted their waiver
+        $swim_id = $form_state->getValue('swim_id');
+        $swim_id_as_int = (int)$swim_id;
+
+        $database = \Drupal::database();
+        $select = $database->select('icows_attendees')
+            ->fields('icows_attendees', ['uid'])
+            ->condition('icows_attendees.swim_id', $swim_id_as_int, '=');
+
+        $query = \Drupal::database()->select('icows_attendees', 'i');
+        $query->condition('i.swim_id', $swim_id_as_int, '=');
+        $query->fields('i', ['uid']);
+        $result = $select->execute()->fetchAll();
+        if(count($result) > 0){
+            $form_state->setErrorByName('signed_up', $this->t('You are already signed up for this swim'));
+        }
+
         $pace = $form_state->getValue('pace');
         $distance = $form_state->getValue('distance');
         $boats = $form_state->getValue('kayaks');
