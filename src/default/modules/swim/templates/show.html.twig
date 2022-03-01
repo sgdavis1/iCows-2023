@@ -36,7 +36,7 @@
     <td>{{ swimmer.name }}</td>
     <td>{{ swimmer.username }}</td>
     <td>{{ swimmer.email }}</td>
-    <td>Yes</td>
+    <td>{{ swimmer.rsvp }}</td>
     <td>{{ swimmer.estimated_pace }}</td>
     <td>{{ swimmer.distance }}km</td>
     <td>{{ swimmer.number_of_kayaks }}</td>
@@ -75,7 +75,7 @@ No swimmers have signed up yet.
     <td>{{ kayaker.name }}</td>
     <td>{{ kayaker.username }}</td>
     <td>{{ kayaker.email }}</td>
-    <td>Yes</td>
+    <td>{{ kayaker.rsvp }}</td>
     <td>{{ kayaker.number_of_kayaks }}</td>
   </tr>
 {% endfor %}
