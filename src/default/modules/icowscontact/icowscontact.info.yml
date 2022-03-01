@@ -1,0 +1,8 @@
+# Basic module configuration information
+name: ICOWS Mass Contact Module
+description:  A custom module for the mass contact page.
+package: ICOWS
+
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9

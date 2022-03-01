@@ -1,0 +1,7 @@
+# Creates a link to our custom module (page) from the Configuration -> Development window
+icowscontact.admin:
+  title: 'ICOWS Mass Contact'
+  description: 'A quick link to the mass email page'
+  parent: system.admin_config_development
+  route_name: contact.content
+  weight: 100 
