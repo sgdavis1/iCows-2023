@@ -8,8 +8,7 @@ function notify_users($subject, $message) {
   $userStorage = \Drupal::entityTypeManager()->getStorage('user');
 
   $query = $userStorage->getQuery();
-  $uids = $query
-    ->condition('field_email_opt_out', false)->execute();
+  $uids = $query->condition('field_email_opt_out', false)->execute();
   
   $users = $userStorage->loadMultiple($uids);
 
@@ -20,7 +19,7 @@ function notify_users($subject, $message) {
   return;
 }
 
-function send_email($recipient, $message) {
+function send_massemail($recipient, $message) {
   $mailManager = \Drupal::service('plugin.manager.mail');
   $module = 'icowscontact';
   $params['message'] = $message;
