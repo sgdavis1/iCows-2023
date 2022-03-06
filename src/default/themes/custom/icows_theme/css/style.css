@@ -686,6 +686,31 @@ Forms CSS
     color: #444444;
 }
 
+.img-responsive{
+    margin-bottom: 10px;
+}
+
+.label{
+    color: #333333;
+    font-weight: bold;
+    font-family: "Roboto", serif;
+    line-height: 1.5em;
+    font-size: 16px;
+    padding: 0 0 10px 0;
+
+}
+
+.block-field-blockuserusername{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.layout__region--second{
+    padding-top: 10px;
+}
+
+
+
 
 
 
