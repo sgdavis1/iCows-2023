@@ -709,6 +709,24 @@ Forms CSS
     padding-top: 10px;
 }
 
+.swim-signup-row {
+    display: flex;
+}
+
+.swim-signup-column {
+    float: left;
+}
+.left{
+    width: 75%;
+}
+
+.right{
+    width: 25%;
+    padding-left: 20px;
+}
+
+
+
 
 
 

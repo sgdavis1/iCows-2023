@@ -1,105 +1,117 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
 
-{% if locked == 1 %}
-<div style="text-align: center;">
-  <h1>This swim is locked</h1>
+
+
+
+<div class="swim-signup-row">
+  <div class="swim-signup-column left">
+    {% if locked == 1 %}
+      <div style="text-align: center;">
+        <h1>This swim is locked</h1>
+      </div>
+    {% endif %}
+
+    <h2>Description</h2>
+    <p> {{ description }} </p>
+  </div>
+
+  <div class="swim-signup-column right">
+    <h2> Host: </h2>
+    <p> Name: {{ host_name }} </p>
+    <p> Email: {{ host_email }} </p>
+    <p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
+    <form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
+      <input type="submit" value="Export Attendees" />
+    </form>
+  </div>
 </div>
-{% endif %}
-
-<h2>Description</h2>
-<p> {{ description }} </p>
-
-<h2> Host: </h2>
-<p> Name: {{ host_name }} </p>
-<p> Email: {{ host_email }} </p>
-<p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
 
 
-<h2>Swimmers</h2>
-{% if not signed_up and locked == 0 %}
-<form action={{drupal_url("swims/#{id}/signup")}}>
-  <input type="submit" value="Swimmer Signup" />
-</form>
-{% endif %}
-{% if swimmers %}
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col"></th>
-      <th scope="col"></th>
-      <th scope="col">User</th>
-      <th scope="col">Email</th>
-      <th scope="col">RSVP</th>
-      <th scope="col">Pace</th>
-      <th scope="col">Distance</th>
-      <th scope="col">Boats?</th>
-      <th scope="col">Kayak?</th>
+<div>
+  <h2>Swimmers</h2>
+  {% if not signed_up and locked == 0 %}
+    <form action={{drupal_url("swims/#{id}/signup")}}>
+      <input type="submit" value="Swimmer Signup" />
+    </form>
+  {% endif %}
+  {% if swimmers %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">User</th>
+        <th scope="col">Email</th>
+        <th scope="col">RSVP</th>
+        <th scope="col">Pace</th>
+        <th scope="col">Distance</th>
+        <th scope="col">Boats?</th>
+        <th scope="col">Kayak?</th>
 
-    </tr>
-  </thead>
-  <tbody>
-{% for swimmer in swimmers %}
-  <tr>
-    <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
-    <td>{{ swimmer.name }}</td>
-    <td>{{ swimmer.username }}</td>
-    <td>{{ swimmer.email }}</td>
-    <td>{{ swimmer.rsvp }}</td>
-    <td>{{ swimmer.estimated_pace }}</td>
-    <td>{{ swimmer.distance }}km</td>
-    <td>{{ swimmer.number_of_kayaks }}</td>
-    <td>{{ swimmer.kayaker }}</td>
-  </tr>
-{% endfor %}
-  </tbody>
-</table>
-{% else %}
-No swimmers have signed up yet.
-{% endif %}
+      </tr>
+      </thead>
+      <tbody>
+      {% for swimmer in swimmers %}
+        <tr>
+          <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
+          <td>{{ swimmer.name }}</td>
+          <td>{{ swimmer.username }}</td>
+          <td>{{ swimmer.email }}</td>
+          <td>{{ swimmer.rsvp }}</td>
+          <td>{{ swimmer.estimated_pace }}</td>
+          <td>{{ swimmer.distance }}km</td>
+          <td>{{ swimmer.number_of_kayaks }}</td>
+          <td>{{ swimmer.kayaker }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    No swimmers have signed up yet.
+  {% endif %}
 
-<h2>Kayakers</h2>
-{% if not signed_up and locked == 0 %}
-<form action={{drupal_url("swims/#{id}/KayakSignup")}}>
-  <input type="submit" value="Kayaker Signup" />
-</form>
-{% endif %}
+  <h2>Kayakers</h2>
+  {% if not signed_up and locked == 0 %}
+    <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
+      <input type="submit" value="Kayaker Signup" />
+    </form>
+  {% endif %}
 
-{% if kayakers %}
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col"></th>
-      <th scope="col"></th>
-      <th scope="col">User</th>
-      <th scope="col">Email</th>
-      <th scope="col">RSVP</th>
-      <th scope="col">Boats?</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for kayaker in kayakers %}
-  <tr>
-    <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
-    <td>{{ kayaker.name }}</td>
-    <td>{{ kayaker.username }}</td>
-    <td>{{ kayaker.email }}</td>
-    <td>{{ kayaker.rsvp }}</td>
-    <td>{{ kayaker.number_of_kayaks }}</td>
-  </tr>
-{% endfor %}
-  </tbody>
-</table>
-{% else %}
-No kayakers have signed up yet.
-{% endif %}
+  {% if kayakers %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">User</th>
+        <th scope="col">Email</th>
+        <th scope="col">RSVP</th>
+        <th scope="col">Boats?</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for kayaker in kayakers %}
+        <tr>
+          <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
+          <td>{{ kayaker.name }}</td>
+          <td>{{ kayaker.username }}</td>
+          <td>{{ kayaker.email }}</td>
+          <td>{{ kayaker.rsvp }}</td>
+          <td>{{ kayaker.number_of_kayaks }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    No kayakers have signed up yet.
+  {% endif %}
 
-{% if signed_up %}
-<form action={{drupal_url("swims/#{id}/drop_out")}}>
-  <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
-</form>
-{% endif %}
+  {% if signed_up %}
+    <form action={{drupal_url("swims/#{id}/drop_out")}}>
+      <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
+    </form>
+  {% endif %}
 
-<form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
-  <input type="submit" value="Export Attendees" />
-</form>
+</div>
+
