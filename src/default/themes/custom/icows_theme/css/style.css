@@ -764,3 +764,7 @@ input[type=submit]:disabled {
     color: #8E8E93;
     border-color: #8E8E93;
 }
+
+.collapsing{
+    transition-duration: 0.01s;
+}
