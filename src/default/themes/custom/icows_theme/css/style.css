@@ -729,6 +729,57 @@ Forms CSS
 
 
 
+/*input[type=submit]  {*/
+/*    border: 1px solid seagreen;*/
+/*    border-radius: 5px;*/
+/*    background: rgb(255, 255, 255);*/
+/*    color: seagreen;*/
+/*    font-style: italic;*/
+/*    padding: 10px;*/
+/*    padding-right: 14px;*/
+/*    padding-left: 12px;*/
+/*    font-size: 17px;*/
+/*}*/
+
+/*input[type=submit]:hover {*/
+/*    background-color: seagreen;*/
+/*    color: white;*/
+/*    border: 1px solid  seagreen;*/
+/*}*/
 
 
+input[type=submit] {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 13px;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    color: #FFFFFF;
+    background-color: #4C6C9FFF;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: all 0.15s linear;
+}
 
+input[type=submit]:hover {
+    background-color: rgba(29, 124, 201, 0.08);
+    border-color: #4C6C9FFF;
+    color: #4C6C9FFF;
+    transform: translateY(-5px) scale(1.05);
+}
+
+input[type=submit]:active {
+    background-color: transparent;
+    border-color: #4C6C9FFF;
+    color: #4C6C9FFF;
+    transform: translateY(5px) scale(0.95);
+}
+
+input[type=submit]:disabled {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #8E8E93;
+    border-color: #8E8E93;
+}

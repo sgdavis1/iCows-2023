@@ -18,9 +18,9 @@
 
   <div class="swim-signup-column right">
     <h2> Host: </h2>
+    <p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
     <p> Name: {{ host_name }} </p>
     <p> Email: {{ host_email }} </p>
-    <p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
     <form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
       <input type="submit" value="Export Attendees" />
     </form>
