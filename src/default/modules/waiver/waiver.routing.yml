@@ -9,9 +9,9 @@ waiver.submit:
     _permission: 'access content'
 
 waiver.approve:
-  path: '/waiver/{id}'
+  path: '/waivers/{id}'
   defaults:
-    _controller: '\Drupal\waiver\Form\Approve'
+    _form: '\Drupal\waiver\Form\Approve'
     _title: 'Waiver Approval'
   requirements:
     _user_is_logged_in: 'TRUE'
