@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use \Drupal\Core\Field\EntityReferenceFieldItemList;
+use \Drupal\node\Entity\Node;
 
 
 /**
@@ -98,7 +100,7 @@ class EditSwimForm extends FormBase {
         $locked = 0;
         $query = \Drupal::database()->select('icows_swims', 'i');
         $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
-        $query->fields('i', ['locked', 'title', 'uid']);
+        $query->fields('i', ['locked', 'title', 'uid', 'nid']);
         $swim = $query->execute()->fetchAll()[0];
         $locked_status = $swim->locked;
 
@@ -129,6 +131,29 @@ class EditSwimForm extends FormBase {
             'date_time' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             'locked' => $locked,
         ))->condition('swim_id', $form_state->getValue('swim_id'), '=')->execute();
+
+
+        //set values to filter
+        $values = [
+            'type' => 'swims',
+            'field_swim_id' => $form_state->getValue('swim_id'),
+        ];
+
+        // Get the swim nodes
+        $nodes = \Drupal::entityTypeManager()
+            ->getStorage('node')
+            ->loadByProperties($values);
+
+        //get specific node
+        $node = $nodes[$swim->nid];
+
+        //update swim node
+        $node->set('title', $form_state->getValue('title'));
+        $node->set('body', $form_state->getValue('description')["value"]);
+        $node->set('field_swim_date', $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT));
+
+        //save to update node
+        $node->save();
 
         $form_state->setRedirect('swim.show', ["id" => $form_state->getValue('swim_id')]);
     }
