@@ -21,7 +21,7 @@
           <td>{{ pending_user.username }}</td>
           <td>{{ pending_user.email }}</td>
           <td>
-            <form action={{ drupal_url("waivers/#{pending_user.waiver_id}/approve") }}>
+            <form action={{ drupal_url("waivers/#{pending_user.waiver_id}/view") }}>
               <input type="submit" value="View" />
             </form>
           </td>
@@ -54,7 +54,7 @@
           <td>{{ approved_user.username }}</td>
           <td>{{ approved_user.email }}</td>
           <td>
-            <form action={{ drupal_url( "waivers/#{approved_user.waiver_id}/view" ) }}>
+            <form action={{ drupal_url( "waivers/#{approved_user.waiver_id}/review" ) }}>
               <input type="submit" value="View" />
             </form>
           </td>
