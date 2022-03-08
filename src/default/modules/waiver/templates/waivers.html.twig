@@ -1,0 +1,62 @@
+{# swim/templates/show.html.twig #}
+
+<div>
+  <h2>Pending</h2>
+  {% if pending_users %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">User</th>
+        <th scope="col">Email</th>
+        <th scope="col">Approve</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for pending_user in pending_users %}
+        <tr>
+          <th>TODO Picture</th>
+          <td>{{ pending_user.name }}</td>
+          <td>{{ pending_user.username }}</td>
+          <td>{{ pending_user.email }}</td>
+          <td>TODO go to approve screen button</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    There are no pending waivers.
+  {% endif %}
+
+  <h2>Approved</h2>
+
+  {% if kayakers %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">User</th>
+        <th scope="col">Email</th>
+        <th scope="col">View</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for kayaker in kayakers %}
+        <tr>
+          <th>TODO Picture</th>
+          <td>{{ swimmer.name }}</td>
+          <td>{{ swimmer.username }}</td>
+          <td>{{ swimmer.email }}</td>
+          <td>TODO view waiver button</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    No waivers have been approved yet!
+  {% endif %}
+
+</div>
+
