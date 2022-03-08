@@ -16,7 +16,7 @@
       <tbody>
       {% for pending_user in pending_users %}
         <tr>
-          <th>TODO Picture</th>
+          <th scope="row">{{ drupal_image(pending_user.picture, 'thumbnail') }}</th>
           <td>{{ pending_user.name }}</td>
           <td>{{ pending_user.username }}</td>
           <td>{{ pending_user.email }}</td>
@@ -31,7 +31,7 @@
 
   <h2>Approved</h2>
 
-  {% if kayakers %}
+  {% if approved_users %}
     <table class="table table-striped">
       <thead>
       <tr>
@@ -43,12 +43,12 @@
       </tr>
       </thead>
       <tbody>
-      {% for kayaker in kayakers %}
+      {% for approved_user in approved_users %}
         <tr>
-          <th>TODO Picture</th>
-          <td>{{ swimmer.name }}</td>
-          <td>{{ swimmer.username }}</td>
-          <td>{{ swimmer.email }}</td>
+          <th scope="row">{{ drupal_image(approved_user.picture, 'thumbnail') }}</th>
+          <td>{{ approved_user.name }}</td>
+          <td>{{ approved_user.username }}</td>
+          <td>{{ approved_user.email }}</td>
           <td>TODO view waiver button</td>
         </tr>
       {% endfor %}
