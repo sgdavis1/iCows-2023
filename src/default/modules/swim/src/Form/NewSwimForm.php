@@ -111,6 +111,7 @@ class NewSwimForm extends FormBase {
             'type'              => 'swims',
             'body'              => $values[0]['description'],
             'title'             => $values[0]['title'],
+            'field_swim_id'     => $num_rows,
             'field_swim_date'   => $values[0]['date_time'],
             'field_swim_link'   => 'http://127.0.0.1:8080/swims/'.$num_rows,
         ]);
