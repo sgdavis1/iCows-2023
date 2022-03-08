@@ -7,3 +7,12 @@ waiver.submit:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
+
+waiver.approve:
+  path: '/waiver/{id}'
+  defaults:
+    _controller: '\Drupal\waiver\Form\Approve'
+    _title: 'Waiver Approval'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
