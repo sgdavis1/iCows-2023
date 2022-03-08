@@ -8,6 +8,9 @@ namespace Drupal\waiver\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class WaiverController extends ControllerBase {
@@ -78,6 +81,7 @@ class WaiverController extends ControllerBase {
       return [
           '#theme' => 'waiver',
           '#waiver_url' => $url,
+          '#id' => $id
       ];
   }
   public function approve($id){
