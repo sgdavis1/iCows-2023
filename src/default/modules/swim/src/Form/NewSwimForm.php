@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use \Drupal\node\Entity\Node;
 
 
 
@@ -104,6 +105,18 @@ class NewSwimForm extends FormBase {
 
         $query = \Drupal::database()->select('icows_swims', 'i');
         $num_rows = $query->countQuery()->execute()->fetchField();
+
+        // create node for calendar
+        $node = Node::create([
+            'type'              => 'swims',
+            'body'              => $values[0]['description'],
+            'title'             => $values[0]['title'],
+            'field_swim_date'   => $values[0]['date_time'],
+            'field_swim_link'   => 'http://127.0.0.1:8080/swims/'.$num_rows,
+        ]);
+        $node->save();
+
+
         $form_state->setRedirect('swim.show', ["id" => $num_rows]);
     }
 
