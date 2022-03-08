@@ -20,7 +20,11 @@
           <td>{{ pending_user.name }}</td>
           <td>{{ pending_user.username }}</td>
           <td>{{ pending_user.email }}</td>
-          <td>TODO go to approve screen button</td>
+          <td>
+            <form action={{ drupal_url("waivers/#{pending_user.waiver_id}/approve") }}>
+              <input type="submit" value="View" />
+            </form>
+          </td>
         </tr>
       {% endfor %}
       </tbody>
@@ -45,11 +49,15 @@
       <tbody>
       {% for approved_user in approved_users %}
         <tr>
-          <th scope="row">{{ drupal_image(approved_user.picture, 'thumbnail') }}</th>
+          <th scope="row">{{ drupal_image( approved_user.picture, 'thumbnail' ) }}</th>
           <td>{{ approved_user.name }}</td>
           <td>{{ approved_user.username }}</td>
           <td>{{ approved_user.email }}</td>
-          <td>TODO view waiver button</td>
+          <td>
+            <form action={{ drupal_url( "waivers/#{approved_user.waiver_id}/view" ) }}>
+              <input type="submit" value="View" />
+            </form>
+          </td>
         </tr>
       {% endfor %}
       </tbody>

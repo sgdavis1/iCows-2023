@@ -27,7 +27,8 @@ class WaiverController extends ControllerBase {
         $user_values = ["name" => $name,
                         "email" => $user->getEmail(),
                         "username" => $user->getDisplayName(),
-                        "picture" => getProfilePicture($user->id())];
+                        "picture" => getProfilePicture($user->id()),
+                        "waiver_id" => $user->field_current_waiver_id->value];
         array_push($approved_users_values, $user_values);
     }
 
@@ -47,7 +48,8 @@ class WaiverController extends ControllerBase {
         $user_values = ["name" => $name,
                         "email" => $user->getEmail(),
                         "username" => $user->getDisplayName(),
-                        "picture" => $user->id()];
+                        "picture" => $user->id(),
+                        "waiver_id" => $user->field_current_waiver_id->value];
         array_push($pending_users_values, $user_values);
     }
 
