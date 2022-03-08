@@ -84,39 +84,39 @@ class NewSwimForm extends FormBase {
             $locked = 1;
         }
 
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $num_rows = $query->countQuery()->execute()->fetchField();
+        $num_rows += 1;
+
+        // create node for calendar
+        $node = Node::create([
+            'type'              => 'swims',
+            'body'              => $form_state->getValue('description')["value"],
+            'title'             => $form_state->getValue('title'),
+            'field_swim_id'     => $num_rows,
+            'field_swim_date'   => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+            'field_swim_link'   => 'http://127.0.0.1:8080/swims/'.$num_rows,
+        ]);
+        $node->save();
+        $nid = $node->id();
+
         $values = [
             [
             'title' => $form_state->getValue('title'),
             'description' => $form_state->getValue('description')["value"],// only saving value for now, can save format later
             'locked' => $locked,
             // https://drupal.stackexchange.com/questions/204103/inserting-the-value-from-datetime-field-form
-            // would need to add timezones here if we ever wanted to support multiple timezones
             'date_time' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
-            // must add uid, ask steve if uid determined by creator or from dropdowm
             'uid' => \Drupal::currentUser()->id(),
+            'nid' => $nid,
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_swims')->fields(['uid','title','description','locked','date_time']); //->values($values)->execute();
+        $query = $database->insert('icows_swims')->fields(['uid','title','description','locked','date_time', 'nid']); //->values($values)->execute();
         foreach ($values as $developer) {
             $query->values($developer);
         }
         $query->execute();
-
-        $query = \Drupal::database()->select('icows_swims', 'i');
-        $num_rows = $query->countQuery()->execute()->fetchField();
-
-        // create node for calendar
-        $node = Node::create([
-            'type'              => 'swims',
-            'body'              => $values[0]['description'],
-            'title'             => $values[0]['title'],
-            'field_swim_id'     => $num_rows,
-            'field_swim_date'   => $values[0]['date_time'],
-            'field_swim_link'   => 'http://127.0.0.1:8080/swims/'.$num_rows,
-        ]);
-        $node->save();
-
 
         $form_state->setRedirect('swim.show', ["id" => $num_rows]);
     }
