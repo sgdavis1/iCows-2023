@@ -58,9 +58,15 @@ class WaiverController extends ControllerBase {
 
   public function approvalPage($id){
 
-      
+      $query = \Drupal::database()->select('icows_waivers', 'i');
 
-      $file = File::load($id);
+      // Add extra detail to this query object: a condition, fields and a range
+      $query->condition('i.waiver_id', $id, '=');
+      $query->fields('i', ['waiver_url']);
+      $query->range(0, 1);
+      $waiver = $query->execute()->fetchAll()[0];
+
+      $file = File::load($waiver->waiver_url);
       $uri = $file->uri;
 
       $url = file_create_url($uri->value);
