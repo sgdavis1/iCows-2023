@@ -5,7 +5,6 @@ use Drupal\Core\Url;
 
 
 function notify_users($subject, $message) {
-  var_dump("test");
   $userStorage = \Drupal::entityTypeManager()->getStorage('user');
 
   $query = $userStorage->getQuery();
