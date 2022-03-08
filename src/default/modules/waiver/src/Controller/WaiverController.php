@@ -26,15 +26,17 @@ class WaiverController extends ControllerBase {
         $name = $user->field_first_name->value . " " . $user->field_last_name->value;
         $user_values = ["name" => $name,
                         "email" => $user->getEmail(),
-                        "username" => "username",
-                        "picture" => "picture"];
+                        "username" => $user->getDisplayName(),
+                        "picture" => getProfilePicture($user->id())];
         array_push($approved_users_values, $user_values);
     }
 
     $userStorage = \Drupal::entityTypeManager()->getStorage('user');
 
     $query = $userStorage->getQuery();
-    $uids = $query->condition('roles', 'swimmer', '<>')->execute();
+    $uids = $query->condition('roles', 'swimmer', '<>')
+                  ->condition('field_current_waiver_id', -1, '<>')
+                  ->execute();
     
     $pending_users = $userStorage->loadMultiple($uids);
 
@@ -44,8 +46,8 @@ class WaiverController extends ControllerBase {
         $name = $user->field_first_name->value . " " . $user->field_last_name->value;
         $user_values = ["name" => $name,
                         "email" => $user->getEmail(),
-                        "username" => "username",
-                        "picture" => "picture"];
+                        "username" => $user->getDisplayName(),
+                        "picture" => $user->id()];
         array_push($pending_users_values, $user_values);
     }
 
