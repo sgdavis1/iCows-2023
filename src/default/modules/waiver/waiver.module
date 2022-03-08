@@ -17,3 +17,9 @@ function waiver_theme($existing, $type, $theme, $path) {
     ]
   ];
 }
+
+function waiver_user_presave(Drupal\Core\Entity\EntityInterface $entity) { 
+    if($entity->isNew()) {
+        $entity->addRole('member');
+    }
+}
