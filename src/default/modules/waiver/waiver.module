@@ -13,7 +13,7 @@ function waiver_theme($existing, $type, $theme, $path) {
       'variables' => ['approved_users' => NULL, 'pending_users' => NULL],
     ],
     'waiver' => [
-        'variables' => ['waiver_url' => NULL],
+        'variables' => ['waiver_url' => NULL, 'waiver_id' => NULL],
     ]
   ];
 }

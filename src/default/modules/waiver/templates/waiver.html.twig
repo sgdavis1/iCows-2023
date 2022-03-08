@@ -1,1 +1,5 @@
-<a href="http://127.0.0.1:8080/sites/default/files/files/writing3.pdf" download="">Download</a>
+<a href={{waiver_url}} download="">Download</a>
+
+<form action={{drupal_url("swims/#{id}/approve")}}>
+    <input type="submit" value="Approve" />
+</form>

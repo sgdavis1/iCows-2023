@@ -56,17 +56,32 @@ class WaiverController extends ControllerBase {
       ]; 
   }
 
-  public function approvalPage(){
-      $file = File::load(9);
+  public function approvalPage($id){
+
+      
+
+      $file = File::load($id);
       $uri = $file->uri;
 
       $url = file_create_url($uri->value);
+
       return [
           '#theme' => 'waiver',
           '#waiver_url' => $url,
       ];
   }
-  public function approve(){
+  public function approve($id){
+      $database = \Drupal::database();
+      $database->update('icows_waivers')->fields(array(
+          'approved' => 1))
+      ->condition('waiver_id', $id, '=')->execute();
+
+      $query = \Drupal::database()->select('icows_waivers', 'i');
+      $query->condition('i.waiver_id', $id, '=');
+      $query->fields('i', ['uid']);
+      $waiver = $query->execute()->fetchAll()[0];
+      $uid = $waiver->uid;
+
 
   }
 }
