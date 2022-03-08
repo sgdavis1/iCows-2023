@@ -11,11 +11,12 @@ waiver.submit:
 waiver.approve:
   path: '/waivers/{id}'
   defaults:
-    _form: '\Drupal\waiver\Form\Approve'
+    _controller: '\Drupal\waiver\Controller\WaiverController::approvalPage'
     _title: 'Waiver Approval'
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
+    _role: 'administrator'
 
 waiver.content:
   path: '/waivers'

@@ -7,6 +7,7 @@
 namespace Drupal\waiver\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\file\Entity\File;
 
 
 class WaiverController extends ControllerBase {
@@ -53,5 +54,19 @@ class WaiverController extends ControllerBase {
         '#approved_users' => $approved_users_values,
         '#pending_users' => $pending_users_values
       ]; 
+  }
+
+  public function approvalPage(){
+      $file = File::load(9);
+      $uri = $file->uri;
+
+      $url = file_create_url($uri->value);
+      return [
+          '#theme' => 'waiver',
+          '#waiver_url' => $url,
+      ];
+  }
+  public function approve(){
+
   }
 }
