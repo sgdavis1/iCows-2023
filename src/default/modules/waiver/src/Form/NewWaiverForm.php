@@ -58,26 +58,33 @@ class NewWaiverForm extends FormBase {
      */
     public function submitForm(array &$form, FormStateInterface $form_state)
     {
+        
         $waiver = $form_state->getValue('waiver');
         if ($waiver) {
             $file = File::load(reset($waiver));
             $file->setPermanent();
             $file->save();
+
+            $uid = \Drupal::currentUser()->id();
+
             $values = [
                 [
                     'approved' => 0,
-                    'uid' => 1,
-                    'current_waiver' => 1,
+                    'uid' => $uid,
                     'waiver_url' => $waiver[0],
                 ],                                          //time not working rn
             ];
 
             $connection = \Drupal::service('database');
-            $query = $connection->insert('icows_waivers')->fields(['approved','uid', 'current_waiver', 'waiver_url']);
+            $query = $connection->insert('icows_waivers')->fields(['approved','uid', 'waiver_url']);
             foreach ($values as $value){
                 $query->values($value);
             }
-            $query->execute();
+            
+            $id = $query->execute();
+            $user = \Drupal\user\Entity\User::load($uid);
+            $user->set('field_current_waiver_id', $id);
+            $user->save();
         }
     }
 }
