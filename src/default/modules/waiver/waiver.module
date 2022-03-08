@@ -1,0 +1,16 @@
+<?php
+use Drupal\Core\Datetime\DrupalDateTime;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url; 
+
+/**
+ * Implements hook_theme().
+ * https://www.drupal.org/docs/theming-drupal/twig-in-drupal/create-custom-twig-templates-for-custom-module
+ */
+function waiver_theme($existing, $type, $theme, $path) {
+  return [
+    'waivers' => [
+      'variables' => ['approved_users' => NULL, 'pending_users' => NULL],
+    ]
+  ];
+}
