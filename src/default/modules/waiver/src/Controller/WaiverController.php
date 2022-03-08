@@ -95,7 +95,10 @@ class WaiverController extends ControllerBase {
       $query->fields('i', ['uid']);
       $waiver = $query->execute()->fetchAll()[0];
       $uid = $waiver->uid;
-
-
+      $user = \Drupal\user\Entity\User::load($uid);
+      $user->addRole('swimmer');
+      $user->save();
+      $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
+      $response->send();
   }
 }

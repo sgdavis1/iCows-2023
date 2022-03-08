@@ -9,7 +9,7 @@ waiver.submit:
     _permission: 'access content'
 
 waiver.view:
-  path: '/waivers/{id}/approve'
+  path: '/waivers/{id}/view'
   defaults:
     _controller: '\Drupal\waiver\Controller\WaiverController::approvalPage'
     _title: 'Waiver Approval'
