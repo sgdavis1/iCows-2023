@@ -38,8 +38,7 @@ class WaiverController extends ControllerBase {
     $userStorage = \Drupal::entityTypeManager()->getStorage('user');
 
     $query = $userStorage->getQuery();
-    $uids = $query->condition('roles', 'swimmer', '<>')
-                  ->condition('field_current_waiver_id', -1, '<>')
+    $uids = $query->condition('field_current_waiver_id', -1, '<>')
                   ->execute();
     
     $pending_users = $userStorage->loadMultiple($uids);
@@ -47,13 +46,15 @@ class WaiverController extends ControllerBase {
     $pending_users_values = array();
   
     foreach($pending_users as $user){
-        $name = $user->field_first_name->value . " " . $user->field_last_name->value;
-        $user_values = ["name" => $name,
-                        "email" => $user->getEmail(),
-                        "username" => $user->getDisplayName(),
-                        "picture" => $user->id(),
-                        "waiver_id" => $user->field_current_waiver_id->value];
-        array_push($pending_users_values, $user_values);
+        if (!in_array("swimmer", $user->getRoles())) {
+          $name = $user->field_first_name->value . " " . $user->field_last_name->value;
+          $user_values = ["name" => $name,
+                          "email" => $user->getEmail(),
+                          "username" => $user->getDisplayName(),
+                          "picture" => $user->id(),
+                          "waiver_id" => $user->field_current_waiver_id->value];
+          array_push($pending_users_values, $user_values);
+        }
     }
 
     return [
