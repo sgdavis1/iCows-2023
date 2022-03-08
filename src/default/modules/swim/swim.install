@@ -157,13 +157,6 @@ function swim_schema() {
                 'size' => 'normal',
                 'description' => 'The URL or file path pointing to this waiver',
             ),
-            'current_waiver' => array(
-                'type' => 'int',
-                'not null' => TRUE,
-                'default' => 0,
-                'size' => 'tiny',
-                'description' => 'Determines if the user is signed up as a kayaker',
-            ),
             'timestamp' => array(
                 'type' => 'varchar',
                 'not null' => false,
