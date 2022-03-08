@@ -233,18 +233,6 @@ class SwimController extends ControllerBase {
   }
 }
 
-function getProfilePicture($user_id) {
-  if (\Drupal\user\Entity\User::load($user_id)->user_picture->entity == NULL) {
-    $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
-    $default_image = $field->getSetting('default_image');
-    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
-    return $file->getFileUri();
-  }
-  else {
-    return \Drupal\user\Entity\User::load($user_id)->user_picture->entity->getFileUri();
-  }
-}
-
 function getFormattedDate($date) {
   $day_index = DateHelper::dayOfWeek($date);
   $day = "";
