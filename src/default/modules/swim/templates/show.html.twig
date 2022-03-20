@@ -1,8 +1,8 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
-
-
-
+  <form action={{drupal_url("/swims/#{id}/delete")}}>
+    <input type="submit" value="Delete" />
+  </form>
 
 <div class="swim-signup-row">
   <div class="swim-signup-column left">
