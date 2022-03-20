@@ -21,6 +21,12 @@ class SwimController extends ControllerBase {
     ];
   }
 
+  public function admins_info() {
+    return [
+        '#theme' => 'admins_info'
+    ];
+  }
+
   public function drop_out($id) {
     $query = \Drupal::database()->select('icows_swims', 'i');
   

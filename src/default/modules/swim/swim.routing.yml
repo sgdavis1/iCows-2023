@@ -79,3 +79,12 @@ swim.attendance_list:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
+
+
+swim.admins_info:
+  path: '/admins_info'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::admins_info'
+    _title: 'Admins Info'
+  requirements:
+    _permission: 'access content'
