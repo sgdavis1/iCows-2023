@@ -138,6 +138,7 @@ class SwimController extends ControllerBase {
     '#host_name' => $host_name,
     '#host_email' => $host_email,
     '#host_picture' => $host_picture,
+    '#isAdmin' => $isAdmin,
     '#cache' => array('max-age' => 0),
     '#isAdmin' => $isAdmin,
   ];    
