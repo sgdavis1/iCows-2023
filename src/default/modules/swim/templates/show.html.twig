@@ -34,7 +34,7 @@
 
 <div>
   <h2>Swimmers</h2>
-  {% if not signed_up and locked == 0 %}
+  {% if (not signed_up) and locked == 0 and isApproved%}
     <form action={{drupal_url("swims/#{id}/signup")}}>
       <input type="submit" value="Swimmer Signup" />
     </form>
@@ -76,7 +76,7 @@
   {% endif %}
 
   <h2>Kayakers</h2>
-  {% if not signed_up %}
+  {% if (not signed_up) and isApproved%}
     <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
       <input type="submit" value="Kayaker Signup" />
     </form>
