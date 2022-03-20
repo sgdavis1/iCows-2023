@@ -768,3 +768,28 @@ input[type=submit]:disabled {
 .collapsing{
     transition-duration: 0.01s;
 }
+
+.about-us-container{
+    margin: auto;
+    width: 60%;
+}
+
+.admin-profile-container{
+    max-width: 900px;
+    height: auto;
+    text-align: center;
+    margin: 20px 0 0 0;
+}
+
+.admin-name{
+    font-size:1.6em;
+    font-weight: 800;
+    font-family: Roboto, serif;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.tom-casavant::before {
+    content: url("../images/tom-casavant-image.png");
+    padding-right: 30px;
+}
