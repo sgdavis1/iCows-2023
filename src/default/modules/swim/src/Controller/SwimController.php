@@ -83,6 +83,13 @@ class SwimController extends ControllerBase {
   if(in_array( 'administrator', $roles)){
       $isAdmin = true;
   }
+  $approved = \Drupal::database()->delete('icows_waivers')
+      ->condition('uid', $current_user_id)
+      ->execute();
+  $isApproved = false;
+  if($approved){
+      $isApproved = true;
+  }
 
   foreach ($swimmers as &$swimmer) {
     $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
@@ -139,6 +146,7 @@ class SwimController extends ControllerBase {
     '#host_email' => $host_email,
     '#host_picture' => $host_picture,
     '#isAdmin' => $isAdmin,
+    '#isApproved' => $isApproved,
     '#cache' => array('max-age' => 0),
   ];    
   }
