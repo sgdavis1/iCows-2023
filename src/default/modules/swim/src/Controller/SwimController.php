@@ -76,7 +76,11 @@ class SwimController extends ControllerBase {
 
   $current_user_id = \Drupal::currentUser()->id();
   $signed_up = false;
-  
+  $isAdmin = false;
+  $roles = \Drupal::currentUser()->getRoles();
+  if(in_array( 'administrator', $roles)){
+      $isAdmin = true;
+  }
 
   foreach ($swimmers as &$swimmer) {
     $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
@@ -132,6 +136,7 @@ class SwimController extends ControllerBase {
     '#host_name' => $host_name,
     '#host_email' => $host_email,
     '#host_picture' => $host_picture,
+    '#isAdmin' => $isAdmin,
   ];    
   }
 
@@ -237,7 +242,26 @@ class SwimController extends ControllerBase {
   
     return $response;
   }
+
+  /**
+  * Delete a swim
+  */
+  public function delete($id) {
+      \Drupal::database()->delete('icows_swims')
+          ->condition('swim_id', $id)
+          ->execute();
+      \Drupal::database()->delete('icows_attendees')
+          ->condition('swim_id', $id)
+          ->execute();
+      \Drupal::database()->delete('icows_swim_groups')
+          ->condition('swim_id', $id)
+          ->execute();
+      $response = new RedirectResponse(Url::fromRoute('swim.content')->toString());
+      $response->send();
+      return;
+  }
 }
+
 
 function getFormattedDate($date) {
   $day_index = DateHelper::dayOfWeek($date);
