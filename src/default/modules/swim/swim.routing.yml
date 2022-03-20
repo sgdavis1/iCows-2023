@@ -82,7 +82,9 @@ swim.attendance_list:
 
 
 swim.admins_info:
-  path: '/admin_info'
+  path: '/admins_info'
   defaults:
-    _form: '\Drupal\swim\Controller\SwimController::admins_info'
-    _title: 'Admin Info'
+    _controller: '\Drupal\swim\Controller\SwimController::admins_info'
+    _title: 'Admins Info'
+  requirements:
+    _permission: 'access content'

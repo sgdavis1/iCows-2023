@@ -32,6 +32,9 @@ function swim_theme($existing, $type, $theme, $path) {
     'attendance_list' => [
       'variables' => ['id' => NULL],
     ],
+    'admins_info' => [
+        'variables' => [],
+    ],
 
   ];
 }
