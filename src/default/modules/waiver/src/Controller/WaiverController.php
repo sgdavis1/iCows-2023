@@ -60,7 +60,8 @@ class WaiverController extends ControllerBase {
     return [
         '#theme' => 'waivers',
         '#approved_users' => $approved_users_values,
-        '#pending_users' => $pending_users_values
+        '#pending_users' => $pending_users_values,
+        '#cache' => array('max-age' => 0),
       ]; 
   }
 
@@ -82,7 +83,8 @@ class WaiverController extends ControllerBase {
       return [
           '#theme' => 'waiver',
           '#waiver_url' => $url,
-          '#id' => $id
+          '#id' => $id,
+          '#cache' => array('max-age' => 0),
       ];
   }
   public function approve($id){
