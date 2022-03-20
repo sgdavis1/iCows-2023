@@ -18,12 +18,14 @@ class SwimController extends ControllerBase {
     return [
       '#theme' => 'swims',
       '#test_var' => $this->t('Test Value'),
+      '#cache' => array('max-age' => 0),
     ];
   }
 
   public function admins_info() {
     return [
-        '#theme' => 'admins_info'
+        '#theme' => 'admins_info',
+        '#cache' => array('max-age' => 0),
     ];
   }
 
@@ -132,6 +134,7 @@ class SwimController extends ControllerBase {
     '#host_name' => $host_name,
     '#host_email' => $host_email,
     '#host_picture' => $host_picture,
+    '#cache' => array('max-age' => 0),
   ];    
   }
 
@@ -139,6 +142,7 @@ class SwimController extends ControllerBase {
     return [
       '#theme' => 'edit',
       '#id' => $id,
+      '#cache' => array('max-age' => 0),
     ];
   }
 
@@ -146,6 +150,7 @@ class SwimController extends ControllerBase {
     return [
       '#theme' => 'attendance_list',
       '#id' => $id,
+      '#cache' => array('max-age' => 0),
     ];
   }
   /**
