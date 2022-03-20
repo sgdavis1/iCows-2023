@@ -45,11 +45,12 @@ class NewSwimForm extends FormBase {
         ];
         $form['override'] = [
             '#type' => 'select',
-            '#title' => $this->t('Manual Override'),
+            '#title' => $this->t('Event Lock'),
             '#options' => [
                 'Unlocked' => $this->t('Unlocked'),
                 'Locked' => $this->t('Locked'),
             ],
+            '#default_value' => $this->t('Unlocked'),
             '#required' => TRUE
         ];
 
