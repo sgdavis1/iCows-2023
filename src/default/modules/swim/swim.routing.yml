@@ -80,7 +80,6 @@ swim.attendance_list:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
-
 swim.admins_info:
   path: '/admins_info'
   defaults:
@@ -88,3 +87,13 @@ swim.admins_info:
     _title: 'Admins Info'
   requirements:
     _permission: 'access content'
+
+swim.delete:
+  path: '/swims/{id}/delete'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::delete'
+    _title: 'Delete Swim'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator'
