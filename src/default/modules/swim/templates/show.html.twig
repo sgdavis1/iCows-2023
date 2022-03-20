@@ -1,8 +1,10 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
+{% if isAdmin %}
   <form action={{drupal_url("/swims/#{id}/delete")}}>
     <input type="submit" value="Delete" />
   </form>
+{% endif %}
 
 <div class="swim-signup-row">
   <div class="swim-signup-column left">
@@ -21,9 +23,11 @@
     <p> {{ drupal_image(host_picture, 'thumbnail') }} </p>
     <p> Name: {{ host_name }} </p>
     <p> Email: {{ host_email }} </p>
-    <form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
-      <input type="submit" value="Export Attendees" />
-    </form>
+    {% if isAdmin %}
+      <form action={{drupal_url("swims/#{id}/exports/attendee_list")}}>
+        <input type="submit" value="Export Attendees" />
+      </form>
+    {% endif %}
   </div>
 </div>
 
