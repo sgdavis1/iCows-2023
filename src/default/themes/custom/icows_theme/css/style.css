@@ -779,6 +779,7 @@ input[type=submit]:disabled {
     height: auto;
     text-align: center;
     margin: 20px 0 0 0;
+    padding-bottom: 30px;
 }
 
 .admin-name{
@@ -791,6 +792,96 @@ input[type=submit]:disabled {
 
 .tom-casavant::before {
     background-image: url("../images/tom-casavant-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.tahuanty-pena::before {
+    background-image: url("../images/tahuanty-pena-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.liz-uribe::before {
+    background-image: url("../images/liz-uribe-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.peter-thorne::before {
+    background-image: url("../images/peter-thorne-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.jerry-protheroe::before {
+    background-image: url("../images/jerry-protheroe-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 198px;
+    content: "";
+}
+
+.hal-ide::before {
+    background-image: url("../images/hal-ide-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.steve-davis::before {
+    background-image: url("../images/steve-davis-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.tom-belin::before {
+    background-image: url("../images/tom-belin-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.steve-bird::before {
+    background-image: url("../images/steve-bird-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.amrita-nain::before {
+    background-image: url("../images/amrita-nain-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
+}
+
+.ben-kieffer::before {
+    background-image: url("../images/ben-kieffer-image.jpg");
     background-size: 200px;
     display: inline-block;
     width: 200px;
