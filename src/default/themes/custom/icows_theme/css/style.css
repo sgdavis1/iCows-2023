@@ -790,6 +790,10 @@ input[type=submit]:disabled {
 }
 
 .tom-casavant::before {
-    content: url("../images/tom-casavant-image.png");
-    padding-right: 30px;
+    background-image: url("../images/tom-casavant-image.png");
+    background-size: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    content: "";
 }
