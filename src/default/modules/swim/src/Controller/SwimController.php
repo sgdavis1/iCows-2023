@@ -260,6 +260,32 @@ class SwimController extends ControllerBase {
   * Delete a swim
   */
   public function delete($id) {
+      //get swim nid
+      $query = \Drupal::database()->select('icows_swims', 'i');
+      $query->condition('i.swim_id', $id, '=');
+      $query->fields('i', ['nid']);
+      $swim = $query->execute()->fetchAll()[0];
+
+      //set values to filter
+      $values = [
+          'type' => 'swims',
+          'field_swim_id' => $id,
+      ];
+
+      // Get the swim nodes
+      $nodes = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->loadByProperties($values);
+
+      // get specific node
+      $node = $nodes[$swim->nid];
+
+      //delete swim node
+      if ($node) {
+          $node->delete();
+      }
+
+      // delete database entries
       \Drupal::database()->delete('icows_swims')
           ->condition('swim_id', $id)
           ->execute();
@@ -269,6 +295,8 @@ class SwimController extends ControllerBase {
       \Drupal::database()->delete('icows_swim_groups')
           ->condition('swim_id', $id)
           ->execute();
+
+      // redirect
       $response = new RedirectResponse(Url::fromRoute('swim.content')->toString());
       $response->send();
       return;
