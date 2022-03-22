@@ -26,7 +26,9 @@ function swim_theme($existing, $type, $theme, $path) {
                       'host_email' => NULL,
                       'host_picture' => NULL,
                       'isAdmin' => NULL,
-                      'isApproved' => NULL]
+                      'isApproved' => NULL,
+                      'isKayaker' => NULL,
+                      'isSwimmer' => NULL]
     ],
     'edit' => [
       'variables' => ['id' => NULL],
