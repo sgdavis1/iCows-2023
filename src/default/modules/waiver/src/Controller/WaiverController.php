@@ -73,7 +73,6 @@ class WaiverController extends ControllerBase {
           array_push($not_submitted_users_values, $user_values);
       }
     }
-    var_dump($uids);
 
     return [
         '#theme' => 'waivers',
