@@ -57,10 +57,28 @@ class WaiverController extends ControllerBase {
         }
     }
 
+    $query = $userStorage->getQuery();
+    $uids = $query->condition('field_current_waiver_id', -1, '=')
+        ->execute();
+    $not_submitted_users = $userStorage->loadMultiple($uids);
+
+    $not_submitted_users_values = array();
+    foreach($not_submitted_users as $user){
+      if (!in_array("swimmer", $user->getRoles())) {
+          $name = $user->field_first_name->value . " " . $user->field_last_name->value;
+          $user_values = ["name" => $name,
+              "email" => $user->getEmail(),
+              "username" => $user->getDisplayName(),
+              "picture" => $user->id(),];
+          array_push($not_submitted_users_values, $user_values);
+      }
+    }
+
     return [
         '#theme' => 'waivers',
         '#approved_users' => $approved_users_values,
         '#pending_users' => $pending_users_values,
+        '#not_submitted_users' => $not_submitted_users_values,
         '#cache' => array('max-age' => 0),
       ]; 
   }

@@ -33,6 +33,32 @@
     There are no pending waivers.
   {% endif %}
 
+  <h2>Users with unsubmitted waivers</h2>
+  {% if not_submitted_users %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">User</th>
+        <th scope="col">Email</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for not_submitted_user in not_submitted_users %}
+      <tr>
+        <th scope="row">{{ drupal_image(not_submitted_user.picture, 'thumbnail') }}</th>
+        <td>{{ not_submitted_user.name }}</td>
+        <td>{{ not_submitted_user.username }}</td>
+        <td>{{ not_submitted_user.email }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    All members have submitted a waiver
+  {% endif %}
   <h2>Approved</h2>
 
   {% if approved_users %}
