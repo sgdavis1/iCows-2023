@@ -1,5 +1,9 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
+{% if isKayaker %}
+  <p> poopy butthole </p>
+{% endif %}
+<p> is Swimmer: {{ isSwimmer }} </p>
 {% if isAdmin %}
   <form action={{drupal_url("/swims/#{id}/delete")}}>
     <input type="submit" value="Delete" />
@@ -75,6 +79,12 @@
     No swimmers have signed up yet.
   {% endif %}
 
+  {% if signed_up and isSwimmer %}
+    <form action={{drupal_url("swims/#{id}/drop_out")}}>
+      <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
+    </form>
+  {% endif %}
+
   <h2>Kayakers</h2>
   {% if (not signed_up) and isApproved%}
     <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
@@ -111,11 +121,10 @@
     No kayakers have signed up yet.
   {% endif %}
 
-  {% if signed_up %}
+  {% if signed_up and isKayaker%}
     <form action={{drupal_url("swims/#{id}/drop_out")}}>
       <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
     </form>
   {% endif %}
-
 </div>
 
