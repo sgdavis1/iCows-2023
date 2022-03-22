@@ -83,13 +83,18 @@ class SwimController extends ControllerBase {
   if(in_array( 'administrator', $roles)){
       $isAdmin = true;
   }
-  $isApproved = \Drupal::database()->delete('icows_waivers')
-      ->condition('uid', $current_user_id)
-      ->execute();
+
+  $query = \Drupal::database()->select('icows_waivers', 'i');
+  $query->condition('i.uid', $current_user_id, '=');
+  $query->fields('i', ['approved']);
+  $waiver = $query->execute()->fetchAll()[0];
+  $isApproved = $waiver->approved;
+
   if(!in_array( 'swimmer', $roles)){
       $isApproved = false;
   }
-
+  $isKayaker = false;
+  $isSwimmer = false;
   foreach ($swimmers as &$swimmer) {
     $swimmer->name = \Drupal\user\Entity\User::load($swimmer->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swimmer->uid)->field_last_name->value;
     $swimmer->picture = getProfilePicture($swimmer->uid);
@@ -97,13 +102,15 @@ class SwimController extends ControllerBase {
     $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
     $date = new DrupalDateTime($swimmer->date_time, 'UTC');
     $swimmer->rsvp = getFormattedDate($date);
+    if ($swimmer->uid == $current_user_id) {
+      $signed_up = true;
+      $isSwimmer= true;
+
+    }
     if ($swimmer->kayaker == 1) {
       $swimmer->kayaker = "Yes";
     } else {
       $swimmer->kayaker = "No";
-    }
-    if ($swimmer->uid == $current_user_id) {
-      $signed_up = true;
     }
   }
 
@@ -126,9 +133,11 @@ class SwimController extends ControllerBase {
     $kayaker->rsvp = getFormattedDate($date);
     if ($kayaker->uid == $current_user_id) {
       $signed_up = true;
+      $isKayaker= true;
     }
   }
-
+  var_dump($isSwimmer);
+  var_dump($isKayaker);
 
   return [
     '#theme' => 'show',
@@ -146,6 +155,8 @@ class SwimController extends ControllerBase {
     '#host_picture' => $host_picture,
     '#isAdmin' => $isAdmin,
     '#isApproved' => $isApproved,
+    '#isKayaker' => $isKayaker,
+    '#isSwimmer' => $isSwimmer,
     '#cache' => array('max-age' => 0),
   ];    
   }
