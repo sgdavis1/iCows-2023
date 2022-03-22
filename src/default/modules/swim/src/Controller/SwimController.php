@@ -136,8 +136,6 @@ class SwimController extends ControllerBase {
       $isKayaker= true;
     }
   }
-  var_dump($isSwimmer);
-  var_dump($isKayaker);
 
   return [
     '#theme' => 'show',

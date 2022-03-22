@@ -1,9 +1,6 @@
 {# swim/templates/show.html.twig #}
 <div class="centerDateTime">{{ date_time }}</div>
-{% if isKayaker %}
-  <p> poopy butthole </p>
-{% endif %}
-<p> is Swimmer: {{ isSwimmer }} </p>
+
 {% if isAdmin %}
   <form action={{drupal_url("/swims/#{id}/delete")}}>
     <input type="submit" value="Delete" />
