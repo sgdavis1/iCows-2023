@@ -83,12 +83,11 @@ class SwimController extends ControllerBase {
   if(in_array( 'administrator', $roles)){
       $isAdmin = true;
   }
-  $approved = \Drupal::database()->delete('icows_waivers')
+  $isApproved = \Drupal::database()->delete('icows_waivers')
       ->condition('uid', $current_user_id)
       ->execute();
-  $isApproved = false;
-  if($approved){
-      $isApproved = true;
+  if(!in_array( 'swimmer', $roles)){
+      $isApproved = false;
   }
 
   foreach ($swimmers as &$swimmer) {
