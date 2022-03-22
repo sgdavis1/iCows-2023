@@ -105,8 +105,7 @@ class WaiverController extends ControllerBase {
     }
     $node->save();
 
-    $url = Url::fromRoute('entity.node.canonical', ['node' => 42]);
-    $response = new RedirectResponse($url->toString());
+    $response = new RedirectResponse(Url::fromUri("internal:/waiver/view")->toString());
     $response->send();
 
     return;
