@@ -5,12 +5,12 @@
  */
  
 namespace Drupal\waiver\Controller;
-
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\node\Entity\Node;
 
 
 class WaiverController extends ControllerBase {
@@ -84,27 +84,34 @@ class WaiverController extends ControllerBase {
   }
 
   public function approvalPage($id){
+    $params = Url::fromUri("internal:/waiver/view")->getRouteParameters();
+    $entity_type = key($params);
+    $node = \Drupal::entityTypeManager()->getStorage($entity_type)->load($params[$entity_type]);
+    $node->set('field_waiver_id', $id);
+    $query = \Drupal::database()->select('icows_waivers', 'i');
+    $query->condition('i.waiver_id', $id, '=');
+    $query->fields('i', ['waiver_url']);
+    $waivers = $query->execute()->fetchAll();
 
-      $query = \Drupal::database()->select('icows_waivers', 'i');
+    if ($waivers == NULL) {
+        $node->set('field_waiver_display', NULL);
+    }
+    else {
+        $waiver = $waivers[0];
+        $file = File::load($waiver->waiver_url);
+        $file->setPermanent();
+        $file->save();
+        $node->set('field_waiver_display', $file);
+    }
+    $node->save();
 
-      // Add extra detail to this query object: a condition, fields and a range
-      $query->condition('i.waiver_id', $id, '=');
-      $query->fields('i', ['waiver_url']);
-      $query->range(0, 1);
-      $waiver = $query->execute()->fetchAll()[0];
+    $response = new RedirectResponse(Url::fromUri("internal:/waiver/view")->toString());
+    $response->send();
 
-      $file = File::load($waiver->waiver_url);
-      $uri = $file->uri;
-
-      $url = file_create_url($uri->value);
-
-      return [
-          '#theme' => 'waiver',
-          '#waiver_url' => $url,
-          '#id' => $id,
-          '#cache' => array('max-age' => 0),
-      ];
+    return;
   }
+
+
   public function approve($id){
       $database = \Drupal::database();
       $database->update('icows_waivers')->fields(array(

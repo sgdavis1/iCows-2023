@@ -1,0 +1,12 @@
+
+{{ warnings }}
+
+{% if warnings == NULL %}
+    <h1>{{ username }}'s waiver</h1>
+    {{ content.field_waiver_display }}
+    <a href={{waiver_url}} download="">Download</a>
+
+    <form action={{drupal_url("waivers/#{id}/approve")}}>
+        <input type="submit" value="Approve" />
+    </form>
+{% endif %}
