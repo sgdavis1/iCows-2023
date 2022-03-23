@@ -16,7 +16,7 @@ waiver.view:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator'
+    _role: 'administrator+swim admin'
 
 waiver.approve:
   path: '/waivers/{id}/approve'
@@ -26,7 +26,7 @@ waiver.approve:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator'
+    _role: 'administrator+swim admin'
 
 waiver.content:
   path: '/waivers'
@@ -36,4 +36,4 @@ waiver.content:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator'
+    _role: 'administrator+swim admin'
