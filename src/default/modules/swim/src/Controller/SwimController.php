@@ -205,7 +205,7 @@ class SwimController extends ControllerBase {
     $attendee_query = \Drupal::database()->select('icows_attendees', 'a');
     $attendee_query->condition('a.swim_id', $id, '=');
   
-    $attendee_query->fields('a', ['uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace']);
+    $attendee_query->fields('a', ['uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
     $attendees = $attendee_query->execute()->fetchAll();
   
     $current_user_id = \Drupal::currentUser()->id();    
@@ -218,12 +218,13 @@ class SwimController extends ControllerBase {
       $csv_row["name"] = $user->field_first_name->value . " " . $user->field_last_name->value;
       $csv_row["username"] = $user->getDisplayName();
       $csv_row["email"] = $user->getEmail();
-      $csv_row["rsvp"] = "TODO";
+      $date = new DrupalDateTime($attendee->date_time, 'UTC');
+      $csv_row["rsvp"] = getFormattedDate($date);
       $csv_row["boats"] = $attendee->number_of_kayaks;
   
       if ($attendee->swimmer == 1) {
         $csv_row["pace"] = $attendee->estimated_pace;
-        $csv_row["distance"] = "TODO"; // $attendee->distance;
+        $csv_row["distance"] = $attendee->distance;
         if ($attendee->kayaker == 1) {
           $csv_row["kayaker"] = "Yes";
         } else {
