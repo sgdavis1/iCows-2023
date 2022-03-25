@@ -80,7 +80,7 @@
           <td>{{ approved_user.username }}</td>
           <td>{{ approved_user.email }}</td>
           <td>
-            <form action={{ drupal_url( "waivers/#{approved_user.waiver_id}/review" ) }}>
+            <form action={{ drupal_url( "waivers/#{approved_user.waiver_id}/view" ) }}>
               <input type="submit" value="View" />
             </form>
           </td>
