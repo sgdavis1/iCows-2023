@@ -888,3 +888,13 @@ input[type=submit]:disabled {
     height: 200px;
     content: "";
 }
+
+span.fc-time{
+    color: white;
+
+}
+
+span.fc-title{
+    color: white;
+
+}
