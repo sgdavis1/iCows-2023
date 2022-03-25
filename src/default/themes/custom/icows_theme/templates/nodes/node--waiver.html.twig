@@ -6,7 +6,9 @@
     {{ content.field_waiver_display }}
     <a href={{waiver_url}} download="">Download</a>
 
-    <form action={{drupal_url("waivers/#{id}/approve")}}>
-        <input type="submit" value="Approve" />
-    </form>
+    {% if not approved %}
+        <form action={{drupal_url("waivers/#{id}/approve")}}>
+            <input type="submit" value="Approve" />
+        </form>
+    {% endif %}
 {% endif %}
