@@ -5,6 +5,7 @@ namespace Drupal\waiver\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
+use Drupal\user\Entity\User;
 
 /**
  * Implements an example form.
@@ -82,9 +83,22 @@ class NewWaiverForm extends FormBase {
             }
             
             $id = $query->execute();
-            $user = \Drupal\user\Entity\User::load($uid);
-            $user->set('field_current_waiver_id', $id);
-            $user->save();
+            $current_user = \Drupal\user\Entity\User::load($uid);
+            $current_user->set('field_current_waiver_id', $id);
+            $current_user->save();
+
+            $ids = \Drupal::entityQuery('user')
+                ->condition('roles', 'administrator')
+                ->execute();
+            $users = User::loadMultiple($ids);
+            foreach($users as $user){
+                $waiver_opt = $user->field_waiver_upload_email_opt_in->value;
+                $first_name = $current_user->field_first_name->value;
+                $last_name = $current_user->field_last_name->value;
+                if($waiver_opt != null and $waiver_opt != 0){
+                    log_email($user->id(), "A new waiver was uploaded by $first_name $last_name");
+                }
+            }
         }
     }
 }
