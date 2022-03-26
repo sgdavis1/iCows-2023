@@ -60,7 +60,7 @@
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col"></th>
+        <th scope="col" onclick="sortSwimmers('name')">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
@@ -71,7 +71,7 @@
 
       </tr>
       </thead>
-      <tbody>
+      <tbody id="swimmers">
       {% for swimmer in swimmers %}
         <tr>
           <th scope="row">{{ drupal_image(swimmer.picture, 'medium') }}</th>
@@ -116,7 +116,7 @@
         <th scope="col">Boats?</th>
       </tr>
       </thead>
-      <tbody>
+      <tbody id="kayakers">
       {% for kayaker in kayakers %}
         <tr>
           <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
@@ -147,5 +147,22 @@
       e.preventDefault();
     }
   }
-</script>
+  function sortSwimmers(field)
+  {
+    switch(field) {
+      case 'name':
+        // sort by name
 
+        break;
+      case 'pace':
+        // sort by pace
+        break;
+      case 'distance':
+        // sort by distance
+        break;
+      case 'boats':
+        // sort by boats
+        break;
+    }
+  }
+</script>
