@@ -64,10 +64,10 @@
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col">Pace</th>
-        <th scope="col">Distance</th>
-        <th scope="col">Boats?</th>
-        <th scope="col">Kayak?</th>
+        <th scope="col" onclick="sortSwimmers('pace')">Pace</th>
+        <th scope="col" onclick="sortSwimmers('distance')">Distance</th>
+        <th scope="col" onclick="sortSwimmers('boats')">Boats</th>
+        <th scope="col">Can Kayak</th>
 
       </tr>
       </thead>
@@ -109,11 +109,11 @@
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col"></th>
+        <th scope="col" onclick="sortKayakers('name')">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col">Boats?</th>
+        <th scope="col" onclick="sortKayakers('boats')">Boats</th>
       </tr>
       </thead>
       <tbody id="kayakers">
@@ -141,6 +141,14 @@
 </div>
 
 <script>
+  var swimNameOrder;
+  var swimNumBoatsOrder;
+  var paceOrder;
+  var distanceOrder;
+
+  var kayakNameOrder;
+  var kayakNumBoatsOrder;
+
   function clicked(e)
   {
     if(!confirm('Are you sure you want to delete the swim?')) {
@@ -161,7 +169,18 @@
         // sort by distance
         break;
       case 'boats':
-        // sort by boats
+        // sort by # of boats
+        break;
+    }
+  }
+
+  function sortKayakers(field)
+  {
+    switch(field) {
+      case 'name':
+        // sort by name
+      case 'boats':
+        // sort by # of boats
         break;
     }
   }
