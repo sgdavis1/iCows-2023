@@ -3,7 +3,7 @@
 
 {% if isAdmin %}
   <form action={{drupal_url("/swims/#{id}/delete")}}>
-    <input type="submit" value="Delete" />
+    <input type="submit" onclick="clicked(event)" value="Delete" />
   </form>
 {% endif %}
 
@@ -124,4 +124,13 @@
     </form>
   {% endif %}
 </div>
+
+<script>
+  function clicked(e)
+  {
+    if(!confirm('Are you sure you want to delete the swim?')) {
+      e.preventDefault();
+    }
+  }
+</script>
 
