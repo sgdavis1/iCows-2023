@@ -1,7 +1,9 @@
 <?php
 use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\Url; 
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+
 
 /**
  * Implements hook_theme().
@@ -122,6 +124,7 @@ function log_email($recipient_uid, $message) {
       $query->values($value);
   }
   $query->execute();
+  \Drupal::logger('swim')->notice("An email has been queued to be sent to user: $recipient_uid with message: $message");
   return;
 }
 
@@ -174,6 +177,13 @@ function send_email($recipient, $message, $message_key="alert_swim_host") {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function swim_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    $form['account']['mail']['#required'] = TRUE;
+}
+
+/**
 * Implements hook_mail().
 * https://www.valuebound.com/resources/blog/how-to-send-mail-programmatically-drupal-8
 */
@@ -187,13 +197,13 @@ function swim_mail($key, &$message, $params) {
   switch ($key) {
     case 'alert_swim_host':
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = t('An hourly upate of changes to icows:');
+      $message['subject'] = t('An hourly update of changes to icows:');
       $message['body'][] = $params['message'];
       break;
     case 'important_swim_changes':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('Changes were made to an upcoming swim.');
-      $message['body'][] = "The following change occured for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'];
+      $message['body'][] = "The following change occurred for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'];
       break;
   }
 }
