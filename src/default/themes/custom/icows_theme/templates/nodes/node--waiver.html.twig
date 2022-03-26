@@ -3,7 +3,8 @@
 
 {% if warnings == NULL %}
     <h1>{{ username }}'s waiver</h1>
-    {{ content.field_waiver_display }}
+    {# {{ content.field_waiver_display }} #}
+    <a href={{waiver_url}} >View</a>
     <a href={{waiver_url}} download="">Download</a>
 
     {% if not approved %}
