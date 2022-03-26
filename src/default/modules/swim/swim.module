@@ -1,7 +1,9 @@
 <?php
 use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\Url; 
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+
 
 /**
  * Implements hook_theme().
@@ -172,6 +174,13 @@ function send_email($recipient, $message, $message_key="alert_swim_host") {
   if ($result['result'] !== true) {
     \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function swim_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    $form['account']['mail']['#required'] = TRUE;
 }
 
 /**
