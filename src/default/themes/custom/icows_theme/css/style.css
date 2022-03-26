@@ -240,7 +240,7 @@ h1, h2, h3, h4, h5, h6
     max-width: 1200px;
     margin: auto;
     /* Must be equal to #header padding + #head .inner padding-left */
-    padding-left: 185px;
+    padding-left: 175px;
     /* Don't overlap over top menu items */
     height: 0;
 }
@@ -403,14 +403,11 @@ h1
     background-color: #cadbed;
     background-color: rgba(202, 219, 237, 0.78);
     /* Provides a faux infinitely wide box */
-    padding-left: 1500px;
     margin-left: -1500px;
-    padding-right: 1500px;
     margin-right: -1500px;
     position: relative;
     top: 20px;
-    padding-top: 30px;
-    padding-bottom: 10px;
+    padding: 30px 1500px 10px;
     min-height: 450px;
     text-align: center;
     overflow: hidden; /* Makes sure that kayaker and swimmer block don't bleed into below sections*/
@@ -488,13 +485,11 @@ h1
 .info4
 {
     background-color: #cadbed;
-    padding-top: 1px;
-    padding-bottom: 15px;
     /* Provides a faux infinitely wide box */
     margin-left: -1500px;
-    padding-left: 1500px;
     margin-right: -1500px;
-    padding-right: 1500px;
+    padding: 1px 1500px 15px 1500px;
+    min-width: 100%;
 }
 
 .info4 .howto-signup,
@@ -647,7 +642,7 @@ h1
 }
 
 
-#navbar{
+#navbar {
     background-color: #204a87;
     min-width: 100%;
     border: 0;
@@ -655,6 +650,94 @@ h1
     z-index: 100;
     margin-top: -15px;
     padding: 0;
+}
+
+@media screen and (max-width: 768px){
+    .col {
+        display: inline-block;
+        width: 100%;
+        vertical-align: top;
+    }
+
+    #navbar {
+        background-color: #204a87;
+        border: 0;
+        min-width: 100vw ;
+        position: fixed;
+        z-index: 100;
+        margin-top: -15px;
+        padding: 0;
+    }
+
+    .info4
+    {
+        background-color: #cadbed;
+        /* Provides a faux infinitely wide box */
+        margin-left: -5vw;
+        margin-right: -3.5vw;
+        padding: 1px 10vw 15px;
+        min-width: 10%;
+    }
+
+    .info2
+    {
+        background-color: #cadbed;
+        background-color: rgba(202, 219, 237, 0.78);
+        /* Provides a faux infinitely wide box */
+
+        position: relative;
+        top: 20px;
+        padding: 30px 10vw 10px;
+        margin-left: -4vw;
+        margin-right: -3.5vw;
+
+        min-height: 450px;
+        text-align: center;
+        overflow: hidden; /* Makes sure that kayaker and swimmer block don't bleed into below sections*/
+    }
+    .info2 p{
+        width: 100%;
+    }
+
+    .home-image
+    {
+        background: url("../images/dock-panorama.jpg") no-repeat center  ;
+        background-size: cover;
+        height: 350px;
+        margin-left: -20vw;
+        margin-right: -3.5vw;
+        margin-top: 10px;
+        position: relative;
+        z-index: -1;
+    }
+
+    .bg-scroll
+    {
+        background: url("../images/ocean.jpg") no-repeat  center ;
+        background-size: cover;
+        height: 200px;
+        /* Provides a faux infinitely wide box */
+        margin-left: -20vw;
+        margin-right: -3.5vw;
+    }
+
+    .swimmers-block{
+        width: 100%;
+    }
+
+    .kayakers-block{
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .navbar-toggle{
+        margin-right: 30px;
+    }
+
+}
+
+.route-title{
+    margin-top: 50px;
 }
 .navbar-default .navbar-nav > li > a {
     color: #ffffff;
