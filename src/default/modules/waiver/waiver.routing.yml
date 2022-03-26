@@ -37,3 +37,14 @@ waiver.content:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
     _role: 'administrator+swim admin'
+
+
+waiver.download_all:
+  path: '/waivers/download_all'
+  defaults:
+    _controller: '\Drupal\waiver\Controller\WaiverController::exportWaivers'
+    _title: 'Waivers Download'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator+swim admin'

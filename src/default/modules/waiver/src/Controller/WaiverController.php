@@ -10,7 +10,9 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Archiver\Zip;
 use Drupal\node\Entity\Node;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 
 class WaiverController extends ControllerBase {
@@ -128,5 +130,54 @@ class WaiverController extends ControllerBase {
       $user->save();
       $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
       $response->send();
+  }
+
+  public function exportWaivers() {
+    $tmp_file = tmpfile(); //temp file in memory
+    $tmp_location = stream_get_meta_data($tmp_file)['uri']; //"location" of temp file 
+    \Drupal::messenger()->addError(t('Error message.'));
+
+    $zip = new Zip($tmp_location); 
+
+    // https://fivejars.com/blog/how-zip-files-drupal-8
+    $query = \Drupal::database()->select('icows_waivers', 'i');
+    $query->condition('i.approved', 1, '=');
+    $query->fields('i', ['waiver_url']);
+    $waivers = $query->execute()->fetchAll();
+    $file_system = \Drupal::service('file_system');
+
+    foreach ($waivers as &$waiver) {
+      $file = File::load($waiver->waiver_url);
+      if ($file != NULL) {
+        $zip->add(1);
+        \Drupal::messenger()->addError(t("Good: " . $waiver->waiver_url . " " . $file->toUrl()));
+      } else {
+        \Drupal::messenger()->addError(t("Bad: " . $waiver->waiver_url));
+      }
+      
+      
+    }
+
+    $zip_data = stream_get_contents($tmp_file);
+
+    // All files are added, so close the zip file.
+    $zip->getArchive()->close();
+    $handle = fopen($tmp_location, 'w+');
+    $csv_data = stream_get_contents($handle);
+  
+    // Close the file handler since we don't need it anymore.  We are not storing
+    // this file anywhere in the filesystem.
+    fclose($handle);
+
+    $response = new Response();
+
+    // By setting these 2 header options, the browser will see the URL
+    // used by this Controller to return a CSV file called "article-report.csv".
+    $response->headers->set('Content-Type', 'application/zip'); //'application/octet-stream');
+    $response->headers->set('Content-Disposition', 'attachment; filename="waivers.zip"');
+  
+    $response->setContent($zip_data);
+  
+    return $response;
   }
 }
