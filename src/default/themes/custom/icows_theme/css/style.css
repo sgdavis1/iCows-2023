@@ -617,6 +617,18 @@ h1
     }
 }
 
+@media (max-width: 1334px){
+    #navbar-collapse {
+        overflow-y: visible;
+        float: right;
+        background-color: #204a87;
+        border-width: 0;
+        margin-top: -9px;
+        padding-right: 25px;
+    }
+
+}
+
 @media screen and (max-width: 768px)    {
     body {
         margin-top: 0;
