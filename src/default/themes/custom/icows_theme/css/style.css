@@ -394,9 +394,55 @@ h1
 
 .route-image::before
 {
-    content: url("../images/swim-route.png");
+    display: inline-block;
+    content: "";
+    background: url("../images/swim-route.png");
     height: 500px;
+    width: 1100px;
+    background-size: 1100px 500px;
+
 }
+
+@media  (max-width: 1200px){
+    .route-image::before
+    {
+        display: inline-block;
+        content: "";
+        background: url("../images/swim-route.png");
+        height: 400px;
+        width: 900px;
+        background-size: 900px 400px;
+
+    }
+}
+
+@media  (max-width: 1000px){
+    .route-image::before
+    {
+        display: inline-block;
+        content: "";
+        background: url("../images/swim-route.png");
+        height: 350px;
+        width: 700px;
+        background-size: 700px 350px;
+
+    }
+}
+
+
+@media  (max-width: 900px){
+    .route-image::before
+    {
+        display: inline-block;
+        content: "";
+        background: url("../images/swim-route.png");
+        height: 40vw;
+        width: 90vw;
+        background-size: 90vw 40vw;
+
+    }
+}
+
 
 .info2
 {
