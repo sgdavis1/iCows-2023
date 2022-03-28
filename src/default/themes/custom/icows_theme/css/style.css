@@ -1022,7 +1022,7 @@ input[type=submit]:disabled {
 }
 
 .ben-kieffer::before {
-    background-image: url("../images/ben-kieffer-image.jpg");
+    background-image: url("../images/ben-kieffer-image.png");
     background-size: 200px;
     display: inline-block;
     width: 200px;
