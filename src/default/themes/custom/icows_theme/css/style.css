@@ -1036,4 +1036,20 @@ span.fc-time{
 
 span.fc-title{
     color: white;
+    /*display: none;*/
+}
+
+.fc-event{
+    line-height: 1.4;
+    margin: 2px 0;
+
+}
+
+.fc-day-grid-event .fc-content {
+    white-space: normal;
+    overflow: visible;
+}
+
+.fc-content-skeleton tr{
+    max-height: 50px;
 }
