@@ -1056,10 +1056,28 @@ span.fc-title{
 
 .up-arrow:after{
     font-family: "FontAwesome",serif;
-    content: "\21BE";
+    content: "\2191";
+    margin-left: 4px ;
+    margin-bottom: -10px;
+    font-size: x-large;
 }
 
 .down-arrow:after{
     font-family: "FontAwesome",serif;
-    content: "\21C2";
+    content: "\2193";
+    margin-left: 4px ;
+    margin-bottom: -10px;
+    font-size: x-large;
 }
+
+.up-arrow:hover{
+    cursor: pointer;
+}
+.down-arrow:hover{
+    cursor: pointer;
+}
+.pointer-cursor:hover{
+    cursor: pointer;
+}
+
+
