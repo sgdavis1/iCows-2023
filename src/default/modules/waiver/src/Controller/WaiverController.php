@@ -114,6 +114,32 @@ class WaiverController extends ControllerBase {
   }
 
 
+  public function requestNewWaivers() {
+    $database = \Drupal::database();
+    $database->update('icows_waivers')->fields(array(
+        'approved' => 0,))
+    ->condition('approved', 1, '=')->execute();
+
+    $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+    $query = $userStorage->getQuery();
+    $uids = $query->condition('roles', 'swimmer')->execute();
+    $approved_users = $userStorage->loadMultiple($uids);
+    foreach($approved_users as $user){
+      $username = $user->get('name')->value;
+      $uid = $user->get('uid')->value;
+      $userlist[$uid] = $username;
+      $user->field_current_waiver_id = -1;
+      $user->removeRole('swimmer');
+      $user->save();
+    } 
+
+    // redirect
+    $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
+    $response->send();
+    return;
+  }
+
+
   public function approve($id){
       $database = \Drupal::database();
       $database->update('icows_waivers')->fields(array(
