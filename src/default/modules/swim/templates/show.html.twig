@@ -1,4 +1,5 @@
 {# swim/templates/show.html.twig #}
+<head><script src="https://kit.fontawesome.com/e6665e8ec8.js" crossorigin="anonymous"></script></head>
 <div class="centerDateTime">{{ date_time }}</div>
 
 <div class="swim-signup-row">
@@ -174,14 +175,38 @@
     }
   }
 
-  function sortKayakers(field)
-  {
-    switch(field) {
-      case 'name':
-        // sort by name
-      case 'boats':
-        // sort by # of boats
-        break;
+  function sortKayakers(field) {
+    for(var sortField in kayakRowSorting){
+      if(sortField !== field){
+        kayakRowSorting[sortField] = SortEnum.NO_SORT;
+        document.getElementById(sortField + "_kayak").className = "";
+      }
     }
+    if(kayakRowSorting[field] === SortEnum.DECREASING){
+      kayakRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field + "_kayak").className = "up-arrow";
+    }
+    else if(kayakRowSorting[field] === SortEnum.INCREASING){
+      kayakRowSorting[field] = SortEnum.DECREASING;
+      document.getElementById(field + "_kayak").className = "down-arrow";
+    }
+    else{
+      kayakRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field + "_kayak").className = "up-arrow";
+    }
+    const table = document.querySelector('.kayakers'); //get the table to be sorted
+    const tableBody = table.querySelector('tbody');
+    const tableData = table2data(tableBody, ['name', 'user', 'email', 'RSVP', 'boats']);
+    tableData.sort((a, b)=>{
+
+      if((kayakRowSorting[field] === SortEnum.INCREASING && a[field] >= b[field]) ||
+              (kayakRowSorting[field] === SortEnum.DECREASING && a[field] <= b[field])){
+        return 1;
+      }
+      return -1;
+    })
+    data2table(tableBody, tableData, ['name', 'user', 'email', 'RSVP', 'boats']);
+  }
+
   }
 </script>
