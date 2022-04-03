@@ -1,4 +1,5 @@
 {# swim/templates/show.html.twig #}
+<head><script src="https://kit.fontawesome.com/e6665e8ec8.js" crossorigin="anonymous"></script></head>
 <div class="centerDateTime">{{ date_time }}</div>
 
 <div class="swim-signup-row">
@@ -56,22 +57,22 @@
     </form>
   {% endif %}
   {% if swimmers %}
-    <table class="table table-striped">
+    <table class="table table-striped swimmers">
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col"></th>
+        <th scope="col" onclick="sortSwimmers('name')" id="name">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col">Pace</th>
-        <th scope="col">Distance</th>
-        <th scope="col">Boats?</th>
-        <th scope="col">Kayak?</th>
+        <th scope="col" onclick="sortSwimmers('pace')" id="pace">Pace</th>
+        <th scope="col" onclick="sortSwimmers('distance')" id="distance">Distance</th>
+        <th scope="col" onclick="sortSwimmers('boats')" id="boats">Boats</th>
+        <th scope="col">Can Kayak</th>
 
       </tr>
       </thead>
-      <tbody>
+      <tbody id="swimmers">
       {% for swimmer in swimmers %}
         <tr>
           <th scope="row">{{ drupal_image(swimmer.picture, 'medium') }}</th>
@@ -105,18 +106,18 @@
   {% endif %}
 
   {% if kayakers %}
-    <table class="table table-striped">
+    <table class="table table-striped kayakers">
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col"></th>
+        <th scope="col" onclick="sortKayakers('name')" id="name_kayak">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col">Boats?</th>
+        <th scope="col" onclick="sortKayakers('boats')" id="boats_kayak">Boats</th>
       </tr>
       </thead>
-      <tbody>
+      <tbody id="kayakers">
       {% for kayaker in kayakers %}
         <tr>
           <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
@@ -141,11 +142,117 @@
 </div>
 
 <script>
+
+  var SortEnum = {
+    DECREASING: 1,
+    INCREASING: 2,
+    NO_SORT: 3,
+  };
+
+  var swimRowSorting = {'name': SortEnum.NO_SORT, 'boats': SortEnum.NO_SORT,
+                        'pace': SortEnum.NO_SORT, 'distance': SortEnum.NO_SORT };
+  var kayakRowSorting = {'name': SortEnum.NO_SORT, 'boats': SortEnum.NO_SORT};
+
   function clicked(e)
   {
     if(!confirm('Are you sure you want to delete the swim?')) {
       e.preventDefault();
     }
   }
-</script>
+  function sortSwimmers(field) {
+    //change all other fields to no sort
+    for(var sortField in swimRowSorting){
+      if(sortField !== field){
+        swimRowSorting[sortField] = SortEnum.NO_SORT;
+        console.log(sortField);
+        document.getElementById(sortField).className = "header";
+      }
+    }
 
+    if(swimRowSorting[field] === SortEnum.DECREASING){
+      swimRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field).className = "up-arrow";
+    }
+    else if(swimRowSorting[field] === SortEnum.INCREASING){
+      swimRowSorting[field] = SortEnum.DECREASING;
+      document.getElementById(field).className = "down-arrow";
+    }
+    else{
+      swimRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field).className = "up-arrow";
+    }
+
+    const table = document.querySelector('.swimmers'); //get the table to be sorted
+    const tableBody = table.querySelector('tbody');
+    const tableData = table2data(tableBody, ['name', 'user', 'email', 'RSVP', 'pace', 'distance', 'boats']);
+    tableData.sort((a, b)=>{
+
+      if((swimRowSorting[field] === SortEnum.INCREASING && a[field] >= b[field]) ||
+         (swimRowSorting[field] === SortEnum.DECREASING && a[field] <= b[field])){
+        return 1;
+      }
+      return -1;
+    })
+    data2table(tableBody, tableData, ['name', 'user', 'email', 'RSVP', 'pace', 'distance', 'boats']);
+  }
+
+  function sortKayakers(field) {
+    for(var sortField in kayakRowSorting){
+      if(sortField !== field){
+        kayakRowSorting[sortField] = SortEnum.NO_SORT;
+        document.getElementById(sortField + "_kayak").className = "";
+      }
+    }
+    if(kayakRowSorting[field] === SortEnum.DECREASING){
+      kayakRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field + "_kayak").className = "up-arrow";
+    }
+    else if(kayakRowSorting[field] === SortEnum.INCREASING){
+      kayakRowSorting[field] = SortEnum.DECREASING;
+      document.getElementById(field + "_kayak").className = "down-arrow";
+    }
+    else{
+      kayakRowSorting[field] = SortEnum.INCREASING;
+      document.getElementById(field + "_kayak").className = "up-arrow";
+    }
+    const table = document.querySelector('.kayakers'); //get the table to be sorted
+    const tableBody = table.querySelector('tbody');
+    const tableData = table2data(tableBody, ['name', 'user', 'email', 'RSVP', 'boats']);
+    tableData.sort((a, b)=>{
+
+      if((kayakRowSorting[field] === SortEnum.INCREASING && a[field] >= b[field]) ||
+              (kayakRowSorting[field] === SortEnum.DECREASING && a[field] <= b[field])){
+        return 1;
+      }
+      return -1;
+    })
+    data2table(tableBody, tableData, ['name', 'user', 'email', 'RSVP', 'boats']);
+  }
+
+  function table2data(tableBody, headers){
+    const tableData = []; // create the array that'll hold the data rows
+    tableBody.querySelectorAll('tr')
+            .forEach(row=>{  // for each table row...
+              var rowData = {};  // make an array for that row
+              let i = 0;
+              row.querySelectorAll('td')  // for each cell in that row
+                      .forEach(cell=>{
+                        rowData[headers[i]] = cell.innerText;  // add it to the row data
+                        i++;
+                      })
+              tableData.push(rowData);  // add the full row to the table data
+            });
+    return tableData;
+  }
+
+  function data2table(tableBody, tableData, headers){
+    tableBody.querySelectorAll('tr') // for each table row...
+            .forEach((row, i)=>{
+              const rowData = tableData[i]; // get the array for the row data
+              row.querySelectorAll('td')  // for each table cell ...
+                      .forEach((cell, j)=>{
+                        cell.innerText = rowData[headers[j]]; // put the appropriate array element into the cell
+                      })
+            });
+  }
+</script>

@@ -122,7 +122,7 @@ class SwimSignUpForm extends FormBase {
     public function validateForm(array &$form, FormStateInterface $form_state) {
         $swim_id = $form_state->getValue('swim_id');
         $swim_id_as_int = (int)$swim_id;
-
+        $uid = \Drupal::currentUser()->id();
         $database = \Drupal::database();
         $select = $database->select('icows_attendees')
             ->fields('icows_attendees', ['uid'])
@@ -130,8 +130,9 @@ class SwimSignUpForm extends FormBase {
 
         $query = \Drupal::database()->select('icows_attendees', 'i');
         $query->condition('i.swim_id', $swim_id_as_int, '=');
+        $query->condition('i.uid', $uid, '=');
         $query->fields('i', ['uid']);
-        $result = $select->execute()->fetchAll();
+        $result = $query->execute()->fetchAll();
         if(count($result) > 0){
             $form_state->setErrorByName('signed_up', $this->t('You are already signed up for this swim'));
         }
