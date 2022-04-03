@@ -1,5 +1,4 @@
 {# swim/templates/show.html.twig #}
-<head><script src="https://kit.fontawesome.com/e6665e8ec8.js" crossorigin="anonymous"></script></head>
 <div class="centerDateTime">{{ date_time }}</div>
 
 <div class="swim-signup-row">
@@ -61,13 +60,13 @@
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col" onclick="sortSwimmers('name')" id="name">Name</th>
+        <th scope="col" onclick="sortSwimmers('name')" id="name" class="pointer-cursor">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col" onclick="sortSwimmers('pace')" id="pace">Pace</th>
-        <th scope="col" onclick="sortSwimmers('distance')" id="distance">Distance</th>
-        <th scope="col" onclick="sortSwimmers('boats')" id="boats">Boats</th>
+        <th scope="col" onclick="sortSwimmers('pace')" id="pace" class="pointer-cursor">Pace</th>
+        <th scope="col" onclick="sortSwimmers('distance')" id="distance" class="pointer-cursor">Distance</th>
+        <th scope="col" onclick="sortSwimmers('boats')" id="boats" class="pointer-cursor">Boats</th>
         <th scope="col">Can Kayak</th>
 
       </tr>
@@ -110,11 +109,11 @@
       <thead>
       <tr>
         <th scope="col"></th>
-        <th scope="col" onclick="sortKayakers('name')" id="name_kayak">Name</th>
+        <th scope="col" onclick="sortKayakers('name')" id="name_kayak" class="pointer-cursor">Name</th>
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col" onclick="sortKayakers('boats')" id="boats_kayak">Boats</th>
+        <th scope="col" onclick="sortKayakers('boats')" id="boats_kayak" class="pointer-cursor">Boats</th>
       </tr>
       </thead>
       <tbody id="kayakers">
@@ -164,8 +163,7 @@
     for(var sortField in swimRowSorting){
       if(sortField !== field){
         swimRowSorting[sortField] = SortEnum.NO_SORT;
-        console.log(sortField);
-        document.getElementById(sortField).className = "header";
+        document.getElementById(sortField).className = "pointer-cursor";
       }
     }
 
@@ -200,7 +198,7 @@
     for(var sortField in kayakRowSorting){
       if(sortField !== field){
         kayakRowSorting[sortField] = SortEnum.NO_SORT;
-        document.getElementById(sortField + "_kayak").className = "";
+        document.getElementById(sortField + "_kayak").className = "pointer-cursor";
       }
     }
     if(kayakRowSorting[field] === SortEnum.DECREASING){
