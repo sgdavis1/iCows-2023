@@ -135,7 +135,6 @@ class WaiverController extends ControllerBase {
   public function exportWaivers() {
     $tmp_file = tmpfile(); //temp file in memory
     $tmp_location = stream_get_meta_data($tmp_file)['uri']; //"location" of temp file 
-
     $zip = new Zip($tmp_location);
     $zip = $zip->getArchive();
 
@@ -158,122 +157,20 @@ class WaiverController extends ControllerBase {
         \Drupal::messenger()->addError(t("PDF missing for : " . basename($url)));
       }
     }
-    
-    // $zip->addFile(PublicStream::basePath() . "/test.pdf", "/waivers/test.pdf");
 
-    $zip_data = stream_get_contents($tmp_file);
-
-    // All files are added, so close the zip file.
     $zip->close();
     $handle = fopen($tmp_location, 'r');
-    $csv_data = stream_get_contents($handle);
+    $zip_data = stream_get_contents($handle);
   
-    // Close the file handler since we don't need it anymore.  We are not storing
-    // this file anywhere in the filesystem.
     fclose($handle);
 
     $response = new Response();
 
-    // By setting these 2 header options, the browser will see the URL
-    // used by this Controller to return a CSV file called "article-report.csv".
-    $response->headers->set('Content-Type', 'application/zip'); //'application/octet-stream');
+    $response->headers->set('Content-Type', 'application/zip');
     $response->headers->set('Content-Disposition', 'attachment; filename="waivers.zip"');
   
-    $response->setContent($csv_data);
-  
-    return $response;
-
-
-
-
-    // https://fivejars.com/blog/how-zip-files-drupal-8
-    // $query = \Drupal::database()->select('icows_waivers', 'i');
-    // $query->condition('i.approved', 1, '=');
-    // $query->fields('i', ['waiver_url']);
-    // $waivers = $query->execute()->fetchAll();
-
-    // foreach ($waivers as &$waiver) {
-    //   $file = File::load($waiver->waiver_url);
-    //   if ($file != NULL) {
-    //     $zip->add(PublicStream::basePath() . "/test.pdf");
-    //     \Drupal::messenger()->addError(t("Good: " . $waiver->waiver_url . " " . $file->toUrl()));
-    //   } else {
-    //     \Drupal::messenger()->addError(t("Bad: " . $waiver->waiver_url));
-    //   }
-    // }
-
-    $zip->addFile(PublicStream::basePath() . "/test.pdf", "/waivers/test.pdf");
-
-    $zip_data = stream_get_contents($tmp_file);
-
-    // All files are added, so close the zip file.
-    $zip->close();
-    $handle = fopen($tmp_location, 'r');
-    $csv_data = stream_get_contents($handle);
-  
-    // Close the file handler since we don't need it anymore.  We are not storing
-    // this file anywhere in the filesystem.
-    fclose($handle);
-
-    $response = new Response();
-
-    // By setting these 2 header options, the browser will see the URL
-    // used by this Controller to return a CSV file called "article-report.csv".
-    $response->headers->set('Content-Type', 'application/zip'); //'application/octet-stream');
-    $response->headers->set('Content-Disposition', 'attachment; filename="waivers.zip"');
-  
-    $response->setContent($csv_data);
+    $response->setContent($zip_data);
   
     return $response;
   }
 }
-
-//   public function exportWaivers() {
-//     $tmp_file = tmpfile(); //temp file in memory
-//     $tmp_location = stream_get_meta_data($tmp_file)['uri']; //"location" of temp file 
-
-//     $zip = new Zip($tmp_location);
-//     $zip = $zip->getArchive();
-
-//     // https://fivejars.com/blog/how-zip-files-drupal-8
-//     $query = \Drupal::database()->select('icows_waivers', 'i');
-//     $query->condition('i.approved', 1, '=');
-//     $query->fields('i', ['waiver_url']);
-//     $waivers = $query->execute()->fetchAll();
-
-//     // foreach ($waivers as &$waiver) {
-//     //   $file = File::load($waiver->waiver_url);
-//     //   if ($file != NULL) {
-//     //     $zip->add(PublicStream::basePath() . "/test.pdf");
-//     //     \Drupal::messenger()->addError(t("Good: " . $waiver->waiver_url . " " . $file->toUrl()));
-//     //   } else {
-//     //     \Drupal::messenger()->addError(t("Bad: " . $waiver->waiver_url));
-//     //   }
-//     // }
-
-//     $zip->addFile(PublicStream::basePath() . "/test.pdf", "/waivers/test.pdf");
-
-//     $zip_data = stream_get_contents($tmp_file);
-
-//     // All files are added, so close the zip file.
-//     $zip->close();
-//     $handle = fopen($tmp_location, 'r');
-//     $csv_data = stream_get_contents($handle);
-  
-//     // Close the file handler since we don't need it anymore.  We are not storing
-//     // this file anywhere in the filesystem.
-//     fclose($handle);
-
-//     $response = new Response();
-
-//     // By setting these 2 header options, the browser will see the URL
-//     // used by this Controller to return a CSV file called "article-report.csv".
-//     $response->headers->set('Content-Type', 'application/zip'); //'application/octet-stream');
-//     $response->headers->set('Content-Disposition', 'attachment; filename="waivers.zip"');
-  
-//     $response->setContent($csv_data);
-  
-//     return $response;
-//   }
-// }
-
