@@ -1053,3 +1053,13 @@ span.fc-title{
 .fc-content-skeleton tr{
     max-height: 50px;
 }
+
+.up-arrow:after{
+    font-family: "FontAwesome",serif;
+    content: "\21BE";
+}
+
+.down-arrow:after{
+    font-family: "FontAwesome",serif;
+    content: "\21C2";
+}
