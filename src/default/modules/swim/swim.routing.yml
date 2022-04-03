@@ -64,6 +64,16 @@ swim.exports.attendee_list:
     _permission: 'access content'
     _role: 'administrator+swim admin'
 
+swim.send_list:
+  path: '/swims/{id}/send_list'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::send_list'
+    _title: 'Send List'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator+swim admin'
+
 swim.edit:
   path: '/swims/{id}/edit'
   defaults:
