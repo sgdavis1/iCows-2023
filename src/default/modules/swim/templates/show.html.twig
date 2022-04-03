@@ -34,6 +34,15 @@
           </form>
         {% endif %}
       </div>
+
+      <div style="float: left">
+        {% if isAdmin %}
+          <form action={{drupal_url("/swims/#{id}/send_list")}}>
+            <input type="submit" value="Send List"
+                   onclick="return confirm('Are you sure you want to export this list of swimmer/kayakers?')"/>
+          </form>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

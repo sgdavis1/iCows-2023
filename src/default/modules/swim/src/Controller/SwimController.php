@@ -167,6 +167,17 @@ class SwimController extends ControllerBase {
     ];
   }
 
+  public function send_list($id) {
+      verify_swim_exists($id);
+
+
+      $config = \Drupal::config('swim.settings');
+      print $config->get('dnr_email');
+
+
+      return new Response();
+  }
+
   public function attendance_list($id) {
     return [
       '#theme' => 'attendance_list',
