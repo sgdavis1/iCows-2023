@@ -1,0 +1,7 @@
+swim.settings:
+  type: config_object
+  label: 'Swim config'
+  mapping:
+    message:
+      type: text
+      label: 'Message'
