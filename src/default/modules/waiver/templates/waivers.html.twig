@@ -88,9 +88,13 @@
       {% endfor %}
       </tbody>
     </table>
+    <form action={{drupal_url("waivers/download_all")}}>
+      <input type="submit" value="Download All" />
+    </form>
   {% else %}
     No waivers have been approved yet!
   {% endif %}
+  
 
 </div>
 

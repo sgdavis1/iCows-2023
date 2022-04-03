@@ -10,7 +10,9 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Archiver\Zip;
 use Drupal\node\Entity\Node;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 
 class WaiverController extends ControllerBase {
@@ -128,5 +130,47 @@ class WaiverController extends ControllerBase {
       $user->save();
       $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
       $response->send();
+  }
+
+  public function exportWaivers() {
+    $tmp_file = tmpfile(); //temp file in memory
+    $tmp_location = stream_get_meta_data($tmp_file)['uri']; //"location" of temp file 
+    $zip = new Zip($tmp_location);
+    $zip = $zip->getArchive();
+
+    // https://fivejars.com/blog/how-zip-files-drupal-8
+    $query = \Drupal::database()->select('icows_waivers', 'i');
+    $query->condition('i.approved', 1, '=');
+    $query->fields('i', ['waiver_url']);
+    $waivers = $query->execute()->fetchAll();
+
+    foreach ($waivers as &$waiver) {
+      $uri = File::load($waiver->waiver_url)->getFileUri();;
+      $url = \Drupal\Core\Url::fromUri(file_create_url($uri))->toString();
+      $dir_uri = \Drupal::service('stream_wrapper_manager')->getViaUri($uri)->getDirectoryPath();
+      $base_name = basename($url);
+      $file_path = $dir_uri . "/files/" . $base_name;
+
+      if (file_exists($file_path)) {
+        $zip->addFile($file_path, "waivers/" . $base_name);
+      } else {
+        \Drupal::messenger()->addError(t("PDF missing for : " . basename($url)));
+      }
+    }
+
+    $zip->close();
+    $handle = fopen($tmp_location, 'r');
+    $zip_data = stream_get_contents($handle);
+  
+    fclose($handle);
+
+    $response = new Response();
+
+    $response->headers->set('Content-Type', 'application/zip');
+    $response->headers->set('Content-Disposition', 'attachment; filename="waivers.zip"');
+  
+    $response->setContent($zip_data);
+  
+    return $response;
   }
 }
