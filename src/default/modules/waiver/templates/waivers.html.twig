@@ -94,7 +94,9 @@
   {% else %}
     No waivers have been approved yet!
   {% endif %}
-  
 
+    <form action={{drupal_url("/waivers/request_new")}}>
+      <input type="submit" value="Request new waivers" onclick="return confirm('Are you sure you want to invalidate all waivers?')" />
+    </form>
 </div>
 
