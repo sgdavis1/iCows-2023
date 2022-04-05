@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\swim\Controller\SwimController.
- */
- 
 namespace Drupal\waiver\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
@@ -122,7 +117,7 @@ class WaiverController extends ControllerBase {
 
     $userStorage = \Drupal::entityTypeManager()->getStorage('user');
     $query = $userStorage->getQuery();
-    $uids = $query->condition('roles', 'swimmer')->execute();
+    $uids = $query->execute();
     $approved_users = $userStorage->loadMultiple($uids);
     foreach($approved_users as $user){
       $username = $user->get('name')->value;
@@ -132,6 +127,7 @@ class WaiverController extends ControllerBase {
       $user->removeRole('swimmer');
       $user->save();
     } 
+    notify_users("ICOWS: Please submit your yearly waiver.", "This is a reminder to submit your update swim waiver for the new year. You will not be able to attend swims as a swimmer until this waiver is submitted and approved.");
 
     // redirect
     $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
