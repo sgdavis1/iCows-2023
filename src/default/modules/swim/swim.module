@@ -249,15 +249,11 @@ function send_list_to_dnr($id, $recipient, $message_key="for_dnr") {
 
     //attach file
     $mailManager = \Drupal::service('plugin.manager.mail');
-    $params = [
-        'attachment' => [
-            'filecontent' => stream_get_contents($handle),
-//            'filecontent' => $csv_data,
-//            'filecontent' => file_get_contents('php://temp'),
-            'filename' => 'iCows_swimmers_and_kayakers.csv',
+    $params['attachment'] = array(
+            'filecontent' => $csv_data,
+            'filename' => 'test.csv',
             'filemime' => 'text/csv',
-        ],
-    ];
+    );
 
     $params['message'] = "Attached below is a list of the swimmers/kayakers that will be present.";
     $langcode = \Drupal::currentUser()->getPreferredLangcode();
@@ -267,6 +263,7 @@ function send_list_to_dnr($id, $recipient, $message_key="for_dnr") {
     if ($result['result'] !== true) {
         \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
     }
+    fclose($handle);
 }
 
 /**
@@ -297,6 +294,7 @@ function swim_mail($key, &$message, $params) {
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('Swimmer/kayaker list for upcoming swim');
       $message['body'][] = $params['message'];
+      $message['params']['attachments'][] = $params['attachment'];
       break;
     case 'important_swim_changes':
       $message['from'] = \Drupal::config('system.site')->get('mail');
