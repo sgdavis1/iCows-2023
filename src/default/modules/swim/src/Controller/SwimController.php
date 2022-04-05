@@ -169,13 +169,12 @@ class SwimController extends ControllerBase {
 
   public function send_list($id) {
       verify_swim_exists($id);
-
-
+        // TODO: ATTACH FILE TO EMAIL
       $config = \Drupal::config('swim.settings');
       print $config->get('dnr_email');
-
-
-      return new Response();
+      send_list_to_dnr($id,'l.pearson.vzw@gmail.com');
+      $response = new RedirectResponse(Url::fromRoute('swim.content')->toString() . '/' . $id);
+      $response->send();
   }
 
   public function attendance_list($id) {

@@ -3,6 +3,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
+use function Drupal\swim\Controller\getFormattedDate;
+use Drupal\file\Entity\File;
 
 
 /**
@@ -176,6 +178,97 @@ function send_email($recipient, $message, $message_key="alert_swim_host") {
   }
 }
 
+function send_list_to_dnr($id, $recipient, $message_key="for_dnr") {
+    // Start using PHP's built in file handler functions to create a temporary file.
+    $handle = fopen('php://temp', 'w+');
+
+    // Set up the header that will be displayed as the first line of the CSV file.
+    // Blank strings are used for multi-cell values where there is a count of
+    // the "keys" and a list of the keys with the count of their usage.
+    $header = [
+        'Status',
+        'Name',
+        'Username',
+        'Email',
+        'RSVP',
+        'Boats',
+        'Pace',
+        'Distance',
+        'Kayak?',
+    ];
+
+    // Add the header as the first line of the CSV.
+    fputcsv($handle, $header);
+
+    // get swimmers
+    $attendee_query = \Drupal::database()->select('icows_attendees', 'a');
+    $attendee_query->condition('a.swim_id', $id, '=');
+
+    $attendee_query->fields('a', ['uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
+    $attendees = $attendee_query->execute()->fetchAll();
+
+    $current_user_id = \Drupal::currentUser()->id();
+
+    foreach ($attendees as &$attendee) {
+        $user =  \Drupal\user\Entity\User::load($attendee->uid);
+        $csv_row = [];
+
+        $csv_row["status"] = ($attendee->swimmer == 1 ? "Swimmer" : "Kayaker");
+        $csv_row["name"] = $user->field_first_name->value . " " . $user->field_last_name->value;
+        $csv_row["username"] = $user->getDisplayName();
+        $csv_row["email"] = $user->getEmail();
+        $date = new DrupalDateTime($attendee->date_time, 'UTC');
+        $csv_row["rsvp"] = getFormattedDate($date);
+        $csv_row["boats"] = $attendee->number_of_kayaks;
+
+        if ($attendee->swimmer == 1) {
+            $csv_row["pace"] = $attendee->estimated_pace;
+            $csv_row["distance"] = $attendee->distance;
+            if ($attendee->kayaker == 1) {
+                $csv_row["kayaker"] = "Yes";
+            } else {
+                $csv_row["kayaker"] = "No";
+            }
+        } else {
+            $csv_row["pace"] = "";
+            $csv_row["distance"] = "";
+            $csv_row["kayaker"] = "";
+        }
+
+        // Add the data we exported to the next line of the CSV>
+        fputcsv($handle, array_values($csv_row));
+    }
+
+    // Reset where we are in the CSV.
+    rewind($handle);
+
+    // Retrieve the data from the file handler.
+    $csv_data = stream_get_contents($handle);
+
+    //should have the file now
+
+    //attach file
+    $mailManager = \Drupal::service('plugin.manager.mail');
+    $params = [
+        'attachment' => [
+            'filecontent' => stream_get_contents($handle),
+//            'filecontent' => $csv_data,
+//            'filecontent' => file_get_contents('php://temp'),
+            'filename' => 'iCows_swimmers_and_kayakers.csv',
+            'filemime' => 'text/csv',
+        ],
+    ];
+
+    $params['message'] = "Attached below is a list of the swimmers/kayakers that will be present.";
+    $langcode = \Drupal::currentUser()->getPreferredLangcode();
+
+    $result = $mailManager->mail('swim', $message_key, $recipient, $langcode, $params, NULL, true);
+
+    if ($result['result'] !== true) {
+        \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
+    }
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -198,6 +291,11 @@ function swim_mail($key, &$message, $params) {
     case 'alert_swim_host':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('An hourly update of changes to icows:');
+      $message['body'][] = $params['message'];
+      break;
+    case 'for_dnr':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Swimmer/kayaker list for upcoming swim');
       $message['body'][] = $params['message'];
       break;
     case 'important_swim_changes':
