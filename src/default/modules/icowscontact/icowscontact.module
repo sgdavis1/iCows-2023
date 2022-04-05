@@ -13,7 +13,11 @@ function notify_users($subject, $message) {
   $users = $userStorage->loadMultiple($uids);
 
   foreach($users as $user){
-    send_massemail($user->getEmail(), $subject, $message);
+    if ($user->getEmail() != null) {
+      send_massemail($user->getEmail(), $subject, $message);
+    } else {
+      \Drupal::messenger()->addError(t('Missing email for ' . $user->field_first_name->value . " " . $user->field_last_name->value));
+    }
   }
 
   return;

@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\swim\Controller\SwimController.
- */
- 
 namespace Drupal\waiver\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
@@ -110,6 +105,33 @@ class WaiverController extends ControllerBase {
     $response = new RedirectResponse(Url::fromUri("internal:/waiver/view")->toString());
     $response->send();
 
+    return;
+  }
+
+
+  public function requestNewWaivers() {
+    $database = \Drupal::database();
+    $database->update('icows_waivers')->fields(array(
+        'approved' => 0,))
+    ->condition('approved', 1, '=')->execute();
+
+    $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+    $query = $userStorage->getQuery();
+    $uids = $query->execute();
+    $approved_users = $userStorage->loadMultiple($uids);
+    foreach($approved_users as $user){
+      $username = $user->get('name')->value;
+      $uid = $user->get('uid')->value;
+      $userlist[$uid] = $username;
+      $user->field_current_waiver_id = -1;
+      $user->removeRole('swimmer');
+      $user->save();
+    } 
+    notify_users("ICOWS: Please submit your yearly waiver.", "This is a reminder to submit your update swim waiver for the new year. You will not be able to attend swims as a swimmer until this waiver is submitted and approved.");
+
+    // redirect
+    $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
+    $response->send();
     return;
   }
 

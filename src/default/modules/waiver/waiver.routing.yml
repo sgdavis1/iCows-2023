@@ -48,3 +48,14 @@ waiver.download_all:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
     _role: 'administrator+swim admin'
+
+
+waiver.request_new:
+  path: '/waivers/request_new'
+  defaults:
+    _controller: '\Drupal\waiver\Controller\WaiverController::requestNewWaivers'
+    _title: 'Request New Waiver'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator+swim admin'
