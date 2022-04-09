@@ -362,9 +362,9 @@ h1
     font-weight: bold;
     font-style: italic;
     padding: 10px;
-    background-color: #8ae234;
-    border: 1px solid #4e9a06;
-    color: #444;
+    background-color: #3465a4;
+    border: 1px solid #d6e3f1;
+    color: #bff0f4;
 }
 
 /** Swimmers / Kayakers section **/
@@ -765,6 +765,7 @@ h1
         margin-left: -20vw;
         margin-right: -3.5vw;
         margin-top: 10px;
+        position: relative;
         position: relative;
         z-index: -1;
     }
