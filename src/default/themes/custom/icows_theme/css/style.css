@@ -302,9 +302,9 @@ h1, h2, h3, h4, h5, h6
 /** Large high res image box **/
 .home-image
 {
-    background: url("../images/dock-panorama.jpg") no-repeat center center fixed;
+    background: url("../images/front-image.jpg") no-repeat center center fixed;
     background-size: cover;
-    height: 350px;
+    height: 450px;
     margin-left: -1500px;
     margin-right: -1500px;
     margin-top: -15px;
@@ -486,7 +486,7 @@ h1
 /** Safety Section **/
 .bg-scroll
 {
-    background: url("../images/ocean.jpg") no-repeat center center fixed;
+    background: url("../images/ocean 16-9 --.jpg") no-repeat center center fixed;
     background-size: cover;
     height: 200px;
     /* Provides a faux infinitely wide box */
@@ -759,9 +759,9 @@ h1
 
     .home-image
     {
-        background: url("../images/dock-panorama.jpg") no-repeat center  ;
+        background: url("../images/front-image.jpg") no-repeat center  ;
         background-size: cover;
-        height: 350px;
+        height: 450px;
         margin-left: -20vw;
         margin-right: -3.5vw;
         margin-top: 10px;
@@ -771,7 +771,7 @@ h1
 
     .bg-scroll
     {
-        background: url("../images/ocean.jpg") no-repeat  center ;
+        background: url("../images/ocean 16-9 --.jpg") no-repeat  center ;
         background-size: cover;
         height: 200px;
         /* Provides a faux infinitely wide box */
