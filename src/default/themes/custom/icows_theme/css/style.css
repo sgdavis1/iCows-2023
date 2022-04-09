@@ -302,9 +302,9 @@ h1, h2, h3, h4, h5, h6
 /** Large high res image box **/
 .home-image
 {
-    background: url("../images/dock-panorama.jpg") no-repeat center center fixed;
+    background: url("../images/front-image.jpg") no-repeat center center fixed;
     background-size: cover;
-    height: 350px;
+    height: 450px;
     margin-left: -1500px;
     margin-right: -1500px;
     margin-top: -15px;
@@ -362,9 +362,9 @@ h1
     font-weight: bold;
     font-style: italic;
     padding: 10px;
-    background-color: #8ae234;
-    border: 1px solid #4e9a06;
-    color: #444;
+    background-color: #3465a4;
+    border: 1px solid #d6e3f1;
+    color: #bff0f4;
 }
 
 /** Swimmers / Kayakers section **/
@@ -486,9 +486,9 @@ h1
 /** Safety Section **/
 .bg-scroll
 {
-    background: url("../images/ocean.jpg") no-repeat center center fixed;
+    background: url("../images/ocean 16-9 --.jpg") no-repeat center center fixed;
     background-size: cover;
-    height: 200px;
+    height: 250px;
     /* Provides a faux infinitely wide box */
     margin-left: -1500px;
     margin-right: -1500px;
@@ -759,21 +759,22 @@ h1
 
     .home-image
     {
-        background: url("../images/dock-panorama.jpg") no-repeat center  ;
+        background: url("../images/front-image.jpg") no-repeat center  ;
         background-size: cover;
-        height: 350px;
+        height: 450px;
         margin-left: -20vw;
         margin-right: -3.5vw;
         margin-top: 10px;
+        position: relative;
         position: relative;
         z-index: -1;
     }
 
     .bg-scroll
     {
-        background: url("../images/ocean.jpg") no-repeat  center ;
+        background: url("../images/ocean 16-9 --.jpg") no-repeat  center ;
         background-size: cover;
-        height: 200px;
+        height: 250px;
         /* Provides a faux infinitely wide box */
         margin-left: -20vw;
         margin-right: -3.5vw;
