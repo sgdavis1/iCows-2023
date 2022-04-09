@@ -96,7 +96,10 @@ class NewSwimForm extends FormBase {
             'title'             => $form_state->getValue('title'),
             'field_swim_id'     => $num_rows,
             'field_swim_date'   => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
-            'field_swim_link'   => 'http://127.0.0.1:8080/swims/'.$num_rows,
+            'field_swim_link' => [
+                'uri' => 'http://127.0.0.1:8080/swims/'.$num_rows,
+                'title' => $form_state->getValue('title'),
+            ]
         ]);
         $node->save();
         $nid = $node->id();
