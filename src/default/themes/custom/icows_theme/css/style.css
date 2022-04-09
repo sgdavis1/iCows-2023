@@ -488,7 +488,7 @@ h1
 {
     background: url("../images/ocean 16-9 --.jpg") no-repeat center center fixed;
     background-size: cover;
-    height: 200px;
+    height: 250px;
     /* Provides a faux infinitely wide box */
     margin-left: -1500px;
     margin-right: -1500px;
@@ -773,7 +773,7 @@ h1
     {
         background: url("../images/ocean 16-9 --.jpg") no-repeat  center ;
         background-size: cover;
-        height: 200px;
+        height: 250px;
         /* Provides a faux infinitely wide box */
         margin-left: -20vw;
         margin-right: -3.5vw;
