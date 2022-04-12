@@ -3,10 +3,9 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
-use function Drupal\swim\Controller\getFormattedDate;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Drupal\Core\Datetime\DateHelper;
 
 /**
  * Implements hook_theme().
@@ -15,12 +14,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 function swim_theme($existing, $type, $theme, $path) {
   return [
     'swim_statistics_form' => array(
-      'variables' => array(
-          'data' => NULL,
-          'form' => NULL
-      ),
       'render element' => 'form'
-  ),
+    ),
     'swims' => [
       'variables' => ['test_var' => NULL],
     ],
@@ -334,4 +329,39 @@ function verify_swim_exists($id) {
   if (!$swim) {
     throw new NotFoundHttpException();
   }
+}
+
+function getFormattedDate($date) {
+  $day_index = DateHelper::dayOfWeek($date);
+  $day = "";
+  switch ($day_index) {
+    case 1:
+      $day = "Monday";
+      break;
+    case 2:
+      $day = "Tuesday";
+      break;
+    case 3:
+      $day = "Wednesday";
+      break;
+    case 4:
+      $day = "Thursday";
+      break;
+    case 5:
+      $day = "Friday";
+      break;
+    case 6:
+      $day = "Saturday";
+      break;
+    case 0:
+      $day = "Sunday";
+      break;
+    default:
+      $day = "Unknown";
+      break;
+  }
+
+  $month_index = intval($date->format('m'));
+  $month = strval(DateHelper::monthNames()[$month_index]);
+  return $day . ", " . $month . $date->format(' d, Y - g:ia');
 }

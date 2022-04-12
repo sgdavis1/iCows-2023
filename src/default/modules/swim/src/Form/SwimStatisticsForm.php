@@ -31,11 +31,19 @@ class SwimStatisticsForm extends FormBase {
         $stats = ["test", "1", "2"];
 
         $date = new DrupalDateTime($swim->date_time);
+
+        // TODO: verify that the date is in the past
+        // TODO: verify that the user was register for the swim
+        // TODO: Allow the route to work without the form portion when no ID is given
+        // TODO: remove blank rows in the table
+        // TODO: Validate the pace and distance format and add description on the form
+        // TODO: format twig better
+
         $form['date_time'] = [
             '#type' => 'datetime',
             '#title' => $this->t('Date and Time'),
             '#default_value' => $date,
-            '#required' => TRUE
+            '#required' => FALSE
         ];
 
         $form['pace'] = [
@@ -45,29 +53,12 @@ class SwimStatisticsForm extends FormBase {
             '#required' => TRUE
         ];
 
-        $form['pace_description'] = array(
-            '#markup' => '<p>Enter your sustained pace per 100m for a long swim (at least 500m length). Ex] 1:55</p><br>'
-        );
-
         $form['distance'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Distance'),
             '#maxlength' => 10,
             '#required' => TRUE
         ];
-
-        $form['distance_description'] = array(
-            '#markup' => '<p>Enter your desired distance that you would like to swim. Ex] 1km</p><br>
-            <p>Some useful approximate distances to remember (short course first / long course second)</p>
-            <ul>
-              <li><strong>Brown boathouse</strong> 1.2K / 2.0K</li>
-              <li><strong>Diamond Window boathouse</strong> 1.6K / 2.4K</li>
-              <li><strong>The point</strong> 2.1K / 2.9K</li>
-              <li><strong>The dam</strong> 3.0K / 3.8K</li>
-            </ul>
-            <p>Short course is the direct route to the landmarks, long course includes a jog across the lake
-            at the start and end of the swim.</p><br>'
-        );
 
         $form['swim_id'] = array(
             '#value' => $id,
@@ -99,14 +90,12 @@ class SwimStatisticsForm extends FormBase {
             $date = new DrupalDateTime($swim->date_time, 'UTC');
             $stat->date =  getFormattedDate($date);
             $stat->swim_name = $swim->title;
-            var_dump($swim->title);
         }
 
-        return array(
-            '#theme' => 'swim_statistics_form',
-            '#form' => $form,
-            '#data' => $swim_stats,
-        );
+        $form['#theme'] = 'swim_statistics_form';
+        $form['data'] = $swim_stats;
+
+        return $form;
     }
 
     /**
@@ -119,10 +108,9 @@ class SwimStatisticsForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
-        $this->messenger()->addStatus("TEST123");
         $current_user_id = \Drupal::currentUser()->id();
         $value = [
-            'uid' => $recipient_uid,
+            'uid' => $current_user_id,
             'swim_id' => $form_state->getValue('swim_id'),
             'pace' => $form_state->getValue('pace'),
             'distance' => $form_state->getValue('distance'),
@@ -133,10 +121,6 @@ class SwimStatisticsForm extends FormBase {
         $query->values($value);
         $query->execute();
         return true;
-
-        // Redirect to home
-        // $form_state->setRedirect('<front>');
-          
     }
 
 }
