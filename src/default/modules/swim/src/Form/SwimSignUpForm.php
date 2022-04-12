@@ -46,6 +46,8 @@ class SwimSignUpForm extends FormBase {
      */
     public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
         verify_swim_status($id);
+        $pace = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_pace->value;
+
         $form['swim_id'] = array(
             '#value' => $id,
             '#type' => 'hidden'
@@ -53,6 +55,7 @@ class SwimSignUpForm extends FormBase {
         $form['pace'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Pace'),
+            '#default_value' => $pace,
             '#maxlength' => 10,
             '#required' => TRUE
         ];
