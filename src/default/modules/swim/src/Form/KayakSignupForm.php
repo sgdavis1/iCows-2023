@@ -62,17 +62,33 @@ class KayakSignupForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
+        $swim_id = $form_state->getValue('swim_id');
+
+        $query = \Drupal::database()->select('icows_attendees', 'i');
+        $query->condition('i.swim_id', $swim_id, '=');
+        $query->condition('i.kayaker', 1, '=');
+        $query->fields('i', ['group']);
+        $kayakers = $query->execute()->fetchAll();
+
+        $group_num = 1;
+        foreach ($kayakers as &$kayaker) {
+            if ($kayaker->group >= $group_num) {
+                $group_num = $kayaker->group + 1;
+            }
+        }
+
         $values = [
             [
                 'kayaker' => 1,
                 'swimmer' => 0,
                 'uid' => intval(\Drupal::currentUser()->id()),
-                'swim_id' => $form_state->getValue('swim_id'),
+                'swim_id' => $swim_id,
                 'number_of_kayaks' => $form_state->getValue('kayaks'),
+                'group' => $group_num,
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks']);
+        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'group']);
         foreach ($values as $developer) {
             $query->values($developer);
         }
