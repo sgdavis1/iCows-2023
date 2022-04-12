@@ -160,18 +160,7 @@ class EditSwimForm extends FormBase {
 
 }
 
-// This code is a duplicate of some in the controller, figure out how to centralize them
-function verify_swim_exists($id) {
-    $query = \Drupal::database()->select('icows_swims', 'i');
-    
-    $query->condition('i.swim_id', $id, '=');
-  
-    $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-    $swim = $query->execute()->fetchAll()[0];
-    if (!$swim) {
-      throw new NotFoundHttpException();
-    }
-  }
+
 
 
 
