@@ -355,16 +355,3 @@ function getFormattedDate($date) {
   $month = strval(DateHelper::monthNames()[$month_index]);
   return $day . ", " . $month . $date->format(' d, Y - g:ia');
 }
-
-function verify_swim_exists($id) {
-  $query = \Drupal::database()->select('icows_swims', 'i');
-    $query->condition('i.swim_id', $id, '=');
-
-  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-  $swim = $query->execute()->fetchAll()[0];
-  if (!$swim) {
-    $response = new RedirectResponse("/");
-    $response->send();
-    return;
-  }
-}

@@ -5,6 +5,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use function Drupal\swim\Controller\getFormattedDate;
 use Drupal\file\Entity\File;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -13,6 +14,13 @@ use Drupal\file\Entity\File;
  */
 function swim_theme($existing, $type, $theme, $path) {
   return [
+    'swim_statistics_form' => array(
+      'variables' => array(
+          'data' => NULL,
+          'form' => NULL
+      ),
+      'render element' => 'form'
+  ),
     'swims' => [
       'variables' => ['test_var' => NULL],
     ],
@@ -171,7 +179,6 @@ function send_email($recipient, $message, $message_key="alert_swim_host") {
  
   // TODO: Actually send the email
   $result = $mailManager->mail($module, $message_key, $recipient, $langcode, $params, NULL, $send);
-  // \Drupal::messenger()->addMessage($params['message']);
 
   if ($result['result'] !== true) {
     \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
@@ -281,8 +288,6 @@ function swim_mail($key, &$message, $params) {
   $options = array(
     'langcode' => $message['langcode'],
   );
-
-  var_dump("WE made it to this point!");
  
   switch ($key) {
     case 'alert_swim_host':
@@ -317,3 +322,16 @@ function getProfilePicture($user_id) {
   }
 }
 
+
+// This code is a duplicate of some in the controller, figure out how to centralize them
+function verify_swim_exists($id) {
+  $query = \Drupal::database()->select('icows_swims', 'i');
+  
+  $query->condition('i.swim_id', $id, '=');
+
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $swim = $query->execute()->fetchAll()[0];
+  if (!$swim) {
+    throw new NotFoundHttpException();
+  }
+}
