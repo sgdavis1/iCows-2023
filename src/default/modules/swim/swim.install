@@ -99,8 +99,8 @@ function swim_schema() {
             'group' => array(
                 'type' => 'int',
                 'not null' => TRUE,
-                'default' => 0,
-                'description' => 'The group the swimmer belongs in for the swim',
+                'default' => 1,
+                'description' => 'The group the swimmer belongs to for the swim',
             ),
             'swimmer' => array(
                 'type' => 'int',
