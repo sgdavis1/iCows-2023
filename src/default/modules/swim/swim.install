@@ -49,12 +49,6 @@ function swim_schema() {
                 'default' => 0,
                 'description' => 'The node ID of the swim node that corresponds to the swim',
             ),
-            'group' => array(
-                'type' => 'int',
-                'not null' => TRUE,
-                'default' => 0,
-                'description' => 'The group the swimmer belongs in for the swim',
-            ),
             'title' => array(
                 'type' => 'text',
                 'not null' => FALSE,
@@ -101,6 +95,12 @@ function swim_schema() {
                 'not null' => TRUE,
                 'default' => 0,
                 'description' => 'User ID of the swim attendee',
+            ),
+            'group' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'The group the swimmer belongs in for the swim',
             ),
             'swimmer' => array(
                 'type' => 'int',
