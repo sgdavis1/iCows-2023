@@ -73,7 +73,7 @@ class SwimController extends ControllerBase {
   $attendee_swimmer_query->condition('a.swim_id', $id, '=');
   $attendee_swimmer_query->condition('a.swimmer', 1, '=');
 
-  $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
+  $attendee_swimmer_query->fields('a', ['uid', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance', 'group']);
   $swimmers = $attendee_swimmer_query->execute()->fetchAll();
 
   $current_user_id = \Drupal::currentUser()->id();
@@ -121,7 +121,7 @@ class SwimController extends ControllerBase {
   $attendee_kayaker_query->condition('a.kayaker', 1, '=');
 
 
-  $attendee_kayaker_query->fields('a', ['uid', 'number_of_kayaks']);
+  $attendee_kayaker_query->fields('a', ['uid', 'number_of_kayaks', 'group']);
   $kayakers = $attendee_kayaker_query->execute()->fetchAll();
 
   foreach ($kayakers as &$kayaker) {

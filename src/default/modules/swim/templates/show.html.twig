@@ -64,6 +64,7 @@
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
+        <th scope="col">Group</th>
         <th scope="col" onclick="sortSwimmers('pace')" id="pace" class="pointer-cursor">Pace</th>
         <th scope="col" onclick="sortSwimmers('distance')" id="distance" class="pointer-cursor">Distance</th>
         <th scope="col" onclick="sortSwimmers('boats')" id="boats" class="pointer-cursor">Boats</th>
@@ -79,6 +80,7 @@
           <td>{{ swimmer.username }}</td>
           <td>{{ swimmer.email }}</td>
           <td>{{ swimmer.rsvp }}</td>
+          <td>{{ swimmer.group }}</td>
           <td>{{ swimmer.estimated_pace }}</td>
           <td>{{ swimmer.distance }}km</td>
           <td>{{ swimmer.number_of_kayaks }}</td>
@@ -113,6 +115,7 @@
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
+        <th scope="col">Group</th>
         <th scope="col" onclick="sortKayakers('boats')" id="boats_kayak" class="pointer-cursor">Boats</th>
       </tr>
       </thead>
@@ -124,6 +127,7 @@
           <td>{{ kayaker.username }}</td>
           <td>{{ kayaker.email }}</td>
           <td>{{ kayaker.rsvp }}</td>
+          <td>{{ kayaker.group }}</td>
           <td>{{ kayaker.number_of_kayaks }}</td>
         </tr>
       {% endfor %}
