@@ -13,27 +13,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Implements an example form.
  */
 class SwimSignUpForm extends FormBase {
-
-    /**
-     * Validates Time in MM:SS
-     *
-     * @param string $time  Name of time to be checked.
-     */
-    public function isValidPace(string $time)
-    {
-        return preg_match("#^(([0-5][0-9])|[0-9]):[0-5][0-9]$#", $time);
-    }
-
-    /**
-     * Validates that a string is a number
-     *
-     * @param string number  Name of number to be checked.
-     */
-    public function isValidNumber(string $number)
-    {
-        return preg_match("#^[0-9]+$#", $number);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -143,13 +122,13 @@ class SwimSignUpForm extends FormBase {
         $pace = $form_state->getValue('pace');
         $distance = $form_state->getValue('distance');
         $boats = $form_state->getValue('kayaks');
-        if(!$this->isValidPace($pace)){
+        if(!isValidPace($pace)){
             $form_state->setErrorByName('invalid_pace', $this->t('Invalid pace. Please use the format MM:SS'));
         }
-        if(!$this->isValidNumber($distance)){
+        if(!isValidNumber($distance)){
             $form_state->setErrorByName('invalid_distance', $this->t("Invalid distance. Please enter a number for the 'distance' field."));
         }
-        if(!$this->isValidNumber($boats)){
+        if(!isValidNumber($boats)){
             $form_state->setErrorByName('invalid_boats', $this->t("Invalid boats entry. Please enter a number for the 'boats' field."));
         }
     }

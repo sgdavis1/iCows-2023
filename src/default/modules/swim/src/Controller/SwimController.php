@@ -8,7 +8,7 @@ namespace Drupal\swim\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Datetime\DateHelper;
+
 use Drupal\Core\Url; 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -321,50 +321,3 @@ class SwimController extends ControllerBase {
 }
 
 
-function getFormattedDate($date) {
-  $day_index = DateHelper::dayOfWeek($date);
-  $day = "";
-  switch ($day_index) {
-    case 1:
-      $day = "Monday";
-      break;
-    case 2:
-      $day = "Tuesday";
-      break;
-    case 3:
-      $day = "Wednesday";
-      break;
-    case 4:
-      $day = "Thursday";
-      break;
-    case 5:
-      $day = "Friday";
-      break;
-    case 6:
-      $day = "Saturday";
-      break;
-    case 0:
-      $day = "Sunday";
-      break;
-    default:
-      $day = "Unknown";
-      break;
-  }
-
-  $month_index = intval($date->format('m'));
-  $month = strval(DateHelper::monthNames()[$month_index]);
-  return $day . ", " . $month . $date->format(' d, Y - g:ia');
-}
-
-function verify_swim_exists($id) {
-  $query = \Drupal::database()->select('icows_swims', 'i');
-    $query->condition('i.swim_id', $id, '=');
-
-  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-  $swim = $query->execute()->fetchAll()[0];
-  if (!$swim) {
-    $response = new RedirectResponse("/");
-    $response->send();
-    return;
-  }
-}
