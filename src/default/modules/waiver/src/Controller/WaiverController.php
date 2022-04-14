@@ -15,10 +15,16 @@ class WaiverController extends ControllerBase {
   public function content() {
     $userStorage = \Drupal::entityTypeManager()->getStorage('user');
 
-    $query = $userStorage->getQuery();
-    $uids = $query->condition('roles', 'swimmer')->execute();
+    $query = \Drupal::database()->select('icows_waivers', 'i');
+    $query->condition('i.approved', 1, '=');
+    $query->fields('i', ['uid']);
+    $waivers = $query->execute()->fetchAll();
+    $approved_uids = array();
+    foreach($waivers as $waiver) {
+        array_push($approved_uids, $waiver->uid);
+    }
     
-    $approved_users = $userStorage->loadMultiple($uids);
+    $approved_users = $userStorage->loadMultiple($approved_uids);
 
     $approved_users_values = array();
   
@@ -43,7 +49,7 @@ class WaiverController extends ControllerBase {
     $pending_users_values = array();
   
     foreach($pending_users as $user){
-        if (!in_array("swimmer", $user->getRoles())) {
+        if (!in_array($user->id(), $approved_uids)) {
           $name = $user->field_first_name->value . " " . $user->field_last_name->value;
           $user_values = ["name" => $name,
                           "email" => $user->getEmail(),
@@ -61,14 +67,12 @@ class WaiverController extends ControllerBase {
 
     $not_submitted_users_values = array();
     foreach($not_submitted_users as $user){
-      if (!in_array("swimmer", $user->getRoles())) {
-          $name = $user->field_first_name->value . " " . $user->field_last_name->value;
-          $user_values = ["name" => $name,
-              "email" => $user->getEmail(),
-              "username" => $user->getDisplayName(),
-              "picture" => $user->id(),];
-          array_push($not_submitted_users_values, $user_values);
-      }
+        $name = $user->field_first_name->value . " " . $user->field_last_name->value;
+        $user_values = ["name" => $name,
+            "email" => $user->getEmail(),
+            "username" => $user->getDisplayName(),
+            "picture" => $user->id(),];
+        array_push($not_submitted_users_values, $user_values);
     }
 
     return [
