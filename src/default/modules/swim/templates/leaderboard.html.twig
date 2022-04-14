@@ -1,0 +1,29 @@
+{# swim/templates/show.html.twig #}
+<div class="centerDateTime">{{ date_time }}</div>
+<div>
+  <table class="table table-striped swimmers">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" onclick="sortSwimmers('name')" id="name" class="pointer-cursor">Name</th>
+      <th scope="col" onclick="sortSwimmers('pace')" id="pace" class="pointer-cursor">Pace</th>
+      <th scope="col" onclick="sortSwimmers('distance')" id="distance" class="pointer-cursor">Distance</th>
+    </tr>
+    </thead>
+    <tbody id="swimmers">
+    {% for swimmer in swimmers %}
+      <tr>
+        <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
+        <td>{{ swimmer.name }}</td>
+        <td>{{ swimmer.actual_pace }}</td>
+        <td>{{ swimmer.actual_distance }}km</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <form action={{drupal_url("swims/#{id}")}}>
+    <input type="submit" value="Back" />
+  </form>
+</div>
+
