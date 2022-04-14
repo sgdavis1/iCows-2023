@@ -35,7 +35,17 @@ function swim_theme($existing, $type, $theme, $path) {
                       'isAdmin' => NULL,
                       'isApproved' => NULL,
                       'isKayaker' => NULL,
-                      'isSwimmer' => NULL]
+                      'isSwimmer' => NULL,
+                      'past_swim' => NULL]
+    ],
+    'leaderboard' => [
+      'variables' => [
+        'id' => NULL,
+        'title' => NULL,
+        'description' => NULL,
+        'date_time' => NULL,
+        'swimmers' => NULL
+      ],
     ],
     'edit' => [
       'variables' => ['id' => NULL],
