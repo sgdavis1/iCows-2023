@@ -158,7 +158,7 @@ class WaiverController extends ControllerBase {
       $response->send();
   }
 
-  public function exportWaivers() {
+  public function exportWaivers(string $condition) {
     $tmp_file = tmpfile(); //temp file in memory
     $tmp_location = stream_get_meta_data($tmp_file)['uri']; //"location" of temp file 
     $zip = new Zip($tmp_location);
@@ -166,7 +166,7 @@ class WaiverController extends ControllerBase {
 
     // https://fivejars.com/blog/how-zip-files-drupal-8
     $query = \Drupal::database()->select('icows_waivers', 'i');
-    $query->condition('i.approved', 1, '=');
+    $query->condition('i.approved', 1, $condition);
     $query->fields('i', ['waiver_url']);
     $waivers = $query->execute()->fetchAll();
 
@@ -199,4 +199,12 @@ class WaiverController extends ControllerBase {
   
     return $response;
   }
+
+    public function exportPendingWaivers(){
+        return $this->exportWaivers('<>');
+    }
+    public function exportApprovedWaivers(){
+        return $this->exportWaivers('=');
+    }
+
 }
