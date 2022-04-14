@@ -42,20 +42,34 @@ class SwimSignUpForm extends FormBase {
      * @param int $per_group is the ideal number of swimmers per group
      * @param int $remainder is the number groups that will have more than the ideal number
      */
-    public function groupSwimmers(array $swimmers, int $num_groups, int $per_group, int $remainder)
+    public function groupSwimmers(array $swimmers, int $num_groups, int $per_group, int $remainder): array
     {
+        $groupings = array();
 
+
+
+
+        return $groupings;
     }
 
     /**
-     * Converts a pace/distance to pace/1km
+     * Converts a pace/distance to pace/1 km
      *
      * @param int $pace is the pace of a swimmer
      * @param int $distance is the distance for the pace given
      */
     public function getStandardPace(int $pace, int $distance): int
     {
-        return 1;
+        //convert pace from min:sec to seconds
+        $time = explode(":", $pace);
+        $pace_in_sec = ($time[0] * 60) + $time[1];
+
+        if ($distance == 1) {
+            return $pace_in_sec;
+        }
+        else {
+            return (1 / $distance) * $pace_in_sec;
+        }
     }
 
     /**
@@ -231,11 +245,11 @@ class SwimSignUpForm extends FormBase {
             $query->fields('i', ['uid', 'estimated_pace', 'distance', 'group']);
             $swimmers = $query->execute()->fetchAll();
 
-            //create array of arrays where each array is the uid, and pace for 1 km
+            //create array of arrays where each array is the uid, and pace (in seconds) for 1 km
             $swimmers_info = array();
 
             //get number of swimmers for swim
-            $swimmer_count = 1;
+            $swimmer_count = 0;
             foreach ($swimmers as &$swimmer) {
                 $swimmer_count += 1;
                 $new_pace = $this->getStandardPace($swimmer->estimated_pace, $swimmer->distance);
