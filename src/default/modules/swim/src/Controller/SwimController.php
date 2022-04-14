@@ -53,7 +53,6 @@ class SwimController extends ControllerBase {
 
   public function show($id) {
   verify_swim_exists($id);
-  # Use dynamic queries instead: https://www.drupal.org/docs/7/api/database-api/dynamic-queries/introduction-to-dynamic-queries
   $query = \Drupal::database()->select('icows_swims', 'i');
   
   // Add extra detail to this query object: a condition, fields and a range

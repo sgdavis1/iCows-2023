@@ -98,7 +98,7 @@
   {% endif %}
 
   <h2>Kayakers</h2>
-  {% if (not signed_up) and isApproved%}
+  {% if (not signed_up)%}
     <form action={{drupal_url("swims/#{id}/KayakSignup")}}>
       <input type="submit" value="Kayaker Signup" />
     </form>
