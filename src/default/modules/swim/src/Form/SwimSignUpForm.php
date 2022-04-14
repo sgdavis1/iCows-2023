@@ -130,10 +130,10 @@ class SwimSignUpForm extends FormBase {
     /**
      * Converts a pace/distance to pace/1 km
      *
-     * @param int $pace is the pace of a swimmer
+     * @param string $pace is the pace of a swimmer
      * @param int $distance is the distance for the pace given
      */
-    public function getStandardPace(int $pace, int $distance): int
+    public function getStandardPace(string $pace, int $distance): int
     {
         //convert pace from min:sec to seconds
         $time = explode(":", $pace);
@@ -352,10 +352,10 @@ class SwimSignUpForm extends FormBase {
             foreach ($grouping as &$group) {
                 $grouping_num++;
                 foreach ($group as &$swimmer) {
-                    $database->update('icows_attendees', 'i')->fields(array(
+                    $database->update('icows_attendees')->fields(array(
                         'group' => $grouping_num,
-                    ))->condition('i.swim_id', $swim_id, '=')
-                        ->condition('i.uid', $swimmer[0], '=')
+                    ))->condition('icows_attendees.swim_id', $swim_id, '=')
+                        ->condition('icows_attendees.uid', $swimmer[0], '=')
                         ->execute();
                 }
             }
