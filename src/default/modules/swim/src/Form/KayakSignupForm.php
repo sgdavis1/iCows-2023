@@ -67,6 +67,7 @@ class KayakSignupForm extends FormBase {
         $query = \Drupal::database()->select('icows_attendees', 'i');
         $query->condition('i.swim_id', $swim_id, '=');
         $query->condition('i.kayaker', 1, '=');
+        $query->condition('i.swimmer', 0, '=');
         $query->fields('i', ['group']);
         $kayakers = $query->execute()->fetchAll();
 
