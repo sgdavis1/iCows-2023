@@ -340,13 +340,26 @@ class SwimSignUpForm extends FormBase {
             });
 
             //make grouping
-            $grouping = $this->groupSwimmers($swimmers_info, $num_kayakers, $group_num, $remainder);
+            $optimized_grouping = $this->groupSwimmers($swimmers_info, $num_kayakers, $group_num, $remainder);
+
+            //get grouping
+            $grouping = $optimized_grouping[0];
 
             //update attendees to have their new group
-            //TODO
+            $database = \Drupal::database();
+
+            $grouping_num = 0;
+            foreach ($grouping as &$group) {
+                $grouping_num++;
+                foreach ($group as &$swimmer) {
+                    $database->update('icows_attendees', 'i')->fields(array(
+                        'group' => $grouping_num,
+                    ))->condition('i.swim_id', $swim_id, '=')
+                        ->condition('i.uid', $swimmer[0], '=')
+                        ->execute();
+                }
+            }
         }
-
-
 
 
         //log changes
