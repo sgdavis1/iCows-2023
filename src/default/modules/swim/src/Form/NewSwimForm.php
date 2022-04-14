@@ -89,6 +89,8 @@ class NewSwimForm extends FormBase {
         $num_rows = $query->countQuery()->execute()->fetchField();
         $num_rows += 1;
 
+        $host = \Drupal::request()->getSchemeAndHttpHost();
+
         // create node for calendar
         $node = Node::create([
             'type'              => 'swims',
@@ -97,7 +99,7 @@ class NewSwimForm extends FormBase {
             'field_swim_id'     => $num_rows,
             'field_swim_date'   => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             'field_swim_link' => [
-                'uri' => 'http://127.0.0.1:8080/swims/'.$num_rows,
+                'uri' => $host.'/swims/'.$num_rows,
                 'title' => $form_state->getValue('title'),
             ]
         ]);
