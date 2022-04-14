@@ -39,11 +39,22 @@ waiver.content:
     _role: 'administrator+swim admin'
 
 
-waiver.download_all:
-  path: '/waivers/download_all'
+waiver.download_approved:
+  path: '/waivers/download_approved'
   defaults:
-    _controller: '\Drupal\waiver\Controller\WaiverController::exportWaivers'
+    _controller: '\Drupal\waiver\Controller\WaiverController::exportApprovedWaivers'
     _title: 'Waivers Download'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator+swim admin'
+
+
+waiver.download_pending:
+  path: '/waivers/download_pending'
+  defaults:
+    _controller: '\Drupal\waiver\Controller\WaiverController::exportPendingWaivers'
+    _title: 'Waivers Pending Download'
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
