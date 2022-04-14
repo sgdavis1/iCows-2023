@@ -158,10 +158,43 @@ class SwimSignUpForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
+        $swim_id = $form_state->getValue('swim_id');
+
         $willing_to_kayak = 0;
         if ($form_state->getValue('if_needed') == 1) {  //assuming 1 means box is checked
             $willing_to_kayak = 1;
         }
+
+        $query = \Drupal::database()->select('icows_attendees', 'i');
+        $query->condition('i.swim_id', $swim_id, '=');
+        $query->condition('i.kayaker', 1, '=');
+        $query->condition('i.swimmer', 0, '=');
+        $query->fields('i', ['group']);
+        $kayakers = $query->execute()->fetchAll();
+
+        $num_kayakers = 0;
+        foreach ($kayakers as &$kayaker) {
+            $num_kayakers += 1;
+        }
+
+        if ($num_kayakers != 0) {
+            $query = \Drupal::database()->select('icows_attendees', 'i');
+            $query->condition('i.swim_id', $swim_id, '=');
+            $query->condition('i.swimmer', 1, '=');
+            $query->fields('i', ['group']);
+            $swimmers = $query->execute()->fetchAll();
+
+            $swimmer_count = 1;
+            foreach ($swimmers as &$swimmer) {
+                $swimmer_count += 1;
+            }
+
+            $group_num =  $num_kayakers % $swimmer_count;
+        }
+        else {
+            $group_num = 1;
+        }
+
 
         $values = [
             [
@@ -169,13 +202,14 @@ class SwimSignUpForm extends FormBase {
                 'swimmer' => 1,
                 'distance' => $form_state->getValue('distance'),
                 'uid' => intval(\Drupal::currentUser()->id()),
-                'swim_id' => $form_state->getValue('swim_id'),
+                'swim_id' => $swim_id,
                 'number_of_kayaks' => $form_state->getValue('kayaks'),
                 'estimated_pace' => $form_state->getValue('pace'),
+                'group' => $group_num,
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
+        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance', 'group']);
         foreach ($values as $developer) {
             $query->values($developer);
         }
