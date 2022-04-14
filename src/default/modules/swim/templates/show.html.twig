@@ -11,6 +11,13 @@
 
     <h2>Description</h2>
     <p> {{ description }} </p>
+    <div style="float: left">
+      {% if past_swim %}
+        <form action={{drupal_url("/swims/#{id}/leaderboard")}}>
+          <input type="submit" value="Leaderboard" />
+        </form>
+      {% endif %}
+    </div>
   </div>
 
   <div class="swim-signup-column right">
@@ -35,11 +42,19 @@
         {% endif %}
       </div>
 
-      <div style="float: left">
+      <div style="float: left; padding-right: 10px">
         {% if isAdmin %}
           <form action={{drupal_url("/swims/#{id}/send_list")}}>
             <input type="submit" value="Send List"
                    onclick="return confirm('Are you sure you want to export this list of swimmer/kayakers?')"/>
+          </form>
+        {% endif %}
+      </div>
+
+      <div style="float: left">
+        {% if isAdmin %}
+          <form action={{drupal_url("/swims/#{id}/edit")}}>
+            <input type="submit" value="Edit" />
           </form>
         {% endif %}
       </div>
@@ -64,8 +79,8 @@
         <th scope="col">User</th>
         <th scope="col">Email</th>
         <th scope="col">RSVP</th>
-        <th scope="col" onclick="sortSwimmers('pace')" id="pace" class="pointer-cursor">Pace</th>
-        <th scope="col" onclick="sortSwimmers('distance')" id="distance" class="pointer-cursor">Distance</th>
+        <th scope="col" onclick="sortSwimmers('pace')" id="pace" class="pointer-cursor">Est. Pace</th>
+        <th scope="col" onclick="sortSwimmers('distance')" id="distance" class="pointer-cursor">Est. Distance</th>
         <th scope="col" onclick="sortSwimmers('boats')" id="boats" class="pointer-cursor">Boats</th>
         <th scope="col">Can Kayak</th>
 
@@ -74,7 +89,7 @@
       <tbody id="swimmers">
       {% for swimmer in swimmers %}
         <tr>
-          <th scope="row">{{ drupal_image(swimmer.picture, 'medium') }}</th>
+          <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
           <td>{{ swimmer.name }}</td>
           <td>{{ swimmer.username }}</td>
           <td>{{ swimmer.email }}</td>
