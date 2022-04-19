@@ -94,6 +94,40 @@ class KayakSignupForm extends FormBase {
             $query->values($developer);
         }
         $query->execute();
+
+        if ($group_num > 1){
+            $num_kayakers = $group_num;
+
+            //get the necessary info for the grouping algo
+            $query = \Drupal::database()->select('icows_attendees', 'i');
+            $query->condition('i.swim_id', $swim_id, '=');
+            $query->condition('i.swimmer', 1, '=');
+            $query->fields('i', ['uid', 'estimated_pace', 'distance', 'group']);
+            $swimmers = $query->execute()->fetchAll();
+
+            //create array of arrays where each array is the uid, and pace (in seconds) for 1 km
+            $swimmers_info = array();
+
+            //get number of swimmers for swim
+            $swimmer_count = 0;
+            foreach ($swimmers as &$swimmer) {
+                $swimmer_count += 1;
+                $new_pace = getStandardPace($swimmer->estimated_pace, $swimmer->distance);
+                $swimmer_info = array($swimmer->uid, $new_pace);
+                array_push($swimmers_info, $swimmer_info);
+            }
+            $group_num =  $num_kayakers / $swimmer_count;
+            $remainder = $num_kayakers % $swimmer_count;
+
+            //sort by pace from fastest (shortest num of seconds to swim 1km) to slowest (longest time)
+            usort($swimmers_info, function ($swimmer1, $swimmer2) {
+                return $swimmer1[1] <=> $swimmer2[1];
+            });
+
+            //call the grouping algorithm for re-grouping
+            groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
+        }
+
         $id = $form_state->getValue('swim_id');
         //$url = \Drupal\Core\Url::fromRoute('swim.show', ["id" => $id]);
 
