@@ -3,9 +3,9 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
-use function Drupal\swim\Controller\getFormattedDate;
 use Drupal\file\Entity\File;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\Datetime\DateHelper;
 
 /**
  * Implements hook_theme().
@@ -13,6 +13,9 @@ use Drupal\file\Entity\File;
  */
 function swim_theme($existing, $type, $theme, $path) {
   return [
+    'swim_statistics_form' => array(
+      'render element' => 'form'
+    ),
     'swims' => [
       'variables' => ['test_var' => NULL],
     ],
@@ -32,7 +35,17 @@ function swim_theme($existing, $type, $theme, $path) {
                       'isAdmin' => NULL,
                       'isApproved' => NULL,
                       'isKayaker' => NULL,
-                      'isSwimmer' => NULL]
+                      'isSwimmer' => NULL,
+                      'past_swim' => NULL]
+    ],
+    'leaderboard' => [
+      'variables' => [
+        'id' => NULL,
+        'title' => NULL,
+        'description' => NULL,
+        'date_time' => NULL,
+        'swimmers' => NULL
+      ],
     ],
     'edit' => [
       'variables' => ['id' => NULL],
@@ -171,7 +184,6 @@ function send_email($recipient, $message, $message_key="alert_swim_host") {
  
   // TODO: Actually send the email
   $result = $mailManager->mail($module, $message_key, $recipient, $langcode, $params, NULL, $send);
-  // \Drupal::messenger()->addMessage($params['message']);
 
   if ($result['result'] !== true) {
     \Drupal::messenger()->addError(t('There was a problem sending your email message and it was not sent.'));
@@ -281,8 +293,6 @@ function swim_mail($key, &$message, $params) {
   $options = array(
     'langcode' => $message['langcode'],
   );
-
-  var_dump("WE made it to this point!");
  
   switch ($key) {
     case 'alert_swim_host':
@@ -316,6 +326,7 @@ function getProfilePicture($user_id) {
     return \Drupal\user\Entity\User::load($user_id)->user_picture->entity->getFileUri();
   }
 }
+
 
 /**
  * Groups swimmers by pace
@@ -459,13 +470,68 @@ function getStandardPace(string $pace, int $distance): int
     }
 }
 
+// This code is a duplicate of some in the controller, figure out how to centralize them
+function verify_swim_exists($id) {
+  $query = \Drupal::database()->select('icows_swims', 'i');
+  
+  $query->condition('i.swim_id', $id, '=');
 
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $swim = $query->execute()->fetchAll()[0];
+  if (!$swim) {
+    throw new NotFoundHttpException();
+  }
+}
 
+function getFormattedDate($date) {
+  $day_index = DateHelper::dayOfWeek($date);
+  $day = "";
+  switch ($day_index) {
+    case 1:
+      $day = "Monday";
+      break;
+    case 2:
+      $day = "Tuesday";
+      break;
+    case 3:
+      $day = "Wednesday";
+      break;
+    case 4:
+      $day = "Thursday";
+      break;
+    case 5:
+      $day = "Friday";
+      break;
+    case 6:
+      $day = "Saturday";
+      break;
+    case 0:
+      $day = "Sunday";
+      break;
+    default:
+      $day = "Unknown";
+      break;
+  }
 
+  $month_index = intval($date->format('m'));
+  $month = strval(DateHelper::monthNames()[$month_index]);
+  return $day . ", " . $month . $date->format(' d, Y - g:ia');
+}
 
+/**
+ * Validates Time in MM:SS
+ *
+ * @param string $time  Name of time to be checked.
+ */
+function isValidPace(string $time) {
+    return preg_match("#^(([0-5][0-9])|[0-9]):[0-5][0-9]$#", $time);
+}
 
-
-
-
-
-
+/**
+ * Validates that a string is a number
+ *
+ * @param string number  Name of number to be checked.
+ */
+function isValidNumber(string $number) {
+    return preg_match("#^[0-9]+$#", $number);
+}

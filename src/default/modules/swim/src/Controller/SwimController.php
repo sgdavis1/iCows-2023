@@ -8,7 +8,7 @@ namespace Drupal\swim\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Datetime\DateHelper;
+
 use Drupal\Core\Url; 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,9 +99,61 @@ class SwimController extends ControllerBase {
     $response->send();
   }
 
+  public function leaderboard($id) {
+    verify_swim_exists($id);
+    $current_user_id = \Drupal::currentUser()->id();
+
+    $query = \Drupal::database()->select('icows_swims', 'i');
+    $query->condition('i.swim_id', $id, '=');
+    $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+    $query->range(0, 1);
+    $swim = $query->execute()->fetchAll()[0];
+
+    $date = new DrupalDateTime($swim->date_time);
+
+    $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+
+    if ($date <= $now) {
+      $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
+      $attendee_swimmer_query->condition('a.swim_id', $id, '=');
+      $attendee_swimmer_query->condition('a.swimmer', 1, '=');
+      $attendee_swimmer_query->fields('a', ['uid']);
+      $swimmers = $attendee_swimmer_query->execute()->fetchAll();
+
+      foreach ($swimmers as &$swimmer) {
+        $user = \Drupal\user\Entity\User::load($swimmer->uid);
+        $swimmer->name = $user->field_first_name->value . " " . $user->field_last_name->value;
+        $swimmer->picture = getProfilePicture($swimmer->uid);
+
+        $query = \Drupal::database()->select('icows_stats', 'i');
+        $query->condition('i.uid', $swimmer->uid, '=');
+        $query->fields('i', ['swim_id', 'pace', 'distance']);
+        $swim_stats = $query->execute()->fetchAll();
+        if ($swim_stats[0]) {
+          $swimmer->actual_pace = $swim_stats[0]->pace;
+          $swimmer->actual_distance = $swim_stats[0]->distance;
+        }
+      }
+
+      return [
+        '#theme' => 'leaderboard',
+        '#id' => $id,
+        '#title' => $swim->title,
+        '#description' => $swim->description,
+        '#date_time' => getFormattedDate($date),
+        '#swimmers' => $swimmers
+      ];
+
+    } else {
+      \Drupal::messenger()->addError(t('The leaderboard cannot be shown for future swims.'));
+      $response = new RedirectResponse(Url::fromRoute('swim.content')->toString() . '/' . $id);
+      $response->send();
+      return;
+    }   
+  }
+
   public function show($id) {
   verify_swim_exists($id);
-  # Use dynamic queries instead: https://www.drupal.org/docs/7/api/database-api/dynamic-queries/introduction-to-dynamic-queries
   $query = \Drupal::database()->select('icows_swims', 'i');
   
   // Add extra detail to this query object: a condition, fields and a range
@@ -110,6 +162,8 @@ class SwimController extends ControllerBase {
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
   $swim = $query->execute()->fetchAll()[0];
   $date = new DrupalDateTime($swim->date_time, 'UTC');
+  $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+  $past_swim = $date < $now;
 
   // host id is $swim->uid
   $host_name = \Drupal\user\Entity\User::load($swim->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swim->uid)->field_last_name->value;
@@ -150,11 +204,12 @@ class SwimController extends ControllerBase {
     $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
     $date = new DrupalDateTime($swimmer->date_time, 'UTC');
     $swimmer->rsvp = getFormattedDate($date);
+
     if ($swimmer->uid == $current_user_id) {
       $signed_up = true;
       $isSwimmer= true;
-
     }
+
     if ($swimmer->kayaker == 1) {
       $swimmer->kayaker = "Yes";
     } else {
@@ -204,6 +259,7 @@ class SwimController extends ControllerBase {
     '#isKayaker' => $isKayaker,
     '#isSwimmer' => $isSwimmer,
     '#cache' => array('max-age' => 0),
+    '#past_swim' => $past_swim,
   ];    
   }
 
@@ -369,50 +425,3 @@ class SwimController extends ControllerBase {
 }
 
 
-function getFormattedDate($date) {
-  $day_index = DateHelper::dayOfWeek($date);
-  $day = "";
-  switch ($day_index) {
-    case 1:
-      $day = "Monday";
-      break;
-    case 2:
-      $day = "Tuesday";
-      break;
-    case 3:
-      $day = "Wednesday";
-      break;
-    case 4:
-      $day = "Thursday";
-      break;
-    case 5:
-      $day = "Friday";
-      break;
-    case 6:
-      $day = "Saturday";
-      break;
-    case 0:
-      $day = "Sunday";
-      break;
-    default:
-      $day = "Unknown";
-      break;
-  }
-
-  $month_index = intval($date->format('m'));
-  $month = strval(DateHelper::monthNames()[$month_index]);
-  return $day . ", " . $month . $date->format(' d, Y - g:ia');
-}
-
-function verify_swim_exists($id) {
-  $query = \Drupal::database()->select('icows_swims', 'i');
-    $query->condition('i.swim_id', $id, '=');
-
-  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
-  $swim = $query->execute()->fetchAll()[0];
-  if (!$swim) {
-    $response = new RedirectResponse("/");
-    $response->send();
-    return;
-  }
-}

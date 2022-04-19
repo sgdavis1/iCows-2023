@@ -54,6 +54,15 @@ swim.show:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
+swim.leaderboard:
+  path: '/swims/{id}/leaderboard'
+  defaults:
+    _controller: '\Drupal\swim\Controller\SwimController::leaderboard'
+    _title: 'Leaderboard'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+
 swim.exports.attendee_list:
   path: '/swims/{id}/exports/attendee_list'
   defaults:
@@ -83,6 +92,15 @@ swim.edit:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
     _role: 'administrator+swim admin'
+
+swim.statistics:
+  path: '/swims/statistics/{id}'
+  defaults:
+    _form: '\Drupal\swim\Form\SwimStatisticsForm'
+    _title: 'Your Swim Statistics'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
 
 swim.attendance_list:
   path: '/swims/{id}/attendance_list'

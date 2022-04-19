@@ -30,7 +30,6 @@ class NewWaiverForm extends FormBase {
             '#description' => t('Swim waiver'),
             '#upload_location' => 'public://files',
             '#upload_validators' => [
-                'file_validate_extensions' => array('pdf'),
                 'file_validate_size' => array(25600000)
             ],
             '#required' => TRUE,

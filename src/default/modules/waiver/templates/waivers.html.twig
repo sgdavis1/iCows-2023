@@ -29,6 +29,9 @@
       {% endfor %}
       </tbody>
     </table>
+    <form action={{drupal_url("waivers/download_pending")}}>
+      <input type="submit" value="Download All Pending Waivers" />
+    </form>
   {% else %}
     There are no pending waivers.
   {% endif %}
@@ -88,8 +91,8 @@
       {% endfor %}
       </tbody>
     </table>
-    <form action={{drupal_url("waivers/download_all")}}>
-      <input type="submit" value="Download All" />
+    <form action={{drupal_url("waivers/download_approved")}}>
+      <input type="submit" value="Download All Approved Waivers" />
     </form>
   {% else %}
     No waivers have been approved yet!
