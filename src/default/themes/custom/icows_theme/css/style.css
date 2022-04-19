@@ -1030,19 +1030,21 @@ input[type=submit]:disabled {
     content: "";
 }
 
-span.fc-time{
-    color: white;
-}
 
-span.fc-title{
-    color: white;
-    /*display: none;*/
-}
 
 .fc-event{
     line-height: 1.4;
     margin: 2px 0;
+}
 
+
+span.fc-title::before{
+    content: '\A';
+    white-space: pre;
+}
+
+.fc-content{
+    color: white;
 }
 
 .fc-day-grid-event .fc-content {
@@ -1052,6 +1054,22 @@ span.fc-title{
 
 .fc-content-skeleton tr{
     max-height: 50px;
+}
+
+div.field--label{
+    content: "Email Opt-Out";
+    white-space: normal;
+}
+li.active{
+    display: none;
+}
+
+.tabs--primary{
+    float: right;
+}
+
+.nav-tabs{
+    border-bottom: transparent;
 }
 
 .up-arrow:after{
