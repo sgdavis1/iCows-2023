@@ -37,15 +37,36 @@ class SwimSignUpForm extends FormBase {
     /**
      * Groups swimmers by pace
      *
-     * @param array $swimmers is a sorted list of lists (by fastest to slowest pace in seconds) of uid and pace for each swimmer
+     * @param int $swim_id is the id of the swim that the grouping is taking place for
+     * @param array $swimmers is a sorted list of lists (by fastest to slowest pace (in seconds)) of uid and pace for each swimmer
      * @param int $num_groups is the number of groups we need to have
      * @param int $per_group is the ideal number of swimmers per group
      * @param int $remainder is the number groups that will have more than the ideal number
      */
-    public function groupSwimmers(array $swimmers, int $num_groups, int $per_group, int $remainder): array
+    public function groupSwimmers(int $swim_id, array $swimmers, int $num_groups, int $per_group, int $remainder)
     {
         $groupings = array();
-        return $this->groupingHelper($swimmers, $groupings, $num_groups, $remainder, 0, $per_group);
+
+        //make grouping
+        $optimized_grouping = $this->groupingHelper($swimmers, $groupings, $num_groups, $remainder, 0, $per_group);
+
+        //get grouping
+        $grouping = $optimized_grouping[0];
+
+        //update attendees to have their new group
+        $database = \Drupal::database();
+
+        $grouping_num = 0;
+        foreach ($grouping as &$group) {
+            $grouping_num++;
+            foreach ($group as &$swimmer) {
+                $database->update('icows_attendees')->fields(array(
+                    'group' => $grouping_num,
+                ))->condition('icows_attendees.swim_id', $swim_id, '=')
+                    ->condition('icows_attendees.uid', $swimmer[0], '=')
+                    ->execute();
+            }
+        }
     }
 
     /**
@@ -339,26 +360,29 @@ class SwimSignUpForm extends FormBase {
                 return $swimmer1[1] <=> $swimmer2[1];
             });
 
-            //make grouping
-            $optimized_grouping = $this->groupSwimmers($swimmers_info, $num_kayakers, $group_num, $remainder);
+            //call the grouping algorithm
+            $this->groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
 
-            //get grouping
-            $grouping = $optimized_grouping[0];
-
-            //update attendees to have their new group
-            $database = \Drupal::database();
-
-            $grouping_num = 0;
-            foreach ($grouping as &$group) {
-                $grouping_num++;
-                foreach ($group as &$swimmer) {
-                    $database->update('icows_attendees')->fields(array(
-                        'group' => $grouping_num,
-                    ))->condition('icows_attendees.swim_id', $swim_id, '=')
-                        ->condition('icows_attendees.uid', $swimmer[0], '=')
-                        ->execute();
-                }
-            }
+//            //make grouping
+//            $optimized_grouping = $this->groupSwimmers($swimmers_info, $num_kayakers, $group_num, $remainder);
+//
+//            //get grouping
+//            $grouping = $optimized_grouping[0];
+//
+//            //update attendees to have their new group
+//            $database = \Drupal::database();
+//
+//            $grouping_num = 0;
+//            foreach ($grouping as &$group) {
+//                $grouping_num++;
+//                foreach ($group as &$swimmer) {
+//                    $database->update('icows_attendees')->fields(array(
+//                        'group' => $grouping_num,
+//                    ))->condition('icows_attendees.swim_id', $swim_id, '=')
+//                        ->condition('icows_attendees.uid', $swimmer[0], '=')
+//                        ->execute();
+//                }
+//            }
         }
 
 
