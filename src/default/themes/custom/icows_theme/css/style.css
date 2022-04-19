@@ -648,7 +648,7 @@ h1
 }
 
 .navbar-collapse{
-    max-width: 85%;
+    max-width: 100%;
     position: center;
 }
 
@@ -663,7 +663,7 @@ h1
     }
 }
 
-@media (max-width: 1334px){
+@media (max-width: 1050px){
     #navbar-collapse {
         overflow-y: visible;
         float: right;
@@ -694,7 +694,7 @@ h1
 }
 
 .navbar-header{
-    padding-left: 10%;
+    padding-left: 1%;
     position: center;
 
 }
@@ -765,7 +765,6 @@ h1
         margin-left: -20vw;
         margin-right: -3.5vw;
         margin-top: 10px;
-        position: relative;
         position: relative;
         z-index: -1;
     }
