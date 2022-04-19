@@ -137,6 +137,8 @@ class SwimSignUpForm extends FormBase {
      * {@inheritdoc}
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
+        $swim_id = $form_state->getValue('swim_id');
+
         $willing_to_kayak = 0;
         if ($form_state->getValue('if_needed') == 1) {  //assuming 1 means box is checked
             $willing_to_kayak = 1;
@@ -148,17 +150,67 @@ class SwimSignUpForm extends FormBase {
                 'swimmer' => 1,
                 'distance' => $form_state->getValue('distance'),
                 'uid' => intval(\Drupal::currentUser()->id()),
-                'swim_id' => $form_state->getValue('swim_id'),
+                'swim_id' => $swim_id,
                 'number_of_kayaks' => $form_state->getValue('kayaks'),
                 'estimated_pace' => $form_state->getValue('pace'),
+                'group' => 1,
             ],
         ];
         $database = \Drupal::database();
-        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance']);
+        $query = $database->insert('icows_attendees')->fields(['swim_id', 'uid', 'swimmer', 'kayaker', 'number_of_kayaks', 'estimated_pace', 'distance', 'group']);
         foreach ($values as $developer) {
             $query->values($developer);
         }
         $query->execute();
+
+        //get swimmers and kayakers for regrouping by pace
+
+        //get num of kayakers (this will be the number of groups)
+        $query = \Drupal::database()->select('icows_attendees', 'i');
+        $query->condition('i.swim_id', $swim_id, '=');
+        $query->condition('i.kayaker', 1, '=');
+        $query->condition('i.swimmer', 0, '=');
+        $query->fields('i', ['group']);
+        $kayakers = $query->execute()->fetchAll();
+
+        $num_kayakers = 0;
+        foreach ($kayakers as &$kayaker) {
+            $num_kayakers += 1;
+        }
+
+        //if more than 1 group is available, get the swimmers for grouping
+        if ($num_kayakers > 1) {
+            $query = \Drupal::database()->select('icows_attendees', 'i');
+            $query->condition('i.swim_id', $swim_id, '=');
+            $query->condition('i.swimmer', 1, '=');
+            $query->fields('i', ['uid', 'estimated_pace', 'distance', 'group']);
+            $swimmers = $query->execute()->fetchAll();
+
+            //create array of arrays where each array is the uid, and pace (in seconds) for 1 km
+            $swimmers_info = array();
+
+            //get number of swimmers for swim
+            $swimmer_count = 0;
+            foreach ($swimmers as &$swimmer) {
+                $swimmer_count += 1;
+                $new_pace = getStandardPace($swimmer->estimated_pace, $swimmer->distance);
+                $swimmer_info = array($swimmer->uid, $new_pace);
+                array_push($swimmers_info, $swimmer_info);
+            }
+            $group_num =  $num_kayakers / $swimmer_count;
+            $remainder = $num_kayakers % $swimmer_count;
+
+            //sort by pace from fastest (shortest num of seconds to swim 1km) to slowest (longest time)
+            usort($swimmers_info, function ($swimmer1, $swimmer2) {
+                return $swimmer1[1] <=> $swimmer2[1];
+            });
+
+            //call the grouping algorithm
+            groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
+        }
+
+
+        //log changes
 
         $query = \Drupal::database()->select('icows_swims', 'i');
         $query->condition('i.swim_id', $form_state->getValue('swim_id'), '=');
@@ -168,6 +220,8 @@ class SwimSignUpForm extends FormBase {
         $attendee = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_first_name->value . " " .  \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_last_name->value;
 
         log_swim_change($form_state->getValue('swim_id'), $swim->uid, sprintf('%s has signed up as a swimmer for your hosted swim %s.', $attendee, $swim->title));
+
+        //re-direct user
 
         $id = $form_state->getValue('swim_id');
         $form_state->setRedirect('swim.show', ["id" => $id]);
