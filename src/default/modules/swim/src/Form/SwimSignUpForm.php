@@ -34,139 +34,139 @@ class SwimSignUpForm extends FormBase {
         return preg_match("#^[0-9]+$#", $number);
     }
 
-    /**
-     * Groups swimmers by pace
-     *
-     * @param int $swim_id is the id of the swim that the grouping is taking place for
-     * @param array $swimmers is a sorted list of lists (by fastest to slowest pace (in seconds)) of uid and pace for each swimmer
-     * @param int $num_groups is the number of groups we need to have
-     * @param int $per_group is the ideal number of swimmers per group
-     * @param int $remainder is the number groups that will have more than the ideal number
-     */
-    public function groupSwimmers(int $swim_id, array $swimmers, int $num_groups, int $per_group, int $remainder)
-    {
-        $groupings = array();
-
-        //make grouping
-        $optimized_grouping = $this->groupingHelper($swimmers, $groupings, $num_groups, $remainder, 0, $per_group);
-
-        //get grouping
-        $grouping = $optimized_grouping[0];
-
-        //update attendees to have their new group
-        $database = \Drupal::database();
-
-        $grouping_num = 0;
-        foreach ($grouping as &$group) {
-            $grouping_num++;
-            foreach ($group as &$swimmer) {
-                $database->update('icows_attendees')->fields(array(
-                    'group' => $grouping_num,
-                ))->condition('icows_attendees.swim_id', $swim_id, '=')
-                    ->condition('icows_attendees.uid', $swimmer[0], '=')
-                    ->execute();
-            }
-        }
-    }
-
-    /**
-     * Groups swimmers by pace
-     *
-     * @param array $swimmers is a sorted array of arrays (by fastest to slowest pace in seconds) of uid and pace for each swimmer
-     * @param array $grouping [0] is the returned array of groupings, [1] is the dif for the grouping
-     * @param int $groups_remaining is the number of groups left that still need to be made
-     * @param int $per_group is the ideal number of swimmers per group
-     * @param int $remainder is the number groups that will have more than the ideal number
-     * @param int $dif is the total number of seconds between each group's pacing differences
-     */
-    public function groupingHelper(array $swimmers, array $grouping, int $groups_remaining,
-                                   int $remainder, int $dif, int $per_group): array
-    {
-        if ($groups_remaining == 0){
-            $final = array();
-            array_push($final, $grouping);
-            array_push($final, $dif);
-            return $final;
-        }
-
-        $groups_remaining--;
-
-        $group = array($swimmers[0]);
-        $group_start_pace = $swimmers[0][1];
-        $group_end_pace = $swimmers[0][1];
-
-        for ($i = 1; $i < $per_group; $i++) {
-            array_push($group, $swimmers[$i]);
-            $group_end_pace = $swimmers[$i][1];
-        }
-
-        // calculate difference
-        $group_dif = $group_end_pace - $group_start_pace;
-
-        //remove swimmers that just got grouped
-        for ($i = 0; $i < $per_group; $i++) {
-            array_shift($swimmers);
-        }
-
-        //add grouping
-        $reg_groupings = $grouping;
-        array_push($reg_groupings, $group);
-
-        //make regular-sized group (without a remainder)
-        $reg_group = $this->groupingHelper($swimmers, $reg_groupings, $groups_remaining, $remainder, ($group_dif + $dif), $per_group);
-
-        if ($remainder > 0) {
-            //make bigger group (with a remainder)
-            $remainder--;
-
-            //add extra swimmer
-            array_push($group, $swimmers[0]);
-            $group_end_pace = $swimmers[0][1];
-
-            //remove swimmer from list of remaining swimmers
-            array_shift($swimmers);
-
-            // calculate difference
-            $group_dif = $group_end_pace - $group_start_pace;
-
-            //add grouping
-            $extra_groupings = $grouping;
-            array_push($extra_groupings, $group);
-
-            $extra_group = $this->groupingHelper($swimmers, $extra_groupings, $groups_remaining, $remainder, ($group_dif + $dif), $per_group);
-
-            if($reg_group[1] < $extra_group[1]){
-                return $reg_group;
-            }
-            else {
-                return $extra_group;
-            }
-        }
-        else {
-            return $reg_group;
-        }
-    }
-
-
-    /**
-     * Converts a pace/distance to pace/1 km
-     *
-     * @param string $pace is the pace of a swimmer
-     * @param int $distance is the distance for the pace given
-     */
-    public function getStandardPace(string $pace, int $distance): int
-    {
-        //convert pace from min:sec to seconds
-        $time = explode(":", $pace);
-        $pace_in_sec = ($time[0] * 60) + $time[1];
-
-        if ($distance == 1) {
-            return $pace_in_sec;
-        }
-        else {
-            return (1 / $distance) * $pace_in_sec;
-        }
-    }
+//    /**
+//     * Groups swimmers by pace
+//     *
+//     * @param int $swim_id is the id of the swim that the grouping is taking place for
+//     * @param array $swimmers is a sorted list of lists (by fastest to slowest pace (in seconds)) of uid and pace for each swimmer
+//     * @param int $num_groups is the number of groups we need to have
+//     * @param int $per_group is the ideal number of swimmers per group
+//     * @param int $remainder is the number groups that will have more than the ideal number
+//     */
+//    public function groupSwimmers(int $swim_id, array $swimmers, int $num_groups, int $per_group, int $remainder)
+//    {
+//        $groupings = array();
+//
+//        //make grouping
+//        $optimized_grouping = $this->groupingHelper($swimmers, $groupings, $num_groups, $remainder, 0, $per_group);
+//
+//        //get grouping
+//        $grouping = $optimized_grouping[0];
+//
+//        //update attendees to have their new group
+//        $database = \Drupal::database();
+//
+//        $grouping_num = 0;
+//        foreach ($grouping as &$group) {
+//            $grouping_num++;
+//            foreach ($group as &$swimmer) {
+//                $database->update('icows_attendees')->fields(array(
+//                    'group' => $grouping_num,
+//                ))->condition('icows_attendees.swim_id', $swim_id, '=')
+//                    ->condition('icows_attendees.uid', $swimmer[0], '=')
+//                    ->execute();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Groups swimmers by pace
+//     *
+//     * @param array $swimmers is a sorted array of arrays (by fastest to slowest pace in seconds) of uid and pace for each swimmer
+//     * @param array $grouping [0] is the returned array of groupings, [1] is the dif for the grouping
+//     * @param int $groups_remaining is the number of groups left that still need to be made
+//     * @param int $per_group is the ideal number of swimmers per group
+//     * @param int $remainder is the number groups that will have more than the ideal number
+//     * @param int $dif is the total number of seconds between each group's pacing differences
+//     */
+//    public function groupingHelper(array $swimmers, array $grouping, int $groups_remaining,
+//                                   int $remainder, int $dif, int $per_group): array
+//    {
+//        if ($groups_remaining == 0){
+//            $final = array();
+//            array_push($final, $grouping);
+//            array_push($final, $dif);
+//            return $final;
+//        }
+//
+//        $groups_remaining--;
+//
+//        $group = array($swimmers[0]);
+//        $group_start_pace = $swimmers[0][1];
+//        $group_end_pace = $swimmers[0][1];
+//
+//        for ($i = 1; $i < $per_group; $i++) {
+//            array_push($group, $swimmers[$i]);
+//            $group_end_pace = $swimmers[$i][1];
+//        }
+//
+//        // calculate difference
+//        $group_dif = $group_end_pace - $group_start_pace;
+//
+//        //remove swimmers that just got grouped
+//        for ($i = 0; $i < $per_group; $i++) {
+//            array_shift($swimmers);
+//        }
+//
+//        //add grouping
+//        $reg_groupings = $grouping;
+//        array_push($reg_groupings, $group);
+//
+//        //make regular-sized group (without a remainder)
+//        $reg_group = $this->groupingHelper($swimmers, $reg_groupings, $groups_remaining, $remainder, ($group_dif + $dif), $per_group);
+//
+//        if ($remainder > 0) {
+//            //make bigger group (with a remainder)
+//            $remainder--;
+//
+//            //add extra swimmer
+//            array_push($group, $swimmers[0]);
+//            $group_end_pace = $swimmers[0][1];
+//
+//            //remove swimmer from list of remaining swimmers
+//            array_shift($swimmers);
+//
+//            // calculate difference
+//            $group_dif = $group_end_pace - $group_start_pace;
+//
+//            //add grouping
+//            $extra_groupings = $grouping;
+//            array_push($extra_groupings, $group);
+//
+//            $extra_group = $this->groupingHelper($swimmers, $extra_groupings, $groups_remaining, $remainder, ($group_dif + $dif), $per_group);
+//
+//            if($reg_group[1] < $extra_group[1]){
+//                return $reg_group;
+//            }
+//            else {
+//                return $extra_group;
+//            }
+//        }
+//        else {
+//            return $reg_group;
+//        }
+//    }
+//
+//
+//    /**
+//     * Converts a pace/distance to pace/1 km
+//     *
+//     * @param string $pace is the pace of a swimmer
+//     * @param int $distance is the distance for the pace given
+//     */
+//    public function getStandardPace(string $pace, int $distance): int
+//    {
+//        //convert pace from min:sec to seconds
+//        $time = explode(":", $pace);
+//        $pace_in_sec = ($time[0] * 60) + $time[1];
+//
+//        if ($distance == 1) {
+//            return $pace_in_sec;
+//        }
+//        else {
+//            return (1 / $distance) * $pace_in_sec;
+//        }
+//    }
 
     /**
      * {@inheritdoc}
@@ -348,7 +348,7 @@ class SwimSignUpForm extends FormBase {
             $swimmer_count = 0;
             foreach ($swimmers as &$swimmer) {
                 $swimmer_count += 1;
-                $new_pace = $this->getStandardPace($swimmer->estimated_pace, $swimmer->distance);
+                $new_pace = getStandardPace($swimmer->estimated_pace, $swimmer->distance);
                 $swimmer_info = array($swimmer->uid, $new_pace);
                 array_push($swimmers_info, $swimmer_info);
             }
@@ -361,28 +361,7 @@ class SwimSignUpForm extends FormBase {
             });
 
             //call the grouping algorithm
-            $this->groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
-
-//            //make grouping
-//            $optimized_grouping = $this->groupSwimmers($swimmers_info, $num_kayakers, $group_num, $remainder);
-//
-//            //get grouping
-//            $grouping = $optimized_grouping[0];
-//
-//            //update attendees to have their new group
-//            $database = \Drupal::database();
-//
-//            $grouping_num = 0;
-//            foreach ($grouping as &$group) {
-//                $grouping_num++;
-//                foreach ($group as &$swimmer) {
-//                    $database->update('icows_attendees')->fields(array(
-//                        'group' => $grouping_num,
-//                    ))->condition('icows_attendees.swim_id', $swim_id, '=')
-//                        ->condition('icows_attendees.uid', $swimmer[0], '=')
-//                        ->execute();
-//                }
-//            }
+            groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
         }
 
 
