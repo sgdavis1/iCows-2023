@@ -1056,6 +1056,22 @@ span.fc-title::before{
     max-height: 50px;
 }
 
+div.field--label{
+    content: "Email Opt-Out";
+    white-space: normal;
+}
+li.active{
+    display: none;
+}
+
+.tabs--primary{
+    float: right;
+}
+
+.nav-tabs{
+    border-bottom: transparent;
+}
+
 .up-arrow:after{
     font-family: "FontAwesome",serif;
     content: "\2191";
