@@ -193,7 +193,7 @@ class SwimStatisticsForm extends FormBase {
         $query = $database->insert('icows_stats')->fields(['uid', 'swim_id', 'pace', 'distance']);
         $query->values($value);
         $query->execute();
-        return true;
+        $form_state->setRedirect('swim.statistics_index');
     }
 
 }
