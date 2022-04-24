@@ -302,7 +302,7 @@ h1, h2, h3, h4, h5, h6
 /** Large high res image box **/
 .home-image
 {
-    background: url("../images/front-image.jpg") no-repeat center center fixed;
+    background: url("../images/front-imageV2.jpg") no-repeat center center fixed;
     background-size: cover;
     height: 450px;
     margin-left: -1500px;
@@ -759,7 +759,7 @@ h1
 
     .home-image
     {
-        background: url("../images/front-image.jpg") no-repeat center  ;
+        background: url("../images/front-imageV2.jpg") no-repeat center  ;
         background-size: cover;
         height: 450px;
         margin-left: -20vw;
@@ -1096,6 +1096,12 @@ li.active{
 }
 .pointer-cursor:hover{
     cursor: pointer;
+}
+
+.stats-page-entry{
+    width: 75%;
+    max-width: 150px;
+    margin: 0 5px 10px;
 }
 
 
