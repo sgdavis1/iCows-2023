@@ -13,6 +13,11 @@
     <p> {{ description }} </p>
     <div style="float: left">
       {% if past_swim %}
+        {% if signed_up and isSwimmer %}
+          <form action={{drupal_url("/swims/statistics/#{id}")}}>
+            <input type="submit" value="Your Statistics" />
+          </form>
+        {% endif %}
         <form action={{drupal_url("/swims/#{id}/leaderboard")}}>
           <input type="submit" value="Leaderboard" />
         </form>
@@ -65,7 +70,7 @@
 
 <div>
   <h2>Swimmers</h2>
-  {% if (not signed_up) and locked == 0 and isApproved%}
+  {% if (not signed_up) and locked == 0 and isApproved %}
     <form action={{drupal_url("swims/#{id}/signup")}}>
       <input type="submit" value="Swimmer Signup" />
     </form>
