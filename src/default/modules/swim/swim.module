@@ -293,12 +293,14 @@ function swim_mail($key, &$message, $params) {
   $options = array(
     'langcode' => $message['langcode'],
   );
+
+  $unsubscribe_notice = '<br>To unsubscribe from ICOWS emails, check the opt out box here: ' . \Drupal::request()->getSchemeAndHttpHost() . Url::fromUri('//user/' .  \Drupal::currentUser()->id() . '/edit')->toString();
  
   switch ($key) {
     case 'alert_swim_host':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('An hourly update of changes to icows:');
-      $message['body'][] = $params['message'];
+      $message['body'][] = $params['message'] . $unsubscribe_notice;
       break;
     case 'for_dnr':
       $message['from'] = \Drupal::config('system.site')->get('mail');
@@ -309,7 +311,7 @@ function swim_mail($key, &$message, $params) {
     case 'important_swim_changes':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('Changes were made to an upcoming swim.');
-      $message['body'][] = "The following change occurred for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'];
+      $message['body'][] = "The following change occurred for a swim that is scheduled for less than 24hrs from now:\n\t" . $params['message'] . $unsubscribe_notice;
       break;
   }
 }
