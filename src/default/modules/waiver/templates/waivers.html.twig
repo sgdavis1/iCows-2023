@@ -42,7 +42,7 @@
 
   <h2>Users with unsubmitted waivers</h2>
   {% if not_submitted_users %}
-  <table class="table table-striped">
+  <table class="table table-striped" id="unsubmited">
     <thead>
       <tr>
         <th scope="col"></th>
@@ -63,6 +63,10 @@
     {% endfor %}
     </tbody>
   </table>
+  <center>
+    <button onclick="decrease('unsubmited')" class="pointer-cursor" id="previous_unsubmited" disabled>Previous</button>
+    <button onclick="increase('unsubmited')" class="pointer-cursor" id="next_unsubmited">Next</button>
+  </center>
   {% else %}
     All members have submitted a waiver
   {% endif %}
