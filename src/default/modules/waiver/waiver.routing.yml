@@ -28,6 +28,16 @@ waiver.approve:
     _permission: 'access content'
     _role: 'administrator+swim admin'
 
+waiver.invalidate:
+  path: '/waivers/{id}/invalidate'
+  defaults:
+    _controller: '\Drupal\waiver\Controller\WaiverController::invalidate'
+    _title: 'Invalidate a Waiver'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+    _role: 'administrator+swim admin'
+
 waiver.content:
   path: '/waivers'
   defaults:

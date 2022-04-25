@@ -11,5 +11,9 @@
         <form action={{drupal_url("waivers/#{id}/approve")}}>
             <input type="submit" value="Approve" />
         </form>
+    {% else %}
+        <form action={{drupal_url("waivers/#{id}/invalidate")}}>
+            <input type="submit" value="Invalidate" />
+        </form>
     {% endif %}
 {% endif %}
