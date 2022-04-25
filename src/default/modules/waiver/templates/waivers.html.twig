@@ -73,7 +73,7 @@
   <h2>Approved</h2>
 
   {% if approved_users %}
-    <table class="table table-striped">
+    <table class="table table-striped" id="approved">
       <thead>
       <tr>
         <th scope="col"></th>
@@ -99,6 +99,10 @@
       {% endfor %}
       </tbody>
     </table>
+    <center>
+      <button onclick="decrease('approved')" class="pointer-cursor" id="previous_approved" disabled>Previous</button>
+      <button onclick="increase('approved')" class="pointer-cursor" id="next_approved">Next</button>
+    </center>
     <form action={{drupal_url("waivers/download_approved")}}>
       <input type="submit" value="Download All Approved Waivers" />
     </form>
@@ -113,8 +117,8 @@
 
 <script>
 
-  const numberPerPage = 3;
-  var pageNums = {"pending": 0, "not_submitted": 0};
+  const numberPerPage = 2;
+  var pageNums = {"pending": 0, "unsubmited": 0, "approved": 0};
 
   document.addEventListener('DOMContentLoaded', function() {
     // TODO check if next button should be disabled
@@ -125,10 +129,17 @@
         row.style.display = 'none';
       }
     }
-    const not_submitted = document.getElementById("not_submitted");
-    for (let i = 0; i < table.rows.length; i++) {
+    const not_submitted = document.getElementById("unsubmited");
+    for (let i = 0; i < not_submitted.rows.length; i++) {
       if(i > numberPerPage){
         let row = not_submitted.rows[i];
+        row.style.display = 'none';
+      }
+    }
+    const approved = document.getElementById("approved");
+    for (let i = 0; i < approved.rows.length; i++) {
+      if(i > numberPerPage){
+        let row = approved.rows[i];
         row.style.display = 'none';
       }
     }
