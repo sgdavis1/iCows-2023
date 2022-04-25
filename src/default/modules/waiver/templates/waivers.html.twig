@@ -33,6 +33,7 @@
       <button onclick="decrease('pending')" class="pointer-cursor" id="previous_pending" disabled>Previous</button>
       <button onclick="increase('pending')" class="pointer-cursor" id="next_pending">Next</button>
     </center>
+    <center><h2 id="pg_num_pending">Page 1</h2></center>
     <form action={{drupal_url("waivers/download_pending")}}>
       <input type="submit" value="Download All Pending Waivers" />
     </form>
@@ -42,7 +43,7 @@
 
   <h2>Users with unsubmitted waivers</h2>
   {% if not_submitted_users %}
-  <table class="table table-striped" id="unsubmited">
+  <table class="table table-striped" id="unsubmitted">
     <thead>
       <tr>
         <th scope="col"></th>
@@ -64,9 +65,10 @@
     </tbody>
   </table>
   <center>
-    <button onclick="decrease('unsubmited')" class="pointer-cursor" id="previous_unsubmited" disabled>Previous</button>
-    <button onclick="increase('unsubmited')" class="pointer-cursor" id="next_unsubmited">Next</button>
+    <button onclick="decrease('unsubmitted')" class="pointer-cursor" id="previous_unsubmitted" disabled>Previous</button>
+    <button onclick="increase('unsubmitted')" class="pointer-cursor" id="next_unsubmitted">Next</button>
   </center>
+  <center><h2 id="pg_num_unsubmitted">Page 1</h2></center>
   {% else %}
     All members have submitted a waiver
   {% endif %}
@@ -103,6 +105,7 @@
       <button onclick="decrease('approved')" class="pointer-cursor" id="previous_approved" disabled>Previous</button>
       <button onclick="increase('approved')" class="pointer-cursor" id="next_approved">Next</button>
     </center>
+    <center><h2 id="pg_num_approved">Page 1</h2></center>
     <form action={{drupal_url("waivers/download_approved")}}>
       <input type="submit" value="Download All Approved Waivers" />
     </form>
@@ -117,11 +120,10 @@
 
 <script>
 
-  const numberPerPage = 2;
-  var pageNums = {"pending": 0, "unsubmited": 0, "approved": 0};
+  const numberPerPage = 10;
+  var pageNums = {"pending": 0, "unsubmitted": 0, "approved": 0};
 
   document.addEventListener('DOMContentLoaded', function() {
-    // TODO check if next button should be disabled
     const table = document.getElementById("pending");
     for (let i = 0; i < table.rows.length; i++) {
       if(i > numberPerPage){
@@ -129,12 +131,21 @@
         row.style.display = 'none';
       }
     }
-    const not_submitted = document.getElementById("unsubmited");
+    if(table.rows.length <= numberPerPage){
+      document.getElementById("previous_pending").style.display = 'none';
+      document.getElementById("next_pending").style.display = 'none';
+    }
+
+    const not_submitted = document.getElementById("unsubmitted");
     for (let i = 0; i < not_submitted.rows.length; i++) {
       if(i > numberPerPage){
         let row = not_submitted.rows[i];
         row.style.display = 'none';
       }
+    }
+    if(not_submitted.rows.length <= numberPerPage){
+      document.getElementById("previous_unsubmitted").style.display = 'none';
+      document.getElementById("next_unsubmitted").style.display = 'none';
     }
     const approved = document.getElementById("approved");
     for (let i = 0; i < approved.rows.length; i++) {
@@ -142,6 +153,10 @@
         let row = approved.rows[i];
         row.style.display = 'none';
       }
+    }
+    if(approved.rows.length <= numberPerPage){
+      document.getElementById("previous_approved").style.display = 'none';
+      document.getElementById("next_approved").style.display = 'none';
     }
   }, false);
 
@@ -156,6 +171,7 @@
       pageNums[tableID] = pageNums[tableID]+ 1;
       pageNum+= 1;
       paginate(pageNum, tableID);
+      document.getElementById("pg_num_"+ tableID).textContent = "Page " + (pageNum+1);
       if(pageNum+1 >= numOfWaivers/numberPerPage){
         document.getElementById("next_"+tableID).disabled = true;
       }
@@ -172,6 +188,7 @@
       pageNums[tableID] = pageNums[tableID]- 1;
       pageNum-= 1;
       paginate(pageNum, tableID);
+      document.getElementById("pg_num_"+ tableID).textContent = "Page " + (pageNum+1);
       if(pageNum === 0){
         document.getElementById("previous_" + tableID).disabled = true;
       }
