@@ -122,7 +122,7 @@ class SwimStatisticsForm extends FormBase {
 
             $average_pace_in_seconds += 60 * intval($pace[0]) + intval($pace[1]);
             
-            $date = new DrupalDateTime($swim->date_time, 'UTC');
+            $date = new DrupalDateTime($swim->date_time, 'CST');
             $stat->date =  getFormattedDate($date);
             $stat->swim_name = $swim->title;
         }
