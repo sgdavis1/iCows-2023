@@ -197,8 +197,9 @@ class SwimSignUpForm extends FormBase {
                 $swimmer_info = array($swimmer->uid, $new_pace);
                 array_push($swimmers_info, $swimmer_info);
             }
-            $group_num =  $num_kayakers / $swimmer_count;
-            $remainder = $num_kayakers % $swimmer_count;
+
+            $group_num =  floor($swimmer_count / $num_kayakers);
+            $remainder = $swimmer_count % $num_kayakers;
 
             //sort by pace from fastest (shortest num of seconds to swim 1km) to slowest (longest time)
             usort($swimmers_info, function ($swimmer1, $swimmer2) {
