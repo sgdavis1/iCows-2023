@@ -341,27 +341,32 @@ function getProfilePicture($user_id) {
  */
 function groupSwimmers(int $swim_id, array $swimmers, int $num_groups, int $per_group, int $remainder)
 {
-    //get possible groupings
     $possible_groups = groupingHelper(array(), $swimmers, array(), $num_groups, $remainder, 0, $per_group);
 
-    //find best grouping
     $best = 'first';
+
+    $counter = 0;
     foreach ($possible_groups as &$sss) {
-        if($sss[2] == 0){
-            if($best == 'first' || $sss[1] < $best[1]){
+        $counter++;
+        if($sss[0][0][2] == 0){
+            if($best == 'first' || $sss[0][0][1] < $best[0][0][1]){
                 $best = $sss;
             }
         }
     }
+    if($best != 'first'){
+        groupingUpdate($swim_id, $best);
+    }
+}
 
-    //get groupings
-    $grouping = $best[0];
 
+function groupingUpdate(int $swim_id, array $grouping)
+{
     //update attendees to have their new group
     $database = \Drupal::database();
 
     $grouping_num = 0;
-    foreach ($grouping as &$group) {
+    foreach ($grouping[0][0][0][0][0] as &$group) {
         $grouping_num++;
         foreach ($group as &$swimmer) {
             $database->update('icows_attendees')->fields(array(
@@ -371,7 +376,9 @@ function groupSwimmers(int $swim_id, array $swimmers, int $num_groups, int $per_
                 ->execute();
         }
     }
+
 }
+
 
 /**
  * Groups swimmers by pace
@@ -440,16 +447,20 @@ function groupingHelper(array $all_groupings, array $swimmers, array $grouping, 
 
         $extra_group = groupingHelper($all_groupings, $swimmers, $extra_groupings, $groups_remaining, $remainder, ($group_dif + $dif), $per_group);
 
-        if($reg_group[1] < $extra_group[1]){
-            return $reg_group;
-        }
-        else {
-            return $extra_group;
-        }
+        $extra_grouping_option = array();
+        array_push($extra_grouping_option, $extra_group);
+        array_push($extra_grouping_option, $dif);
+        array_push($extra_grouping_option, count($swimmers));
+        array_push($all_groupings, $extra_grouping_option);
+
     }
-    else {
-        return $reg_group;
-    }
+    $grouping_option = array();
+    array_push($grouping_option, $reg_group);
+    array_push($grouping_option, $dif);
+    array_push($grouping_option, count($swimmers));
+    array_push($all_groupings, $grouping_option);
+
+    return $all_groupings;
 }
 
 /**
