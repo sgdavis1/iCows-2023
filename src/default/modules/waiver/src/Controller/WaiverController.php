@@ -140,6 +140,29 @@ class WaiverController extends ControllerBase {
   }
 
 
+  public function invalidate($id) {
+    $database = \Drupal::database();
+    $database->update('icows_waivers')->fields(array(
+        'approved' => 0,))
+      ->condition('waiver_id', $id, '=')->execute();
+
+    $query = \Drupal::database()->select('icows_waivers', 'i');
+
+    $query->condition('i.waiver_id', $id, '=');
+    $query->fields('i', ['uid']);
+    $waiver = $query->execute()->fetchAll()[0];
+    $uid = $waiver->uid;
+    $user = \Drupal\user\Entity\User::load($uid);
+    $user->field_current_waiver_id = -1;
+    $user->removeRole('swimmer');
+    $user->save();
+    $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
+    $response->send();
+    $user_name = $user->field_first_name->value . " " . $user->field_last_name->value;
+    \Drupal::messenger()->addMessage(t("New waiver requested for " . $user_name));
+  }
+
+
   public function approve($id){
       $database = \Drupal::database();
       $database->update('icows_waivers')->fields(array(
@@ -156,6 +179,8 @@ class WaiverController extends ControllerBase {
       $user->save();
       $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
       $response->send();
+      $user_name = $user->field_first_name->value . " " . $user->field_last_name->value;
+      \Drupal::messenger()->addMessage(t("Waiver successfully approved for " . $user_name));
   }
 
   public function exportWaivers(string $condition) {
