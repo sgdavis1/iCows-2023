@@ -161,7 +161,7 @@ class SwimController extends ControllerBase {
 
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
   $swim = $query->execute()->fetchAll()[0];
-  $date = new DrupalDateTime($swim->date_time, 'UTC');
+  $date = new DrupalDateTime($swim->date_time, 'CST');
   $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
   $past_swim = $date < $now;
 
@@ -202,7 +202,7 @@ class SwimController extends ControllerBase {
     $swimmer->picture = getProfilePicture($swimmer->uid);
     $swimmer->email = \Drupal\user\Entity\User::load($swimmer->uid)->getEmail();
     $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
-    $date = new DrupalDateTime($swimmer->date_time, 'UTC');
+    $date = new DrupalDateTime($swimmer->date_time, 'CST');
     $swimmer->rsvp = getFormattedDate($date);
 
     if ($swimmer->uid == $current_user_id) {
@@ -232,7 +232,7 @@ class SwimController extends ControllerBase {
     $kayaker->picture = getProfilePicture($kayaker->uid);
     $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
     $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
-    $date = new DrupalDateTime($kayaker->date_time, 'UTC');
+    $date = new DrupalDateTime($kayaker->date_time, 'CST');
     $kayaker->rsvp = getFormattedDate($date);
     if ($kayaker->uid == $current_user_id) {
       $signed_up = true;
@@ -330,7 +330,7 @@ class SwimController extends ControllerBase {
       $csv_row["name"] = $user->field_first_name->value . " " . $user->field_last_name->value;
       $csv_row["username"] = $user->getDisplayName();
       $csv_row["email"] = $user->getEmail();
-      $date = new DrupalDateTime($attendee->date_time, 'UTC');
+      $date = new DrupalDateTime($attendee->date_time, 'CST');
       $csv_row["rsvp"] = getFormattedDate($date);
       $csv_row["boats"] = $attendee->number_of_kayaks;
   
