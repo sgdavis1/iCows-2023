@@ -45,6 +45,15 @@ swim.drop_out:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
+swim.change_auto_grouping:
+  path: '/swims/{id}/change_auto_grouping'
+  defaults:
+    _title: 'Change Swim Grouping Status'
+    _controller: '\Drupal\swim\Controller\SwimController::change_auto_grouping'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:
