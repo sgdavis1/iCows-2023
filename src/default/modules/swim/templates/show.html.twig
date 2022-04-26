@@ -69,6 +69,7 @@
 
 
 <div>
+  <h2>checked equals {{ is_checked }}</h2>
 
   <table>
     <tr>
@@ -76,8 +77,17 @@
         <h2>Swimmers</h2>
       </th>
       <th style="padding-left: 20px; padding-top: 30px">
-        <input type="checkbox" id="auto_grouping" name="auto_grouping" value="Bike">
-        <label for="auto_grouping"> Enable auto-grouping</label><br>
+        <form action={{drupal_url("swims/#{id}/change_auto_grouping")}}>
+          {% if is_checked == 0 %}
+            <input type="checkbox" id="auto_grouping"
+                   name="auto_grouping" onchange="this.form.submit()">
+          {% else %}
+            <input type="checkbox" id="auto_grouping"
+                   name="auto_grouping" onchange="this.form.submit()"
+                   checked>
+          {% endif %}
+          <label for="auto_grouping"> Enable auto-grouping</label><br>
+        </form>
       </th>
     </tr>
   </table>
