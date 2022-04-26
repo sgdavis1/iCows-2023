@@ -94,8 +94,22 @@ class SwimController extends ControllerBase {
           $num_kayakers += 1;
       }
 
+      //see if auto-grouping is on
+      $query = \Drupal::database()->select('icows_swims', 'i');
+      $query->condition('i.swim_id', $swim_id, '=');
+      $query->fields('i', ['auto_grouping']);
+      $swim_grouping = $query->execute()->fetchAll()[0];
+
+      $grouping_setting = $swim_grouping->auto_grouping;
+
+      if ($grouping_setting == '1' || $grouping_setting == 1) {
+          $grouping_setting = true;
+      } else {
+          $grouping_setting = false;
+      }
+
       //if more than 1 group is available, get the swimmers for grouping
-      if ($num_kayakers > 1) {
+      if ($num_kayakers > 1 && $grouping_setting) {
           $query = \Drupal::database()->select('icows_attendees', 'i');
           $query->condition('i.swim_id', $swim_id, '=');
           $query->condition('i.swimmer', 1, '=');
