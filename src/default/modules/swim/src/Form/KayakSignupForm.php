@@ -94,7 +94,21 @@ class KayakSignupForm extends FormBase {
         }
         $query->execute();
 
-        if ($group_num > 1){
+        //see if auto-grouping is on
+        $query = \Drupal::database()->select('icows_swims', 'i');
+        $query->condition('i.swim_id', $swim_id, '=');
+        $query->fields('i', ['auto_grouping']);
+        $swim_grouping = $query->execute()->fetchAll()[0];
+
+        $grouping_setting = $swim_grouping->auto_grouping;
+
+        if ($grouping_setting == '1' || $grouping_setting == 1) {
+            $grouping_setting = true;
+        } else {
+            $grouping_setting = false;
+        }
+
+        if ($group_num > 1 && $grouping_setting){
             $num_kayakers = $group_num;
 
             //get the necessary info for the grouping algo
