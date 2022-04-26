@@ -67,25 +67,34 @@
   </div>
 </div>
 
-<div>
+<div id="table"></div>
+
+<div id="regularTable" style="visibility: visible">
   <table>
     <tr>
       <th>
         <h2>Swimmers</h2>
       </th>
-      <th style="padding-left: 20px; padding-top: 30px">
-        <form action={{drupal_url("swims/#{id}/change_auto_grouping")}}>
-          {% if is_checked == 0 %}
-            <input type="checkbox" id="auto_grouping"
-                   name="auto_grouping" onchange="this.form.submit()">
-          {% else %}
-            <input type="checkbox" id="auto_grouping"
-                   name="auto_grouping" onchange="this.form.submit()"
-                   checked>
-          {% endif %}
-          <label for="auto_grouping">Automatic grouping</label><br>
-        </form>
-      </th>
+      {% if isAdmin %}
+        <th style="padding-left: 20px; padding-top: 30px">
+          <form action={{drupal_url("swims/#{id}/change_auto_grouping")}}>
+            {% if is_checked == 0 %}
+              <input type="checkbox" id="auto_grouping"
+                     name="auto_grouping" onchange="this.form.submit()">
+            {% else %}
+              <input type="checkbox" id="auto_grouping"
+                     name="auto_grouping" onchange="this.form.submit()"
+                     checked>
+            {% endif %}
+            <label for="auto_grouping">Automatic grouping</label><br>
+          </form>
+        </th>
+        <th></th>
+        <th></th>
+        <th style="padding-left: 20px; padding-top: 30px">
+          <input type="submit" value="Edit groupings" onclick="enableManualGrouping()"/>
+        </th>
+      {% endif %}
     </tr>
   </table>
 
@@ -120,7 +129,7 @@
           <td>{{ swimmer.username }}</td>
           <td>{{ swimmer.email }}</td>
           <td>{{ swimmer.rsvp }}</td>
-          <td>{{ swimmer.group }}</td>
+          <td class="groupingCol">{{ swimmer.group }}</td>
           <td>{{ swimmer.estimated_pace }}</td>
           <td>{{ swimmer.distance }}km</td>
           <td>{{ swimmer.number_of_kayaks }}</td>
@@ -167,7 +176,7 @@
           <td>{{ kayaker.username }}</td>
           <td>{{ kayaker.email }}</td>
           <td>{{ kayaker.rsvp }}</td>
-          <td>{{ kayaker.group }}</td>
+          <td class="groupingCol">{{ kayaker.group }}</td>
           <td>{{ kayaker.number_of_kayaks }}</td>
         </tr>
       {% endfor %}
@@ -176,13 +185,105 @@
   {% else %}
     No kayakers have signed up yet.
   {% endif %}
-  {{ past_swim }} TEST
 
   {% if signed_up and isKayaker and not past_swim %}
     <form action={{drupal_url("swims/#{id}/drop_out")}}>
       <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
     </form>
   {% endif %}
+</div>
+
+
+
+<div id="editTable" style="visibility: hidden">
+  <form action={{drupal_url("swims/#{id}/update_groupings")}}>
+    <table>
+      <tr>
+        <th>
+          <h2>Swimmers</h2>
+        </th>
+        <th style="padding-left: 20px; padding-top: 30px">
+          <input type="submit" value="Submit groupings" />
+        </th>
+
+      </tr>
+    </table>
+
+    {% if swimmers %}
+      <table class="table table-striped swimmers">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col">User</th>
+          <th scope="col">Email</th>
+          <th scope="col">RSVP</th>
+          <th scope="col">Group</th>
+          <th scope="col">Est. Pace</th>
+          <th scope="col">Est. Distance</th>
+          <th scope="col">Boats</th>
+          <th scope="col">Can Kayak</th>
+
+        </tr>
+        </thead>
+        <tbody id="swimmers">
+        {% for swimmer in swimmers %}
+          <tr>
+            <th scope="row">{{ drupal_image(swimmer.picture, 'thumbnail') }}</th>
+            <td>{{ swimmer.name }}</td>
+            <td>{{ swimmer.username }}</td>
+            <td>{{ swimmer.email }}</td>
+            <td>{{ swimmer.rsvp }}</td>
+            <td>
+              <input name={{swimmer.uid}} type="text" size="2" class="newGrouping" required/>
+            </td>
+            <td>{{ swimmer.estimated_pace }}</td>
+            <td>{{ swimmer.distance }}km</td>
+            <td>{{ swimmer.number_of_kayaks }}</td>
+            <td>{{ swimmer.kayaker }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      No swimmers have signed up yet.
+    {% endif %}
+
+    <h2>Kayakers</h2>
+    {% if kayakers %}
+      <table class="table table-striped kayakers">
+        <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col">User</th>
+          <th scope="col">Email</th>
+          <th scope="col">RSVP</th>
+          <th scope="col">Group</th>
+          <th scope="col">Boats</th>
+        </tr>
+        </thead>
+        <tbody id="kayakers">
+        {% for kayaker in kayakers %}
+          <tr>
+            <th scope="row">{{ drupal_image(kayaker.picture, 'thumbnail') }}</th>
+            <td>{{ kayaker.name }}</td>
+            <td>{{ kayaker.username }}</td>
+            <td>{{ kayaker.email }}</td>
+            <td>{{ kayaker.rsvp }}</td>
+            <td>
+              <input type="text" size="2" class="newGrouping" required/>
+            </td>
+            <td>{{ kayaker.number_of_kayaks }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      No kayakers have signed up yet.
+    {% endif %}
+  </form>
+
 </div>
 
 <script>
@@ -203,6 +304,15 @@
       e.preventDefault();
     }
   }
+
+  function enableManualGrouping(e)
+  {
+    var table = document.getElementById('table');
+    document.getElementById('regularTable').style.visibility = 'hidden';
+    document.getElementById('editTable').style.visibility = 'visible';
+    table.appendChild(document.getElementById('editTable'));
+  }
+
   function sortSwimmers(field) {
     //change all other fields to no sort
     for(var sortField in swimRowSorting){
