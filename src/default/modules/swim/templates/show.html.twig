@@ -156,8 +156,9 @@
   {% else %}
     No kayakers have signed up yet.
   {% endif %}
+  {{ past_swim }} TEST
 
-  {% if signed_up and isKayaker%}
+  {% if signed_up and isKayaker and not past_swim %}
     <form action={{drupal_url("swims/#{id}/drop_out")}}>
       <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
     </form>
