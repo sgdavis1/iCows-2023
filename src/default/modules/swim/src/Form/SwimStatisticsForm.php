@@ -31,9 +31,9 @@ class SwimStatisticsForm extends FormBase {
             $query->range(0, 1);
             $swim = $query->execute()->fetchAll()[0];
     
-            $date = new DrupalDateTime($swim->date_time);
+            $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
 
-            $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+            $now = DrupalDateTime::createFromTimestamp(time(), 'America/Chicago');
             
             $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
             $attendee_swimmer_query->condition('a.swim_id', $id, '=');
@@ -122,7 +122,7 @@ class SwimStatisticsForm extends FormBase {
 
             $average_pace_in_seconds += 60 * intval($pace[0]) + intval($pace[1]);
             
-            $date = new DrupalDateTime($swim->date_time, 'CST');
+            $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
             $stat->date =  getFormattedDate($date);
             $stat->swim_name = $swim->title;
         }

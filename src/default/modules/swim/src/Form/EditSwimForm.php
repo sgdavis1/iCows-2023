@@ -43,7 +43,7 @@ class EditSwimForm extends FormBase {
             '#required' => TRUE,
             '#default_value' => $swim->title,
         ];
-        $date = new DrupalDateTime($swim->date_time);
+        $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
         $form['date_time'] = [
             '#type' => 'datetime',
             '#title' => $this->t('Date and Time'),
@@ -150,7 +150,7 @@ class EditSwimForm extends FormBase {
         //update swim node
         $node->set('title', $form_state->getValue('title'));
         $node->set('body', $form_state->getValue('description')["value"]);
-        $node->set('field_swim_date', $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT));
+        $node->set('field_swim_date', $form_state->getValue('date_time')->modify('+5 hour')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT));
 
         //save to update node
         $node->save();
