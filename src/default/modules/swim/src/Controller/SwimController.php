@@ -29,6 +29,37 @@ class SwimController extends ControllerBase {
     ];
   }
 
+  public function change_auto_grouping($id) {
+      //get the current value
+      $query = \Drupal::database()->select('icows_swims', 'i');
+      $query->condition('i.swim_id', $id, '=');
+      $query->fields('i', ['auto_grouping']);
+      $res = $query->execute()->fetchAll()[0];
+
+      //get field
+      $current_value = $res->auto_grouping;
+
+      //if it's a string, convert to int
+      if ($current_value == '0') {
+          $current_value = 0;
+      } elseif ($current_value == '1') {
+          $current_value = 1;
+      }
+
+      //switch 0 --> 1 or 1--> 0
+      $current_value = abs($current_value - 1);
+
+
+      //set it to the opposite of the current value
+      $database = \Drupal::database();
+      $database->update('icows_swims')->fields(array(
+          'auto_grouping' => $current_value,
+      ))->condition('swim_id', $id, '=')->execute();
+
+      $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
+      $response->send();
+  }
+
   public function drop_out($id) {
     $query = \Drupal::database()->select('icows_swims', 'i');
 
@@ -158,10 +189,11 @@ class SwimController extends ControllerBase {
   // Add extra detail to this query object: a condition, fields and a range
   $query->condition('i.swim_id', $id, '=');
 
-  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
+  $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked', 'auto_grouping']);
   $swim = $query->execute()->fetchAll()[0];
   $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
   $now = DrupalDateTime::createFromTimestamp(time());
+  $checked = intval($swim->auto_grouping);
   $past_swim = $date < $now;
 
   // host id is $swim->uid
@@ -259,6 +291,7 @@ class SwimController extends ControllerBase {
     '#isSwimmer' => $isSwimmer,
     '#cache' => array('max-age' => 0),
     '#past_swim' => $past_swim,
+    '#is_checked' => $checked,
   ];    
   }
 
