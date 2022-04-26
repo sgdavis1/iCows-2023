@@ -54,6 +54,15 @@ swim.change_auto_grouping:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
 
+swim.update_groupings:
+  path: '/swims/{id}/update_groupings'
+  defaults:
+    _title: 'Update Swim Groups'
+    _controller: '\Drupal\swim\Controller\SwimController::update_groupings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'access content'
+
 swim.show:
   path: '/swims/{id}'
   defaults:

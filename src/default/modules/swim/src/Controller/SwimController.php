@@ -9,9 +9,10 @@ namespace Drupal\swim\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
-use Drupal\Core\Url; 
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class SwimController extends ControllerBase {
   public function content() {
@@ -308,6 +309,38 @@ class SwimController extends ControllerBase {
     '#is_checked' => $checked,
   ];    
   }
+
+
+  public function update_groupings($id) {
+      //get swimmers for the swim
+      $query = \Drupal::database()->select('icows_attendees', 'i');
+      $query->condition('i.swim_id', $id, '=');
+      $query->fields('i', ['uid', 'group']);
+      $swimmers = $query->execute()->fetchAll();
+
+      //number of swimmers
+      $num_swimmers = count($swimmers);
+
+      for ($i = 0; $i < $num_swimmers; $i++) {
+          //user
+          $swimmer_uid = $swimmers[$i]->uid;
+
+          //get new group for swimmer
+          $new_group = \Drupal::request()->query->get($swimmer_uid);
+
+          //update swimmer's group
+          $database = \Drupal::database();
+          $database->update('icows_attendees')->fields(array(
+              'group' => $new_group,
+          ))->condition('icows_attendees.swim_id', $id, '=')
+              ->condition('icows_attendees.uid', $swimmer_uid, '=')
+              ->execute();
+      }
+
+      $response = new RedirectResponse(Url::fromRoute('swim.show', ['id' => $id])->toString());
+      $response->send();
+  }
+
 
   public function edit($id) {
     return [
