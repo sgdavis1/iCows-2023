@@ -49,6 +49,12 @@ function swim_schema() {
                 'default' => 0,
                 'description' => 'The node ID of the swim node that corresponds to the swim',
             ),
+            'auto_grouping' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 1,
+                'description' => 'Whether the host wants the swim to have automatic grouping or not',
+            ),
             'title' => array(
                 'type' => 'text',
                 'not null' => FALSE,
