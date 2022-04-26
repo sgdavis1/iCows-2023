@@ -97,7 +97,7 @@ class NewSwimForm extends FormBase {
             'body'              => $form_state->getValue('description')["value"],
             'title'             => $form_state->getValue('title'),
             'field_swim_id'     => $num_rows,
-            'field_swim_date'   => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+            'field_swim_date'   => $form_state->getValue('date_time')->modify('+5 hour')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             'field_swim_link' => [
                 'uri' => $host.'/swims/'.$num_rows,
                 'title' => $form_state->getValue('title'),

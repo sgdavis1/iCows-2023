@@ -24,17 +24,22 @@ class NewWaiverForm extends FormBase {
      */
     public function buildForm(array $form, FormStateInterface $form_state) {
         $form_state->disableCache();
+        $form['waiver_title'] = array(
+            '#markup' => '<h1>Submit a Waiver</h1><br>'
+        );
+
         $form['waiver'] = array(
             '#type' => 'managed_file',
-            '#title' => t('waiver'),
-            '#description' => t('Swim waiver'),
             '#upload_location' => 'public://files',
             '#upload_validators' => [
                 'file_validate_size' => array(25600000)
             ],
             '#required' => TRUE,
         );
-        //only allow pdfs for now
+
+        $form['waiver_description'] = array(
+            '#markup' => '<p>Submit a photo or PDF scan of your ICOWS swim waiver here.</p><p>This form must be submitted once per year to be elegible to sign up as a swimmer for future swim events.</p><br>'
+        );
 
         //need to add sidebar option-selector thing
         $form['actions']['submit'] = [

@@ -109,9 +109,8 @@ class SwimController extends ControllerBase {
     $query->range(0, 1);
     $swim = $query->execute()->fetchAll()[0];
 
-    $date = new DrupalDateTime($swim->date_time);
-
-    $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
+    $now = DrupalDateTime::createFromTimestamp(time());
 
     if ($date <= $now) {
       $attendee_swimmer_query = \Drupal::database()->select('icows_attendees', 'a');
@@ -161,8 +160,8 @@ class SwimController extends ControllerBase {
 
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked']);
   $swim = $query->execute()->fetchAll()[0];
-  $date = new DrupalDateTime($swim->date_time, 'CST');
-  $now = DrupalDateTime::createFromTimestamp(time())->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+  $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
+  $now = DrupalDateTime::createFromTimestamp(time());
   $past_swim = $date < $now;
 
   // host id is $swim->uid
@@ -202,7 +201,7 @@ class SwimController extends ControllerBase {
     $swimmer->picture = getProfilePicture($swimmer->uid);
     $swimmer->email = \Drupal\user\Entity\User::load($swimmer->uid)->getEmail();
     $swimmer->username = \Drupal\user\Entity\User::load($swimmer->uid)->getDisplayName();
-    $date = new DrupalDateTime($swimmer->date_time, 'CST');
+    $date = new DrupalDateTime($swimmer->date_time, 'America/Chicago');
     $swimmer->rsvp = getFormattedDate($date);
 
     if ($swimmer->uid == $current_user_id) {
@@ -232,7 +231,7 @@ class SwimController extends ControllerBase {
     $kayaker->picture = getProfilePicture($kayaker->uid);
     $kayaker->email = \Drupal\user\Entity\User::load($kayaker->uid)->getEmail();
     $kayaker->username = \Drupal\user\Entity\User::load($kayaker->uid)->getDisplayName();
-    $date = new DrupalDateTime($kayaker->date_time, 'CST');
+    $date = new DrupalDateTime($kayaker->date_time, 'America/Chicago');
     $kayaker->rsvp = getFormattedDate($date);
     if ($kayaker->uid == $current_user_id) {
       $signed_up = true;
@@ -330,7 +329,7 @@ class SwimController extends ControllerBase {
       $csv_row["name"] = $user->field_first_name->value . " " . $user->field_last_name->value;
       $csv_row["username"] = $user->getDisplayName();
       $csv_row["email"] = $user->getEmail();
-      $date = new DrupalDateTime($attendee->date_time, 'CST');
+      $date = new DrupalDateTime($attendee->date_time, 'America/Chicago');
       $csv_row["rsvp"] = getFormattedDate($date);
       $csv_row["boats"] = $attendee->number_of_kayaks;
   
