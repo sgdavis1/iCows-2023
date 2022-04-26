@@ -69,12 +69,25 @@
 
 
 <div>
-  <h2>Swimmers</h2>
+
+  <table>
+    <tr>
+      <th>
+        <h2>Swimmers</h2>
+      </th>
+      <th style="padding-left: 20px; padding-top: 30px">
+        <input type="checkbox" id="auto_grouping" name="auto_grouping" value="Bike">
+        <label for="auto_grouping"> Enable auto-grouping</label><br>
+      </th>
+    </tr>
+  </table>
+
   {% if (not signed_up) and locked == 0 and isApproved %}
     <form action={{drupal_url("swims/#{id}/signup")}}>
       <input type="submit" value="Swimmer Signup" />
     </form>
   {% endif %}
+
   {% if swimmers %}
     <table class="table table-striped swimmers">
       <thead>
