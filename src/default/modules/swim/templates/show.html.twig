@@ -297,6 +297,10 @@
   var swimRowSorting = {'name': SortEnum.NO_SORT, 'boats': SortEnum.NO_SORT,
                         'pace': SortEnum.NO_SORT, 'distance': SortEnum.NO_SORT };
   var kayakRowSorting = {'name': SortEnum.NO_SORT, 'boats': SortEnum.NO_SORT};
+  document.addEventListener('DOMContentLoaded', function() {
+    sortSwimmers('name');
+    sortKayakers('name')
+  });
 
   function clicked(e)
   {
