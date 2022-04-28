@@ -16,7 +16,7 @@ waiver.view:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 waiver.approve:
   path: '/waivers/{id}/approve'
@@ -26,7 +26,7 @@ waiver.approve:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 waiver.invalidate:
   path: '/waivers/{id}/invalidate'
@@ -36,7 +36,7 @@ waiver.invalidate:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 waiver.content:
   path: '/waivers'
@@ -46,7 +46,7 @@ waiver.content:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 
 waiver.download_approved:
@@ -57,7 +57,7 @@ waiver.download_approved:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 
 waiver.download_pending:
@@ -68,7 +68,7 @@ waiver.download_pending:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 
 waiver.request_new:
@@ -79,4 +79,4 @@ waiver.request_new:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
