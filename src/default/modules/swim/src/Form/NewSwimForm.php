@@ -85,26 +85,7 @@ class NewSwimForm extends FormBase {
             $locked = 1;
         }
 
-        $query = \Drupal::database()->select('icows_swims', 'i');
-        $num_rows = $query->countQuery()->execute()->fetchField();
-        $num_rows += 1;
-
         $host = \Drupal::request()->getSchemeAndHttpHost();
-
-        // create node for calendar
-        $node = Node::create([
-            'type'              => 'swims',
-            'body'              => $form_state->getValue('description')["value"],
-            'title'             => $form_state->getValue('title'),
-            'field_swim_id'     => $num_rows,
-            'field_swim_date'   => $form_state->getValue('date_time')->modify('+5 hour')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
-            'field_swim_link' => [
-                'uri' => $host.'/swims/'.$num_rows,
-                'title' => $form_state->getValue('title'),
-            ]
-        ]);
-        $node->save();
-        $nid = $node->id();
 
         $values = [
             [
@@ -114,17 +95,39 @@ class NewSwimForm extends FormBase {
             // https://drupal.stackexchange.com/questions/204103/inserting-the-value-from-datetime-field-form
             'date_time' => $form_state->getValue('date_time')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
             'uid' => \Drupal::currentUser()->id(),
-            'nid' => $nid,
+            'nid' => -1,
             ],
         ];
+
         $database = \Drupal::database();
-        $query = $database->insert('icows_swims')->fields(['uid','title','description','locked','date_time', 'nid']); //->values($values)->execute();
+        $query = $database->insert('icows_swims')->fields(['swim_id', 'uid','title','description','locked','date_time', 'nid']); //->values($values)->execute();
         foreach ($values as $developer) {
             $query->values($developer);
         }
-        $query->execute();
+        $swim_id = $query->execute();
 
-        $form_state->setRedirect('swim.show', ["id" => $num_rows]);
+        // create node for calendar
+        $node = Node::create([
+            'type'              => 'swims',
+            'body'              => $form_state->getValue('description')["value"],
+            'title'             => $form_state->getValue('title'),
+            'field_swim_id'     => $swim_idd,
+            'field_swim_date'   => $form_state->getValue('date_time')->modify('+5 hour')->format(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+            'field_swim_link' => [
+                'uri' => $host.'/swims/'.$swim_id,
+                'title' => $form_state->getValue('title'),
+            ]
+        ]);
+
+        $node->save();
+        $nid = $node->id();
+
+        $database = \Drupal::database();
+        $database->update('icows_swims')->fields(array(
+          'nid' => $node->id(),
+        ))->condition('swim_id', $swim_id, '=')->execute();
+
+        $form_state->setRedirect('swim.show', ["id" => $swim_id]);
     }
 
 }
