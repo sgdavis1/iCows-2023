@@ -16,7 +16,7 @@ swim.new:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 swim.signup:
   path: '/swims/{id}/signup'
@@ -89,7 +89,7 @@ swim.exports.attendee_list:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 swim.send_list:
   path: '/swims/{id}/send_list'
@@ -99,7 +99,7 @@ swim.send_list:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 swim.edit:
   path: '/swims/{id}/edit'
@@ -109,7 +109,7 @@ swim.edit:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 swim.statistics:
   path: '/swims/statistics/{id}'
@@ -137,7 +137,7 @@ swim.attendance_list:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
 
 swim.admins_info:
   path: '/admins_info'
@@ -155,4 +155,4 @@ swim.delete:
   requirements:
     _user_is_logged_in: 'TRUE'
     _permission: 'access content'
-    _role: 'administrator+swim admin'
+    _role: 'administrator+swim_admin'
