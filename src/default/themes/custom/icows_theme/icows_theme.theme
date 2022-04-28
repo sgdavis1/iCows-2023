@@ -2,6 +2,7 @@
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 Use \Drupal\Core\Routing;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 function icows_theme_preprocess_node(&$variable) {
     if ($variable['node']->getType() === 'waiver') {
@@ -15,12 +16,15 @@ function icows_theme_preprocess_node(&$variable) {
         $waivers = $query->execute()->fetchAll();
 
         $variable['warnings'] = NULL;
+        $waiver = $waivers[0];
 
-        if ($variable['node']->field_waiver_display == NULL) {
-            $variable['warnings'] = sprintf('Waiver %d not found :( .', $id);
+        if ($id == NULL || $waiver == NULL || $waiver->waiver_url == NULL || $variable['node']->field_waiver_display == NULL) {
+            \Drupal::messenger()->addError(sprintf('Waiver %d not found.', $id));
+            $response = new RedirectResponse(Url::fromRoute('waiver.content')->toString());
+            $response->send();
+            return;
         }
         else {
-            $waiver = $waivers[0];
             $file = Drupal\file\Entity\File::load($waiver->waiver_url);
             $username = \Drupal\user\Entity\User::load($waiver->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($waiver->uid)->field_last_name->value;
             $approved = $waiver->approved == 1;
