@@ -3,20 +3,18 @@
 /**
  *  hook_install()
  */
-function swim_install() {
-    // $values = [
-    //     [
-    //     'swim_id' => 1,
-    //     'uid' => 1,
-    //     'description' => 'this is a test',
-    //     ],
-    // ];
-    // $database = \Drupal::database();
-    // $query = $database->insert('icows_swims')->fields(['swim_id','field_date','uid','description']);
-    // foreach ($values as $developer) {
-    //     $query->values($developer);
-    // }
-    // $query->execute();
+function swim_install()
+{
+//    set_time_limit(1000);
+//    for ($x = 0; $x <= 1000; $x++){
+//        $user = \Drupal\user\Entity\User::create();
+//        $user->setPassword('password');
+//        $user->enforceIsNew();
+//        $user->setEmail($x.'email@email.com');
+//        $user->setUsername($x.'user_name');
+//        $user->save();
+//    }
+//    set_time_limit(30);
 }
 
 /**
