@@ -41,13 +41,14 @@ class SwimSignUpForm extends FormBase {
             '#markup' => '<p>Enter your sustained pace per 100m for a long swim (at least 500m length). Ex] 1:55</p><br>'
         );
         $form['distance'] = [
-            '#type' => 'textfield',
+            '#type' => 'number',
             '#title' => $this->t('Distance'),
-            '#maxlength' => 10,
+            '#step' => '.01',
+            'precision' => 2, 
             '#required' => TRUE
         ];
         $form['distance_description'] = array(
-            '#markup' => '<p>Enter your desired distance that you would like to swim. Ex] 1km</p><br>
+            '#markup' => '<p>Enter your desired distance that you would like to swim. Ex: 1 = 1km</p><br>
             <p>Some useful approximate distances to remember (short course first / long course second)</p>
             <ul>
               <li><strong>Brown boathouse</strong> 1.2K / 2.0K</li>
@@ -123,9 +124,6 @@ class SwimSignUpForm extends FormBase {
         $boats = $form_state->getValue('kayaks');
         if(!isValidPace($pace)){
             $form_state->setErrorByName('invalid_pace', $this->t('Invalid pace. Please use the format MM:SS'));
-        }
-        if(!isValidNumber($distance)){
-            $form_state->setErrorByName('invalid_distance', $this->t("Invalid distance. Please enter a number for the 'distance' field."));
         }
         if(!isValidNumber($boats)){
             $form_state->setErrorByName('invalid_boats', $this->t("Invalid boats entry. Please enter a number for the 'boats' field."));
