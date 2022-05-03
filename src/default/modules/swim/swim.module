@@ -33,6 +33,7 @@ function swim_theme($existing, $type, $theme, $path) {
                       'host_email' => NULL,
                       'host_picture' => NULL,
                       'isAdmin' => NULL,
+                      'isSwimAdmin' => NULL,
                       'isApproved' => NULL,
                       'isKayaker' => NULL,
                       'isSwimmer' => NULL,
