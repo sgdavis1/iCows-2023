@@ -206,7 +206,7 @@ class SwimController extends ControllerBase {
 
   $query->fields('i', ['uid', 'swim_id', 'date_time', 'title', 'description', 'locked', 'auto_grouping']);
   $swim = $query->execute()->fetchAll()[0];
-  $date = new DrupalDateTime($swim->date_time, 'America/Chicago');
+  $date_of_swim = new DrupalDateTime($swim->date_time, 'America/Chicago');
   $now = DrupalDateTime::createFromTimestamp(time());
   $checked = intval($swim->auto_grouping);
   $past_swim = $date < $now;
@@ -296,7 +296,7 @@ class SwimController extends ControllerBase {
     '#title' => $swim->title,
     '#description' => $swim->description,
     '#locked' => $swim->locked,
-    '#date_time' => getFormattedDate($date),
+    '#date_time' => getFormattedDate($date_of_swim),
     '#uid' => $swim->uid,
     '#swimmers' => $swimmers,
     '#kayakers' => $kayakers,
