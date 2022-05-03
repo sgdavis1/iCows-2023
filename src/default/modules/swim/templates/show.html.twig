@@ -75,7 +75,7 @@
       <th>
         <h2>Swimmers</h2>
       </th>
-      {% if isAdmin %}
+      {% if isAdmin or isSwimAdmin %}
         <th style="padding-left: 20px; padding-top: 30px">
           <form action={{drupal_url("swims/#{id}/change_auto_grouping")}}>
             {% if is_checked == 0 %}
