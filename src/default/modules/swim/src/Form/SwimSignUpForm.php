@@ -27,7 +27,7 @@ class SwimSignUpForm extends FormBase {
         $pace = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id())->field_pace->value;
 
         $form['swim_id'] = array(
-            '#value' => $id,
+            '#default_value' => $id,
             '#type' => 'hidden'
         );
         $form['pace'] = [
@@ -84,19 +84,17 @@ class SwimSignUpForm extends FormBase {
             '#value' => $this->t('Sign up'),
             '#button_type' => 'primary',
         ];
-        $form['actions']['cancel'] = [      //FIXME
+        $form['actions']['cancel'] = array(
             '#type' => 'button',
             '#value' => t('Cancel'),
             '#weight' => 20,
             '#executes_submit_callback' => TRUE,
-            '#submit' => array('mymodule_form_cancel'),
-        ];
+            '#submit' => array('swims_form_cancel'),
+            '#limit_validation_errors' => array()
+        );
         return $form;
     }
 
-    public function mymodule_form_cancel(){     //FIXME
-        drupal_goto('destinationpage');
-    }
 
     /**
      * {@inheritdoc}
