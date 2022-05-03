@@ -15,7 +15,7 @@
       </thead>
       <tbody>
       {% for pending_user in pending_users %}
-        <tr>
+        <tr style="display: none">
           <th scope="row">{{ drupal_image(pending_user.picture, 'thumbnail') }}</th>
           <td>{{ pending_user.name }}</td>
           <td>{{ pending_user.username }}</td>
@@ -55,7 +55,7 @@
     </thead>
     <tbody>
     {% for not_submitted_user in not_submitted_users %}
-      <tr>
+      <tr style="display: none">
         <th scope="row">{{ drupal_image(not_submitted_user.picture, 'thumbnail') }}</th>
         <td>{{ not_submitted_user.name }}</td>
         <td>{{ not_submitted_user.username }}</td>
@@ -87,7 +87,7 @@
       </thead>
       <tbody>
       {% for approved_user in approved_users %}
-        <tr>
+        <tr style="display: none">
           <th scope="row">{{ drupal_image( approved_user.picture, 'thumbnail' ) }}</th>
           <td>{{ approved_user.name }}</td>
           <td>{{ approved_user.username }}</td>
@@ -126,9 +126,12 @@
   document.addEventListener('DOMContentLoaded', function() {
     const table = document.getElementById("pending");
     for (let i = 0; i < table.rows.length; i++) {
+      let row = table.rows[i];
       if(i > numberPerPage){
-        let row = table.rows[i];
         row.style.display = 'none';
+      }
+      else{
+        row.style.display = '';
       }
     }
     if(table.rows.length <= numberPerPage){
@@ -138,9 +141,12 @@
 
     const not_submitted = document.getElementById("unsubmitted");
     for (let i = 0; i < not_submitted.rows.length; i++) {
+      let row = not_submitted.rows[i];
       if(i > numberPerPage){
-        let row = not_submitted.rows[i];
         row.style.display = 'none';
+      }
+      else{
+        row.style.display = '';
       }
     }
     if(not_submitted.rows.length <= numberPerPage){
@@ -149,9 +155,12 @@
     }
     const approved = document.getElementById("approved");
     for (let i = 0; i < approved.rows.length; i++) {
+      let row = not_submitted.rows[i];
       if(i > numberPerPage){
-        let row = approved.rows[i];
         row.style.display = 'none';
+      }
+      else{
+        row.style.display = '';
       }
     }
     if(approved.rows.length <= numberPerPage){
