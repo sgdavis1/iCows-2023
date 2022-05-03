@@ -26,7 +26,7 @@ class KayakSignupForm extends FormBase {
     public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
         verify_swim_status($id);
         $form['swim_id'] = array(
-            '#value' => $id,
+            '#default_value' => $id,
             '#type' => 'hidden'
         );
         $form['kayaks'] = [
@@ -46,6 +46,14 @@ class KayakSignupForm extends FormBase {
             '#value' => $this->t('Sign up'),
             '#button_type' => 'primary',
         ];
+        $form['actions']['cancel'] = array(
+            '#type' => 'button',
+            '#value' => t('Cancel'),
+            '#weight' => 20,
+            '#executes_submit_callback' => TRUE,
+            '#submit' => array('swims_form_cancel'),
+            '#limit_validation_errors' => array()
+        );
 
         return $form;
     }
