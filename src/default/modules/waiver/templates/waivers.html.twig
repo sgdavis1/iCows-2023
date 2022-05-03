@@ -124,50 +124,56 @@
   var pageNums = {"pending": 0, "unsubmitted": 0, "approved": 0};
 
   document.addEventListener('DOMContentLoaded', function() {
-    const table = document.getElementById("pending");
-    for (let i = 0; i < table.rows.length; i++) {
-      let row = table.rows[i];
-      if(i > numberPerPage){
-        row.style.display = 'none';
-      }
-      else{
-        row.style.display = '';
-      }
-    }
-    if(table.rows.length <= numberPerPage){
-      document.getElementById("previous_pending").style.display = 'none';
-      document.getElementById("next_pending").style.display = 'none';
-    }
 
-    const not_submitted = document.getElementById("unsubmitted");
-    for (let i = 0; i < not_submitted.rows.length; i++) {
-      let row = not_submitted.rows[i];
-      if(i > numberPerPage){
-        row.style.display = 'none';
+      const table = document.getElementById("pending");
+      if(table){
+        for (let i = 0; i < table.rows.length; i++) {
+          let row = table.rows[i];
+          if (i > numberPerPage) {
+            row.style.display = 'none';
+          } else {
+            row.style.display = '';
+          }
+        }
+        if (table.rows.length <= numberPerPage) {
+          document.getElementById("previous_pending").style.display = 'none';
+          document.getElementById("next_pending").style.display = 'none';
+        }
       }
-      else{
-        row.style.display = '';
+
+      const not_submitted = document.getElementById("unsubmitted");
+      if(not_submitted){
+        for (let i = 0; i < not_submitted.rows.length; i++) {
+          let row = not_submitted.rows[i];
+          console.log(row);
+          console.log(i);
+          if (i > numberPerPage) {
+            row.style.display = 'none';
+          } else {
+            row.style.display = '';
+          }
+        }
+        if (not_submitted.rows.length <= numberPerPage) {
+          document.getElementById("previous_unsubmitted").style.display = 'none';
+          document.getElementById("next_unsubmitted").style.display = 'none';
+        }
       }
-    }
-    if(not_submitted.rows.length <= numberPerPage){
-      document.getElementById("previous_unsubmitted").style.display = 'none';
-      document.getElementById("next_unsubmitted").style.display = 'none';
-    }
-    const approved = document.getElementById("approved");
-    for (let i = 0; i < approved.rows.length; i++) {
-      let row = not_submitted.rows[i];
-      if(i > numberPerPage){
-        row.style.display = 'none';
+      const approved = document.getElementById("approved");
+      if(approved){
+        for (let i = 0; i < approved.rows.length; i++) {
+          let row = not_submitted.rows[i];
+          if (i > numberPerPage) {
+            row.style.display = 'none';
+          } else {
+            row.style.display = '';
+          }
+        }
+        if (approved.rows.length <= numberPerPage) {
+          document.getElementById("previous_approved").style.display = 'none';
+          document.getElementById("next_approved").style.display = 'none';
+        }
       }
-      else{
-        row.style.display = '';
-      }
-    }
-    if(approved.rows.length <= numberPerPage){
-      document.getElementById("previous_approved").style.display = 'none';
-      document.getElementById("next_approved").style.display = 'none';
-    }
-  }, false);
+  });
 
   function increase(tableID){
     let pageNum = pageNums[tableID];
