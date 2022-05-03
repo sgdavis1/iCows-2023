@@ -120,7 +120,7 @@
 
 <script>
 
-  const numberPerPage = 10;
+  const numberPerPage = 5;
   var pageNums = {"pending": 0, "unsubmitted": 0, "approved": 0};
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -161,7 +161,7 @@
       const approved = document.getElementById("approved");
       if(approved){
         for (let i = 0; i < approved.rows.length; i++) {
-          let row = not_submitted.rows[i];
+          let row = approved.rows[i];
           if (i > numberPerPage) {
             row.style.display = 'none';
           } else {
