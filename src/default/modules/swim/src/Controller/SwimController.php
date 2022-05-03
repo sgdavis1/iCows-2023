@@ -227,9 +227,13 @@ class SwimController extends ControllerBase {
   $current_user_id = \Drupal::currentUser()->id();
   $signed_up = false;
   $isAdmin = false;
+  $isSwimAdmin = false;
   $roles = \Drupal::currentUser()->getRoles();
   if(in_array( 'administrator', $roles)){
       $isAdmin = true;
+  }
+  if(in_array( 'swim_admin', $roles)){
+      $isSwimAdmin = true;
   }
 
   $query = \Drupal::database()->select('icows_waivers', 'i');
@@ -301,6 +305,7 @@ class SwimController extends ControllerBase {
     '#host_email' => $host_email,
     '#host_picture' => $host_picture,
     '#isAdmin' => $isAdmin,
+    '#isSwimAdmin' => $isSwimAdmin,
     '#isApproved' => $isApproved,
     '#isKayaker' => $isKayaker,
     '#isSwimmer' => $isSwimmer,
