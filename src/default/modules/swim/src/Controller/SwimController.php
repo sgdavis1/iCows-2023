@@ -128,16 +128,19 @@ class SwimController extends ControllerBase {
               $swimmer_info = array($swimmer->uid, $new_pace);
               array_push($swimmers_info, $swimmer_info);
           }
-          $group_num =  $num_kayakers / $swimmer_count;
-          $remainder = $num_kayakers % $swimmer_count;
 
-          //sort by pace from fastest (shortest num of seconds to swim 1km) to slowest (longest time)
-          usort($swimmers_info, function ($swimmer1, $swimmer2) {
-              return $swimmer1[1] <=> $swimmer2[1];
-          });
+          if ($swimmer_count > 0) {
+            $group_num =  $num_kayakers / $swimmer_count;
+            $remainder = $num_kayakers % $swimmer_count;
 
-          //call the grouping algorithm
-          groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
+            //sort by pace from fastest (shortest num of seconds to swim 1km) to slowest (longest time)
+            usort($swimmers_info, function ($swimmer1, $swimmer2) {
+                return $swimmer1[1] <=> $swimmer2[1];
+            });
+
+            //call the grouping algorithm for re-grouping
+            groupSwimmers($swim_id, $swimmers_info, $num_kayakers, $group_num, $remainder);
+        }
       }
 
 
@@ -209,7 +212,7 @@ class SwimController extends ControllerBase {
   $date_of_swim = new DrupalDateTime($swim->date_time, 'America/Chicago');
   $now = DrupalDateTime::createFromTimestamp(time());
   $checked = intval($swim->auto_grouping);
-  $past_swim = $date < $now;
+  $past_swim = $date_of_swim < $now;
 
   // host id is $swim->uid
   $host_name = \Drupal\user\Entity\User::load($swim->uid)->field_first_name->value . " " . \Drupal\user\Entity\User::load($swim->uid)->field_last_name->value;

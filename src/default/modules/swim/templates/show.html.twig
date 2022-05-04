@@ -142,7 +142,7 @@
     No swimmers have signed up yet.
   {% endif %}
 
-  {% if signed_up and isSwimmer %}
+  {% if signed_up and isSwimmer and not past_swim %}
     <form action={{drupal_url("swims/#{id}/drop_out")}}>
       <input type="submit" value="Drop out!" onclick="return confirm('Do you want to drop out of this swim?')" />
     </form>
