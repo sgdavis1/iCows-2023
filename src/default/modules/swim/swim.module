@@ -371,7 +371,10 @@ function groupingUpdate(int $swim_id, array $grouping)
     foreach ($grouping[0][0][0][0][0] as &$group) {
         $grouping_num++;
         foreach ($group as &$swimmer) {
-            $database->update('icows_attendees')->fields(array(
+          var_dump($grouping_num);
+          var_dump($swim_id);
+          var_dump($swimmer[0]);
+          $database->update('icows_attendees')->fields(array(
                 'group' => $grouping_num,
             ))->condition('icows_attendees.swim_id', $swim_id, '=')
                 ->condition('icows_attendees.uid', $swimmer[0], '=')
